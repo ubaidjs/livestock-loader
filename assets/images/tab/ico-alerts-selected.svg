@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="48" height="32" viewBox="0 0 48 32">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_198" data-name="Rectangle 198" width="24" height="24" transform="translate(0 0.5)" fill="#423f33" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+  </defs>
+  <g id="Glyph" transform="translate(0.217)">
+    <g id="Frame" transform="translate(-0.217)" fill="rgba(255,255,255,0)" stroke="rgba(0,0,0,0)" stroke-width="1">
+      <rect width="48" height="32" stroke="none"/>
+      <rect x="0.5" y="0.5" width="47" height="31" fill="none"/>
+    </g>
+    <g id="notification-icon_1" data-name="notification-icon – 1" transform="translate(11.783 8)">
+      <g id="Mask_Group_12" data-name="Mask Group 12" transform="translate(0 -0.5)" clip-path="url(#clip-path)">
+        <path id="bell-solid" d="M10.5,24a3,3,0,0,0,3-3h-6A3,3,0,0,0,10.5,24Zm10.1-7.018c-.906-.973-2.6-2.437-2.6-7.232a7.4,7.4,0,0,0-6-7.273V1.5a1.5,1.5,0,1,0-3,0v.977A7.4,7.4,0,0,0,3,9.75c0,4.8-1.695,6.259-2.6,7.232A1.465,1.465,0,0,0,0,18a1.5,1.5,0,0,0,1.5,1.5H19.5A1.5,1.5,0,0,0,21,18,1.464,1.464,0,0,0,20.6,16.982Z" transform="translate(1.5 -0.1)" fill="#423f33"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,10 @@
+<svg id="board-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_201" data-name="Rectangle 201" width="24" height="24" fill="#423f33"/>
+    </clipPath>
+  </defs>
+  <g id="Mask_Group_15" data-name="Mask Group 15" clip-path="url(#clip-path)">
+    <path id="farm-solid" d="M9.229,3.8l.015-.007A4.664,4.664,0,0,0,0,4.667V21.333H5.333V10.856a2.681,2.681,0,0,1,.282-1.193L7.927,5.038A2.672,2.672,0,0,1,9.229,3.8Zm14.63,6.464L21.547,5.634a1.333,1.333,0,0,0-.651-.622l-5.021-2.23a1.333,1.333,0,0,0-1.083,0L9.77,5.013a1.333,1.333,0,0,0-.651.622L6.807,10.261a1.337,1.337,0,0,0-.141.6V21.333H12v-4h6.667v4H24V10.856a1.337,1.337,0,0,0-.141-.6Zm-6.526,3.074h-4v-4h4Z" transform="translate(0 0.734)" fill="#423f33"/>
+  </g>
+</svg>

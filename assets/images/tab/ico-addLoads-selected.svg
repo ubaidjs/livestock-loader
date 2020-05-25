@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="48" height="32" viewBox="0 0 48 32">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_409" data-name="Rectangle 409" width="24" height="24" transform="translate(0.435)" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+  </defs>
+  <g id="Glyph" transform="translate(-0.435)">
+    <g id="Frame" transform="translate(0.435)" fill="rgba(255,255,255,0)" stroke="rgba(0,0,0,0)" stroke-width="1">
+      <rect width="48" height="32" stroke="none"/>
+      <rect x="0.5" y="0.5" width="47" height="31" fill="none"/>
+    </g>
+    <g id="active-icon-add" transform="translate(12 8)" clip-path="url(#clip-path)">
+      <g id="plus-circle-duotone" transform="translate(0 0)">
+        <path id="Path_394" data-name="Path 394" d="M12.387.387a12,12,0,1,0,12,12A12,12,0,0,0,12.387.387Zm6.968,13.355a.581.581,0,0,1-.581.581H14.323v4.452a.581.581,0,0,1-.581.581h-2.71a.581.581,0,0,1-.581-.581V14.323H6a.581.581,0,0,1-.581-.581v-2.71A.581.581,0,0,1,6,10.452h4.452V6a.581.581,0,0,1,.581-.581h2.71A.581.581,0,0,1,14.323,6v4.452h4.452a.581.581,0,0,1,.581.581Z" transform="translate(-0.387 -0.387)" fill="#423f33"/>
+        <path id="Path_395" data-name="Path 395" d="M19.355,13.742a.581.581,0,0,1-.581.581H14.323v4.452a.581.581,0,0,1-.581.581h-2.71a.581.581,0,0,1-.581-.581V14.323H6a.581.581,0,0,1-.581-.581v-2.71A.581.581,0,0,1,6,10.452h4.452V6a.581.581,0,0,1,.581-.581h2.71A.581.581,0,0,1,14.323,6v4.452h4.452a.581.581,0,0,1,.581.581Z" transform="translate(-0.387 -0.387)" fill="#eac547"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,17 @@
+<svg id="Glyph" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="48" height="32" viewBox="0 0 48 32">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_414" data-name="Rectangle 414" width="24" height="24" transform="translate(364 11)" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+  </defs>
+  <g id="Frame" fill="rgba(255,255,255,0)" stroke="rgba(0,0,0,0)" stroke-width="1">
+    <rect width="48" height="32" stroke="none"/>
+    <rect x="0.5" y="0.5" width="47" height="31" fill="none"/>
+  </g>
+  <g id="actice-more-icon" transform="translate(-352 -3)" clip-path="url(#clip-path)">
+    <g id="bars-duotone" transform="translate(364 9.286)">
+      <path id="Path_400" data-name="Path 400" d="M.857,15.429H23.143A.857.857,0,0,0,24,14.571V12.857A.857.857,0,0,0,23.143,12H.857A.857.857,0,0,0,0,12.857v1.714a.857.857,0,0,0,.857.857Z" fill="#eac547"/>
+      <path id="Path_401" data-name="Path 401" d="M23.143,20.571H.857A.857.857,0,0,0,0,21.429v1.714A.857.857,0,0,0,.857,24H23.143A.857.857,0,0,0,24,23.143V21.429A.857.857,0,0,0,23.143,20.571Zm0-17.143H.857A.857.857,0,0,0,0,4.286V6a.857.857,0,0,0,.857.857H23.143A.857.857,0,0,0,24,6V4.286A.857.857,0,0,0,23.143,3.429Z" fill="#eac547"/>
+    </g>
+  </g>
+</svg>

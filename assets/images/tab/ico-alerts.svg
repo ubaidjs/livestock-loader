@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_410" data-name="Rectangle 410" width="24" height="24" transform="translate(-0.217)" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+  </defs>
+  <g id="alert-icon" transform="translate(0.217)" clip-path="url(#clip-path)">
+    <path id="bell-light" d="M10.5,22.5A1.5,1.5,0,0,1,9,21H7.5a3,3,0,1,0,6,0H12A1.5,1.5,0,0,1,10.5,22.5Zm9.815-6.806C19,14.446,18,13.14,18,8.714A7.314,7.314,0,0,0,11.25,1.573V.75a.75.75,0,0,0-1.5,0v.823A7.313,7.313,0,0,0,3,8.714c0,4.426-1,5.732-2.313,6.98a2.182,2.182,0,0,0-.527,2.4A2.237,2.237,0,0,0,2.25,19.5h16.5a2.237,2.237,0,0,0,2.093-1.4A2.181,2.181,0,0,0,20.315,15.694ZM18.75,18H2.25a.712.712,0,0,1-.531-1.219C3.353,15.225,4.5,13.484,4.5,8.715A5.86,5.86,0,0,1,10.5,3a5.86,5.86,0,0,1,6,5.714c0,4.751,1.135,6.5,2.779,8.066A.712.712,0,0,1,18.75,18Z" transform="translate(1.5)" fill="#423f33"/>
+  </g>
+</svg>

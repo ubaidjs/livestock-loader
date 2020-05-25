@@ -1,0 +1,14 @@
+<svg id="Glyph" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="48" height="32" viewBox="0 0 48 32">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_412" data-name="Rectangle 412" width="24" height="24" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+  </defs>
+  <g id="Frame" fill="rgba(255,255,255,0)" stroke="rgba(0,0,0,0)" stroke-width="1">
+    <rect width="48" height="32" stroke="none"/>
+    <rect x="0.5" y="0.5" width="47" height="31" fill="none"/>
+  </g>
+  <g id="more-icon" transform="translate(12 8)" clip-path="url(#clip-path)">
+    <path id="bars-light" d="M23.679,6.107H.321A.321.321,0,0,1,0,5.786V4.5a.321.321,0,0,1,.321-.321H23.679A.321.321,0,0,1,24,4.5V5.786a.321.321,0,0,1-.321.321Zm0,8.571H.321A.321.321,0,0,1,0,14.357V13.071a.321.321,0,0,1,.321-.321H23.679a.321.321,0,0,1,.321.321v1.286a.321.321,0,0,1-.321.321Zm0,8.571H.321A.321.321,0,0,1,0,22.929V21.643a.321.321,0,0,1,.321-.321H23.679a.321.321,0,0,1,.321.321v1.286a.321.321,0,0,1-.321.321Z" transform="translate(0 -1.714)"/>
+  </g>
+</svg>
