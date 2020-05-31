@@ -8,7 +8,8 @@ import DateTimePicker from '@react-native-community/datetimepicker'
 import { StackActions, NavigationActions } from 'react-navigation'
 import colors from '../../constants/Colors'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
-
+import { Ionicons } from '@expo/vector-icons'
+import TimeZone from '../../validation/TimeZone'
 const Float = styled(View)`
   position: absolute;
   bottom: 0;
@@ -46,12 +47,13 @@ const Bar = styled.View`
   background-color: #f7f7f7;
   elevation: 1;
   margin: 10px 0px 20px;
-  padding: 20px 15px;
+  padding: 20px 8px;
 `
 
 const BarLineOne = styled.View`
   flex-direction: row;
   align-items: center;
+  padding-left: 8px;
 `
 
 const BarLineOneText = styled.Text`
@@ -117,7 +119,6 @@ const AddLoad = (props) => {
       })
     }
   }
-
   return (
     <View>
       <ScrollView>
@@ -126,14 +127,14 @@ const AddLoad = (props) => {
           <StepText>Step 1 of 4</StepText>
           <CalendarWrap>
             <CalendarPicker
-              onDateChange={_onDateChange}
+              onDateChange={_onDateChange} 
               allowRangeSelection={true}
               minDate={new Date()}
               selectedDayColor={colors.themeYellow}
               selectedDayTextColor="#fff"
               nextTitle="&#8250;"
               enableSwipe={false}
-              nextTitleStyle={{
+              nextTitleStyle={{ 
                 fontSize: 25,
                 fontWeight: 'bold',
               }}
@@ -151,6 +152,7 @@ const AddLoad = (props) => {
               dayLabelsWrapper={{
                 borderBottomWidth: 0,
                 borderTopWidth: 0,
+                marginBottom: 15
               }}
             />
           </CalendarWrap>
@@ -178,7 +180,10 @@ const AddLoad = (props) => {
                 display="default"
                 onChange={(e, date) => {
                   setOpenPickTime(false)
-                  setPickTime(moment(date).format('h:mm A'))
+                  if(e.type != 'dismissed'){
+                    let settimezon = TimeZone(date)
+                  setPickTime(moment(date).format('h:mm A')+' '+settimezon)
+                  } 
                 }}
               />
             )}
@@ -190,7 +195,10 @@ const AddLoad = (props) => {
                 display="default"
                 onChange={(e, date) => {
                   setOpenDropTime(false)
-                  setDropTime(moment(date).format('h:mm A'))
+                  if(e.type != 'dismissed'){
+                    let settimezon = TimeZone(date)
+                  setDropTime(moment(date).format('h:mm A')+' '+settimezon)
+                  }
                 }}
                 timeZoneOffsetInMinutes={-330}
               />
@@ -200,7 +208,7 @@ const AddLoad = (props) => {
             <Bar>
               <BarLineOne>
                 <Feather name="arrow-up-circle" color="black" size={18} />
-                <BarLineOneText>Pick Up</BarLineOneText>
+                <BarLineOneText>Pick up</BarLineOneText>
               </BarLineOne>
 
               <BarLineTwo>
@@ -253,9 +261,9 @@ AddLoad.navigationOptions = ({ navigation }) => {
 
   return {
     title: 'Add Load',
-    headerRight: () => (
-      <TouchableOpacity onPress={() => navigation.dispatch(resetAction)}>
-        <Text style={{ color: '#fff', marginRight: 15 }}>Exit</Text>
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
       </TouchableOpacity>
     ),
   }

@@ -26,6 +26,7 @@ import {
   ButtonTextDisable,
 } from '../../constants/CommonStyles'
 import { api_url } from '../../constants/Api'
+import EmailValidation from '../../validation/Emailvalidation'
 
 const Container = styled.View`
   padding-top: 50px;
@@ -98,8 +99,8 @@ const Login = (props) => {
   const [password, setPassword] = useState('')
   const [userNotFound, setUserNotFound] = useState(false)
   const [loading, setLoading] = useState(false)
-
   const login_pass = useRef(null)
+  const [msgshow,setMsgshow] = useState('')
 
   const handleFormSubmit = async () => {
     setUserNotFound(false)
@@ -109,6 +110,14 @@ const Login = (props) => {
     if (!password) {
       return
     }
+   const isemail =  EmailValidation(email);
+   if(!isemail)
+   {
+    setMsgshow('Incorrect emailid');
+   }
+   else
+   {
+    setMsgshow('');
     setLoading(true)
     try {
       const response = await fetch(`${api_url}?action=login`, {
@@ -119,7 +128,6 @@ const Login = (props) => {
         },
       })
       const json = await response.json()
-
       if (json.status === '200') {
         await AsyncStorage.setItem('USER_TOKEN', json.data.u_token)
         await AsyncStorage.setItem('USER_ID', json.data.u_id)
@@ -137,6 +145,7 @@ const Login = (props) => {
     } catch (error) {
       console.error('Error:', error)
     }
+  }
   }
 
   return (
@@ -189,8 +198,11 @@ const Login = (props) => {
             </TouchableOpacity>
           </JoinWrapper>
         </FormView>
+        {msgshow != '' && (
+          <Invalid>{msgshow}</Invalid>
+        )}
         {userNotFound && (
-          <Invalid>Error logging in. Check email and password</Invalid>
+          <Invalid>Enter correct emailid/Password</Invalid>
         )}
         {!email.length || !password.length ? (
           <CustomButtonDisable>

@@ -91,8 +91,8 @@ const MyLoads = (props) => {
           }}
         >
           No Saved Load
-        </Text>
-      )}
+        </Text> 
+      )} 
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

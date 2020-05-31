@@ -234,13 +234,14 @@ const AddLoadDetails = (props) => {
               <ActionSheetText>
                 Your load is now {'\n'} saved! Let's start {'\n'} networking!
               </ActionSheetText>
-              <Text style={{ marginTop: 40, color: colors.linkBlue }}>
+              {/* <Text style={{ marginTop: 40, color: colors.linkBlue }}>
                 Complete later
-              </Text>
+              </Text> */}
             </ActionSheetWrapper>
           </RBSheet>
 
-          <TitleText>Preview & Save</TitleText>
+          {/* <TitleText>Preview & Save</TitleText> */}
+          <TitleText>Enter Load Details</TitleText>
           <StepText>Step 4 of 4</StepText>
           <Bar>
             <BarLineOne>
@@ -398,7 +399,7 @@ const AddLoadDetails = (props) => {
           </Bar>
           <Checkbox
             checked={finalDetails.private}
-            text="Make laod private. If private, this load will not be posted in
+            text="Make load private. If private, this load will not be posted in
                 live boards. This load will only be visible to you unless
                 shared."
           />

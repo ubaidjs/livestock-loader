@@ -22,12 +22,18 @@ import {
   ButtonTextDisable,
 } from '../../constants/CommonStyles'
 import { api_url } from '../../constants/Api'
+import PhoneNumberValidation from '../../validation/PhoneNumberValidation'
 
 const Container = styled.View`
   padding: 30px 20px;
   padding-bottom: 10px;
   justify-content: space-between;
   flex: 1;
+`
+const Invalid = styled.Text`
+  color: red;
+  text-align: center;
+  margin-bottom: 10px;
 `
 
 const ScreenTitle = styled.Text`
@@ -55,7 +61,7 @@ const Mobile = (props) => {
   const [code, setCode] = useState('+1')
   const [country, setCountry] = useState('us')
   const [loading, setLoading] = useState(false)
-
+  const [msgshow,setMsgshow] = useState('')
   const countryList = [
     { label: 'United States', value: 'us' },
     { label: 'Canada', value: 'canada' },
@@ -64,6 +70,14 @@ const Mobile = (props) => {
   ]
 
   const addPhoneNumber = async () => {
+    const isphonenumber = PhoneNumberValidation(phone)
+    if(!isphonenumber)
+   {
+    setMsgshow('Please enter a 10 digit phone number');
+   }
+   else
+   {
+    setMsgshow('');
     setLoading(true)
     const token = await AsyncStorage.getItem('USER_TOKEN')
     try {
@@ -83,6 +97,7 @@ const Mobile = (props) => {
     } catch (error) {
       console.log('error: ', error)
     }
+  }
   }
 
   return (
@@ -139,7 +154,10 @@ const Mobile = (props) => {
           <CodeText>We'll send you an SMS verification code.</CodeText>
         </MobileWrapper>
         <ButtonWrapper>
-          {phone ? (
+        {msgshow != '' && (
+          <Invalid>{msgshow}</Invalid>
+        )}
+          {phone ? ( 
             <TouchableOpacity onPress={() => addPhoneNumber()}>
               <CustomButton>
                 {loading ? (

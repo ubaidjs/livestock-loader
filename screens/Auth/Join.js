@@ -84,7 +84,6 @@ const Join = (props) => {
   const [error, setError] = useState(false)
   const [emailExist, setEmailExist] = useState(false)
   const [invalidEmail, setInalidEmail] = useState(false)
-
   function emailValidation(email) {
     var testReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     return testReg.test(String(email).toLowerCase())
@@ -273,7 +272,7 @@ const Join = (props) => {
             <InvalidText>Couldn't signup. Please check details</InvalidText>
           )}
           {emailExist && <InvalidText>This email already exist</InvalidText>}
-          {invalidEmail && <InvalidText>Invalid Email format</InvalidText>}
+          {invalidEmail && <InvalidText>Incorrect emailid</InvalidText>}
           <View style={{ marginTop: 30 }}>
             {!name.length || !email.length || !password.length ? (
               <View>

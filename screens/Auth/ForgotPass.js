@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 import styled from 'styled-components/native'
 import colors from '../../constants/Colors'
 import { CustomButton, CustomInput } from '../../constants/CommonStyles'
+import EmailValidation from '../../validation/Emailvalidation'
 
 const Container = styled.View`
   padding: 30px 20px;
@@ -36,8 +37,32 @@ const FormWrap = styled.View`
   flex: 1;
   margin-top: 20;
 `
-
+const Invalid = styled.Text`
+  color: red;
+  text-align: center;
+  margin-bottom: 10px;
+`
 const ForgotPass = props => {
+  const [msgshow,setMsgshow] = useState('');
+  const [email, setEmail] = useState('')
+  const handleSave = async () => {
+    if(email == '')
+    {
+      setMsgshow('please enter emailid');
+    }
+    else
+    {
+    const isemail =  EmailValidation(email);
+    if(!isemail)
+    {
+     setMsgshow('Incorrect emailid');
+    }
+    else
+    {
+     setMsgshow('');
+    }
+  }
+  }
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <Container>
@@ -52,13 +77,18 @@ const ForgotPass = props => {
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
+            value={email}
+            onChangeText={(val) => setEmail(val)}
           />
+          {msgshow != '' && (
+          <Invalid>{msgshow}</Invalid>
+        )}
         </FormWrap>
         <ButtonsWrap>
           <TouchableOpacity onPress={() => props.navigation.navigate('Login')}>
             <Text style={{ color: colors.linkBlue }}>Cancel</Text>
           </TouchableOpacity>
-          <CustomButton style={{ marginBottom: 0, paddingHorizontal: 30 }}>
+          <CustomButton onStartShouldSetResponder={handleSave} style={{ marginBottom: 0, paddingHorizontal: 30 }}>
             <Text>Reset</Text>
           </CustomButton>
         </ButtonsWrap>

@@ -25,10 +25,34 @@ const CodeText = styled.Text`
 
   color: ${colors.warmGrey};
 `
+const Invalid = styled.Text`
+  color: red;
+  text-align: center;
+  margin-bottom: 10px;
+`
 
 const Otp = (props) => {
   const [code, setCode] = useState('initialState')
-  console.log(code)
+  const [msgshow,setMsgshow] = useState('')
+  const onVerifyotp = async () => {
+    // alert(code)
+    // return false;
+    if(code.length==4)
+    {
+      setMsgshow('');
+      props.navigation.navigate('LoadBoards', {
+        fromSignup: true,
+      })
+    }
+    if(code == 'initialState' || code == '')
+    {
+      setMsgshow('Please enter the code sent for verification');
+    }
+    else
+    {
+      setMsgshow('');
+    }
+  }
   return (
     <Container>
       <View>
@@ -42,18 +66,18 @@ const Otp = (props) => {
           autoFocusOnLoad={false}
           codeInputFieldStyle={styles.underlineStyleBase}
           codeInputHighlightStyle={styles.underlineStyleHighLighted}
-          onCodeFilled={(code) => {
-            setCode(code)
-          }}
+          onCodeChanged={code => setCode(code)} 
+          // onCodeFilled={(code) => {
+          //   setCode(code)
+          // }}
         />
       </View>
       <TouchableOpacity
-        onPress={() =>
-          props.navigation.navigate('LoadBoards', {
-            fromSignup: true,
-          })
-        }
+        onPress={onVerifyotp}
       >
+        {msgshow != '' && (
+          <Invalid>{msgshow}</Invalid>
+        )}
         <CustomButton>
           <ButtonText>ENTER</ButtonText>
         </CustomButton>

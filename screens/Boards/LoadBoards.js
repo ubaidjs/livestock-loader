@@ -12,6 +12,7 @@ import {
   Dimensions,
   StyleSheet,
   RefreshControl,
+  Alert
 } from 'react-native'
 import MapView from 'react-native-maps'
 import {
@@ -21,6 +22,7 @@ import {
   MaterialIcons,
   Octicons,
 } from '@expo/vector-icons'
+import { Location } from 'expo';
 import * as Permissions from 'expo-permissions'
 import styled from 'styled-components/native'
 import moment from 'moment'
@@ -352,8 +354,32 @@ const LoadBoards = (props) => {
   }, [index, showSearch])
 
   const askPermission = async () => {
-    const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS)
+    const { status } = await Permissions.askAsync(Permissions.LOCATION)
+
+    if (status !== 'granted') {
+      // Alert.alert(
+      //   'Alert Title',
+      //   'My Alert Msg',
+      //   [
+      //     {
+      //       text: 'Ask me later',
+      //       onPress: () => console.log('Ask me later pressed')
+      //     },
+      //     {
+      //       text: 'Cancel',
+      //       onPress: () => console.log('Cancel Pressed'),
+      //       style: 'cancel'
+      //     },
+      //     { text: 'OK', onPress: () => console.log('OK Pressed') }
+      //   ],
+      //   { cancelable: false }
+      // );
+    }
+    
+    // const userLocation = Location.getCurrentPositionAsync()
   }
+
+
 
   const openRBSheet = () => {
     const fromSignup = props.navigation.getParam('fromSignup')

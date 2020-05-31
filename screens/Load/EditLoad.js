@@ -365,7 +365,7 @@ const EditLoad = (props) => {
                       color: colors.greyishBrown,
                     }}
                   >
-                    Make laod private. If private, this load will not be posted
+                    Make load private. If private, this load will not be posted
                     in live boards. This load will only be visible to you unless
                     shared.
                   </Text>

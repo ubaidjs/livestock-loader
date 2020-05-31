@@ -11,6 +11,7 @@ import {
   AsyncStorage,
   ActivityIndicator,
   Alert,
+  FlatList
 } from 'react-native'
 import styled from 'styled-components/native'
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
@@ -127,6 +128,7 @@ const AddLoadDetails = (props) => {
   const [livestockType, setLivestockType] = useState('')
   const [livestockQty, setLivestockQty] = useState('')
   const [focusState, setFocusState] = useState(null)
+  const [allstock, setAllstock] = useState([0])
   const [emptyFeilds, setEmptyFeilds] = useState({
     details: false,
     weight: false,
@@ -136,6 +138,21 @@ const AddLoadDetails = (props) => {
 
   const rate_input = useRef(null)
   const prevDetails = props.navigation.getParam('details')
+ 
+  const onAddCurrency = (val) => {
+     if(val.charAt(0) == '$')
+     {
+        setRate(val.replace(/[- #*+;,.<>\{\}\[\]\\\/]/gi, ''))
+    if(val.length <= 1)
+     {
+      setRate('')
+     }
+     }
+     else
+     {
+      setRate('$'+val.replace(/[- #*+;,.<>\{\}\[\]\\\/]/gi, ''))
+     }
+  }
 
   const handleSubmit = () => {
     setFocusState(null)
@@ -168,7 +185,10 @@ const AddLoadDetails = (props) => {
       })
     }
   }
-
+const AddAnotherTypequantity = () => {
+  setAllstock(allstock => [...allstock, allstock.length]);
+  // setAllstock([...allstock,findlength])
+}
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
       <ScrollView>
@@ -179,7 +199,11 @@ const AddLoadDetails = (props) => {
             <BarLineOne>
               <BarLineOneText>Livestock Type & Quantity</BarLineOneText>
             </BarLineOne>
-            <View style={{ flexDirection: 'row', marginTop: 20 }}>
+            <FlatList
+            data = {allstock}
+            extraData = {allstock}
+            renderItem={()=>{
+              return(<View style={{ flexDirection: 'row', marginTop: 20 }}>
               <View style={{ flex: 1, marginRight: 5 }}>
                 <RNPickerSelect
                   Icon={() => (
@@ -220,9 +244,11 @@ const AddLoadDetails = (props) => {
                   }}
                 />
               </View>
-            </View>
+            </View>)
+            }}
+            />
             <View style={{ marginVertical: 15, flexDirection: 'row' }}>
-              <MaterialCommunityIcons name="plus-box" size={20} />
+              <MaterialCommunityIcons name="plus-box" size={20} onPress={AddAnotherTypequantity} />
               <AddLivestockText>
                 Add another livestock type and qty
               </AddLivestockText>
@@ -245,7 +271,8 @@ const AddLoadDetails = (props) => {
                   setFocusState('weight')
                 }}
                 placeholder="per load"
-                onChangeText={(val) => setWeight(val)}
+                value = {weight}
+                onChangeText={(val) =>  {setWeight(val.replace(/[- #*;,.<>\{\}\[\]\\\/]/gi, ''))}}
                 keyboardType="numeric"
                 returnKeyType="next"
                 onSubmitEditing={() => rate_input.current.focus()}
@@ -256,6 +283,7 @@ const AddLoadDetails = (props) => {
             <DInputWrap>
               <Label>Rate</Label>
               <TextInput
+              value={rate}
                 ref={rate_input}
                 style={[
                   styles.detailsInput,
@@ -267,7 +295,7 @@ const AddLoadDetails = (props) => {
                   setFocusState('rate')
                 }}
                 placeholder="$"
-                onChangeText={(val) => setRate(val)}
+                onChangeText={(val) => onAddCurrency(val)}
                 keyboardType="numeric"
               />
             </DInputWrap>
@@ -291,7 +319,7 @@ const AddLoadDetails = (props) => {
           </Bar>
           <Checkbox
             checked={checked}
-            text="Make laod private. If private, this load will not be posted in
+            text="Make load private. If private, this load will not be posted in
                 live boards. This load will only be visible to you unless
                 shared."
             setChecked={setChecked}
