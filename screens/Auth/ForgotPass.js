@@ -4,7 +4,7 @@ import {
   Text,
   Keyboard,
   TouchableWithoutFeedback,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native'
 import styled from 'styled-components/native'
 import colors from '../../constants/Colors'
@@ -42,27 +42,41 @@ const Invalid = styled.Text`
   text-align: center;
   margin-bottom: 10px;
 `
-const ForgotPass = props => {
-  const [msgshow,setMsgshow] = useState('');
+const ForgotPass = (props) => {
+  const [msgshow, setMsgshow] = useState('')
   const [email, setEmail] = useState('')
+
+  const generateOtp = () => {
+    var val = Math.floor(1000 + Math.random() * 9000)
+    return val
+  }
+
+  const navigateForward = async () => {
+    const otp = generateOtp()
+    await fetch(
+      `https://conveyenceadmin.livestockloader.com/emailservice/index.php?email=${email}&otp=${otp}`
+    )
+
+    props.navigation.navigate('EmailOtp', {
+      otp: otp,
+      email: email,
+    })
+  }
+
   const handleSave = async () => {
-    if(email == '')
-    {
-      setMsgshow('please enter emailid');
-    }
-    else
-    {
-    const isemail =  EmailValidation(email);
-    if(!isemail)
-    {
-     setMsgshow('Incorrect emailid');
-    }
-    else
-    {
-     setMsgshow('');
+    if (email == '') {
+      setMsgshow('please enter emailid')
+    } else {
+      const isemail = EmailValidation(email)
+      if (!isemail) {
+        setMsgshow('Incorrect emailid')
+      } else {
+        setMsgshow('')
+        navigateForward()
+      }
     }
   }
-  }
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <Container>
@@ -80,15 +94,16 @@ const ForgotPass = props => {
             value={email}
             onChangeText={(val) => setEmail(val)}
           />
-          {msgshow != '' && (
-          <Invalid>{msgshow}</Invalid>
-        )}
+          {msgshow != '' && <Invalid>{msgshow}</Invalid>}
         </FormWrap>
         <ButtonsWrap>
           <TouchableOpacity onPress={() => props.navigation.navigate('Login')}>
             <Text style={{ color: colors.linkBlue }}>Cancel</Text>
           </TouchableOpacity>
-          <CustomButton onStartShouldSetResponder={handleSave} style={{ marginBottom: 0, paddingHorizontal: 30 }}>
+          <CustomButton
+            onStartShouldSetResponder={handleSave}
+            style={{ marginBottom: 0, paddingHorizontal: 30 }}
+          >
             <Text>Reset</Text>
           </CustomButton>
         </ButtonsWrap>
@@ -98,7 +113,7 @@ const ForgotPass = props => {
 }
 
 ForgotPass.navigationOptions = {
-  header: null
+  header: null,
 }
 
 export default ForgotPass

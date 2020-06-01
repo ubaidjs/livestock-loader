@@ -61,7 +61,7 @@ const Mobile = (props) => {
   const [code, setCode] = useState('+1')
   const [country, setCountry] = useState('us')
   const [loading, setLoading] = useState(false)
-  const [msgshow,setMsgshow] = useState('')
+  const [msgshow, setMsgshow] = useState('')
   const countryList = [
     { label: 'United States', value: 'us' },
     { label: 'Canada', value: 'canada' },
@@ -69,35 +69,46 @@ const Mobile = (props) => {
     { label: 'Australia', value: 'australia' },
   ]
 
+  const generateOtp = () => {
+    var val = Math.floor(1000 + Math.random() * 9000)
+    return val
+  }
+
   const addPhoneNumber = async () => {
     const isphonenumber = PhoneNumberValidation(phone)
-    if(!isphonenumber)
-   {
-    setMsgshow('Please enter a 10 digit phone number');
-   }
-   else
-   {
-    setMsgshow('');
-    setLoading(true)
-    const token = await AsyncStorage.getItem('USER_TOKEN')
-    try {
-      const res = await fetch(`${api_url}?action=savenumber`, {
-        method: 'POST',
-        body: JSON.stringify({ token: token, mobileno: phone }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+    if (!isphonenumber) {
+      setMsgshow('Please enter a 10 digit phone number')
+    } else {
+      setMsgshow('')
+      setLoading(true)
+      const token = await AsyncStorage.getItem('USER_TOKEN')
+      try {
+        const res = await fetch(`${api_url}?action=savenumber`, {
+          method: 'POST',
+          body: JSON.stringify({ token: token, mobileno: phone }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
 
-      const json = await res.json()
-      setLoading(false)
-      if (json.status === '200') {
-        props.navigation.navigate('Otp')
+        const json = await res.json()
+        console.log(json)
+        setLoading(false)
+        if (json.status === '200') {
+          // props.navigation.navigate('Otp')
+          const otp = generateOtp()
+          await fetch(
+            `https://conveyenceadmin.livestockloader.com/smsservice/index.php?phone=${phone}&otp=${otp}&code=+1`
+          )
+          props.navigation.navigate('Otp', {
+            otp: otp,
+            phone: phone,
+          })
+        }
+      } catch (error) {
+        console.log('error: ', error)
       }
-    } catch (error) {
-      console.log('error: ', error)
     }
-  }
   }
 
   return (
@@ -154,10 +165,8 @@ const Mobile = (props) => {
           <CodeText>We'll send you an SMS verification code.</CodeText>
         </MobileWrapper>
         <ButtonWrapper>
-        {msgshow != '' && (
-          <Invalid>{msgshow}</Invalid>
-        )}
-          {phone ? ( 
+          {msgshow != '' && <Invalid>{msgshow}</Invalid>}
+          {phone ? (
             <TouchableOpacity onPress={() => addPhoneNumber()}>
               <CustomButton>
                 {loading ? (

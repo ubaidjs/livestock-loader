@@ -24,20 +24,19 @@ const CodeText = styled.Text`
   text-align: center;
   color: ${colors.warmGrey};
 `
-
 const Invalid = styled.Text`
   color: red;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `
 
 const Otp = (props) => {
-  const [code, setCode] = useState('')
-  const [msgshow, setMsgshow] = useState('')
+  const [wrongOtp, setWrongOtp] = useState(false)
+  const [localCode, setLocalCode] = useState('')
   const [counter, setCounter] = useState(60)
 
-  const otp = props.navigation.getParam('otp')
-  const phone = props.navigation.getParam('phone')
+  const code = props.navigation.getParam('otp')
+  const email = props.navigation.getParam('email')
 
   useEffect(() => {
     counter > 0 && setTimeout(() => setCounter(counter - 1), 1000)
@@ -46,46 +45,40 @@ const Otp = (props) => {
   const resendOtp = async () => {
     try {
       await fetch(
-        `https://conveyenceadmin.livestockloader.com/smsservice/index.php?phone=${phone}&otp=${otp}&code=+1`
+        `https://conveyenceadmin.livestockloader.com/emailservice/index.php?email=${email}&otp=${otp}`
       )
     } catch (error) {
       console.log(error)
     }
   }
 
-  const onVerifyotp = async () => {
-    if (code.length == 4) {
-      setMsgshow('')
-      if (parseInt(code) === parseInt(otp)) {
-        props.navigation.navigate('LoadBoards', {
-          fromSignup: true,
-        })
-      } else {
-        setMsgshow('OTP did not matched. Please check again.')
-      }
+  const handleButtonPress = () => {
+    if (parseInt(code) === parseInt(localCode)) {
+      props.navigation.navigate('ResetPassword', {
+        email: email,
+      })
     } else {
-      setMsgshow('Please enter the code sent for verification')
+      setWrongOtp(true)
     }
   }
+
   return (
     <Container>
       <View>
-        <ScreenTitle>Mobile Verification</ScreenTitle>
-        <CodeText>
-          Please enter SMS verification code {'\n'} we text you
-        </CodeText>
+        <ScreenTitle>Email Verification</ScreenTitle>
+        <CodeText>Please enter verification code {'\n'} we email you</CodeText>
         <OTPInputView
           style={{ width: '80%', height: 200, alignSelf: 'center' }}
           pinCount={4}
           autoFocusOnLoad={false}
           codeInputFieldStyle={styles.underlineStyleBase}
           codeInputHighlightStyle={styles.underlineStyleHighLighted}
-          onCodeChanged={(code) => setCode(code)}
-          // onCodeFilled={(code) => {
-          //   setCode(code)
+          onCodeChanged={(val) => setLocalCode(val)}
+          // onCodeFilled={(val) => {
+          //   handleButtonPress(val)
           // }}
         />
-        <Invalid>{msgshow}</Invalid>
+        {wrongOtp && <Invalid>Entered OTP did not match</Invalid>}
         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
           <Text>Resend OTP in: </Text>
           {counter != 0 && (
@@ -103,7 +96,7 @@ const Otp = (props) => {
           )}
         </View>
       </View>
-      <TouchableOpacity onPress={onVerifyotp}>
+      <TouchableOpacity onPress={handleButtonPress}>
         <CustomButton>
           <ButtonText>ENTER</ButtonText>
         </CustomButton>
