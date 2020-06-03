@@ -12,7 +12,7 @@ import {
   Dimensions,
   StyleSheet,
   RefreshControl,
-  Alert
+  Alert,
 } from 'react-native'
 import MapView from 'react-native-maps'
 import {
@@ -22,7 +22,7 @@ import {
   MaterialIcons,
   Octicons,
 } from '@expo/vector-icons'
-import { Location } from 'expo';
+import { Location, Notifications } from 'expo'
 import * as Permissions from 'expo-permissions'
 import styled from 'styled-components/native'
 import moment from 'moment'
@@ -154,7 +154,7 @@ const ButtonTextLocal = styled.Text`
   margin-left: 10;
 `
 
-const FirstRoute = ({ loading, boards, genRandom, fetchLoadAgain }) => {
+const FirstRoute = ({ props, loading, boards, genRandom, fetchLoadAgain }) => {
   return (
     <Container>
       {loading && <ActivityIndicator color="#000" />}
@@ -334,6 +334,7 @@ const LoadBoards = (props) => {
   const [index, setIndex] = React.useState(0)
   const [user, setUser] = useState(null)
   const [showSearch, setShowSearch] = useState(false)
+  const [deviceToken, setDeviceToken] = useState('')
 
   const refRBSheet = useRef()
 
@@ -342,6 +343,7 @@ const LoadBoards = (props) => {
   }
 
   useEffect(() => {
+    registerForPushNotificationsAsync()
     getUser()
     fetchLoadBoards()
     fetchTrailerBoards()
@@ -352,6 +354,44 @@ const LoadBoards = (props) => {
   useEffect(() => {
     props.navigation.setParams({ index, toggleShowSearch })
   }, [index, showSearch])
+
+  const registerForPushNotificationsAsync = async () => {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    )
+    let finalStatus = existingStatus
+    if (existingStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
+      finalStatus = status
+    }
+    // if (finalStatus !== 'granted') {
+    //   alert('Failed to get push token for push notification!');
+    //   return;
+    // }
+    token = await Notifications.getExpoPushTokenAsync()
+    await AsyncStorage.setItem('PUSH_TOKEN', token)
+    try {
+      let userId = await AsyncStorage.getItem('USER_ID')
+      const response = await fetch(`${api_url}?action=updatepushtoken`, {
+        method: 'POST',
+        body: JSON.stringify({ id: userId, push_token: token }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    } catch (error) {
+      console.log(error)
+    }
+
+    if (Platform.OS === 'android') {
+      Notifications.createChannelAndroidAsync('default', {
+        name: 'default',
+        sound: true,
+        priority: 'max',
+        vibrate: [0, 250, 250, 250],
+      })
+    }
+  }
 
   const askPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION)
@@ -375,11 +415,9 @@ const LoadBoards = (props) => {
       //   { cancelable: false }
       // );
     }
-    
+
     // const userLocation = Location.getCurrentPositionAsync()
   }
-
-
 
   const openRBSheet = () => {
     const fromSignup = props.navigation.getParam('fromSignup')
@@ -486,6 +524,7 @@ const LoadBoards = (props) => {
       case 'first':
         return (
           <FirstRoute
+            props={props}
             loading={loading}
             boards={boards}
             genRandom={genRandom}

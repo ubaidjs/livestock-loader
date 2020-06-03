@@ -83,6 +83,7 @@ export default class Chat extends Component {
     this.handleLoadTouch = this.handleLoadTouch.bind(this)
     this.renderCustomView = this.renderCustomView.bind(this)
     this.setSelectedLoad = this.setSelectedLoad.bind(this)
+    this.sendNotification = this.sendNotification.bind(this)
 
     props.navigation.setParams({
       fname: props.navigation.getParam('friendName'),
@@ -306,6 +307,13 @@ export default class Chat extends Component {
     }
   }
 
+  async sendNotification() {
+    const pushToken = await AsyncStorage.getItem('PUSH_TOKEN')
+    await fetch(
+      `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${pushToken}&msg=${this.user.name}%20messaged%20you&sender_id=${this.user.id}&receiver_id=${this.friend.id}&sender_name=${this.user.name}&message_type=chatmessage`
+    )
+  }
+
   onSend(messages = []) {
     messages.forEach((message) => {
       var now = new Date().getTime()
@@ -324,6 +332,7 @@ export default class Chat extends Component {
         order: -1 * now,
       })
     })
+    this.sendNotification()
   }
 
   listenForItems(chatRef) {
