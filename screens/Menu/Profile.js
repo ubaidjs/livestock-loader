@@ -137,7 +137,7 @@ export default function Profile(props) {
             />
           </View>
           <RatingText>
-            4.5{' '}
+            4.5
             <MaterialCommunityIcons
               name="star"
               size={15}

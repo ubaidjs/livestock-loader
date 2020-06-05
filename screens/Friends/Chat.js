@@ -43,6 +43,7 @@ export default class Chat extends Component {
       modalLoader: false,
       loads: [],
       selectedLoad: null,
+      pushToken: '',
     }
     this.user = {
       id: props.navigation.getParam('userId'),
@@ -123,6 +124,29 @@ export default class Chat extends Component {
           </TouchableWithoutFeedback>
         )
       },
+    }
+  }
+
+  async fetchPushToken() {
+    try {
+      const response = await fetch(`${api_url}?action=gettokenbyid`, {
+        method: 'POST',
+        body: JSON.stringify({ id: this.friend.id }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const json = await response.json()
+      if (json.status === '200') {
+        this.setState((prevState) => {
+          return {
+            ...prevState,
+            pushToken: json.data.push_token,
+          }
+        })
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -308,7 +332,6 @@ export default class Chat extends Component {
   }
 
   async sendNotification() {
-    const pushToken = await AsyncStorage.getItem('PUSH_TOKEN')
     await fetch(
       `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${pushToken}&msg=${this.user.name}%20messaged%20you&sender_id=${this.user.id}&receiver_id=${this.friend.id}&sender_name=${this.user.name}&message_type=chatmessage`
     )

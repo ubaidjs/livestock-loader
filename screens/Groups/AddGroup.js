@@ -70,7 +70,7 @@ const AddGroup = (props) => {
       const token = await AsyncStorage.getItem('USER_TOKEN')
       const id = await AsyncStorage.getItem('USER_ID')
       const userName = await AsyncStorage.getItem('USER_NAME')
-      const pushToken = await AsyncStorage.getItem('PUSH_TOKEN')
+
       const response = await fetch(`${api_url}?action=addgroup`, {
         method: 'POST',
         body: JSON.stringify({
@@ -84,7 +84,7 @@ const AddGroup = (props) => {
       })
       selectedFriends.forEach(async (item) => {
         await fetch(
-          `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${pushToken}&msg=${userName}%20added%20you%20to%20a%20group&sender_id=${id}&receiver_id=${item.u_id}&sender_name=${userName}&message_type=groupnotification`
+          `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${item.push_token}&msg=${userName}%20added%20you%20to%20a%20group&sender_id=${id}&receiver_id=${item.u_id}&sender_name=${userName}&message_type=groupnotification`
         )
       })
       const json = await response.json()

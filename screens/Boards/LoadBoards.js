@@ -332,7 +332,7 @@ const LoadBoards = (props) => {
   const [page, setPage] = useState(0)
   const [trailerPage, setTrailerPage] = useState(0)
   const [index, setIndex] = React.useState(0)
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState({})
   const [showSearch, setShowSearch] = useState(false)
   const [deviceToken, setDeviceToken] = useState('')
 
@@ -347,7 +347,7 @@ const LoadBoards = (props) => {
     getUser()
     fetchLoadBoards()
     fetchTrailerBoards()
-    openRBSheet()
+    firstVisitFunction()
     askPermission()
   }, [])
 
@@ -419,10 +419,29 @@ const LoadBoards = (props) => {
     // const userLocation = Location.getCurrentPositionAsync()
   }
 
-  const openRBSheet = () => {
+  const firstVisitFunction = async () => {
+    let userString = await AsyncStorage.getItem('USER')
+    userString = JSON.parse(userString)
+    const pushToken = await AsyncStorage.getItem('PUSH_TOKEN')
+    // const id = await AsyncStorage.getItem('USER_ID')
+    // const userName = await AsyncStorage.getItem('USER_NAME')
     const fromSignup = props.navigation.getParam('fromSignup')
     if (fromSignup) {
       refRBSheet.current.open()
+      Alert.alert(
+        '',
+        'Email verification link sent to your email.',
+        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+        { cancelable: true }
+      )
+
+      await fetch(
+        `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${pushToken}&msg=${userString.u_fullname}%20Complete%20your%20account&sender_id=${userString.u_id}&receiver_id=${userString.u_id}&sender_name=${userString.u_fullname}&message_type=completeaccount`
+      )
+
+      await fetch(
+        `https://conveyenceadmin.livestockloader.com/emailservice/index.php?email=${userString.u_email}&token=${pushToken}&type=sendverifyemail`
+      )
     }
   }
 

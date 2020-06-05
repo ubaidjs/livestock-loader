@@ -58,6 +58,12 @@ const InputWrap = styled.View`
 
 const NotVerified = styled.Text`
   color: red;
+  margin-top: 5;
+`
+
+const Verified = styled.Text`
+  color: green;
+  margin-top: 5;
 `
 
 const EditProfile = (props) => {
@@ -241,7 +247,11 @@ const EditProfile = (props) => {
                 value={email}
                 onChangeText={(val) => setEmail(val)}
               />
-              <NotVerified>not verified</NotVerified>
+              {profile.email_verified === '0' ? (
+                <NotVerified>not verified</NotVerified>
+              ) : (
+                <Verified>verified</Verified>
+              )}
             </InputWrap>
             <InputWrap>
               <CustomInput
@@ -251,7 +261,11 @@ const EditProfile = (props) => {
                 keyboardType="phone-pad"
                 onChangeText={(val) => setPhone(val)}
               />
-              <NotVerified>not verified</NotVerified>
+              {profile.phone_verified === '0' ? (
+                <NotVerified>not verified</NotVerified>
+              ) : (
+                <Verified>verified</Verified>
+              )}
             </InputWrap>
           </View>
         </View>

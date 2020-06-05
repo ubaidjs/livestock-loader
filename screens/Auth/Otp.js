@@ -38,6 +38,7 @@ const Otp = (props) => {
 
   const otp = props.navigation.getParam('otp')
   const phone = props.navigation.getParam('phone')
+  console.log(otp)
 
   useEffect(() => {
     counter > 0 && setTimeout(() => setCounter(counter - 1), 1000)
