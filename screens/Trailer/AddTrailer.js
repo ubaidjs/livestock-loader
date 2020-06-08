@@ -12,7 +12,7 @@ import colors from '../../constants/Colors'
 import { api_url } from '../../constants/Api'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
 import styled from 'styled-components/native'
-
+import { Ionicons } from '@expo/vector-icons'
 const Container = styled.View`
   flex: 1;
   padding: 20px;
@@ -92,8 +92,13 @@ const AddTrailer = props => {
   )
 }
 
-AddTrailer.navigationOptions = {
+AddTrailer.navigationOptions = (navigation) => ({
   title: 'Add Trailer',
+  headerLeft: () => (
+    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    </TouchableOpacity>
+  ),
   headerStyle: {
     backgroundColor: colors.greyishBrown,
     elevation: 0, // for android
@@ -101,6 +106,6 @@ AddTrailer.navigationOptions = {
     borderBottomWidth: 0 //for ios
   },
   headerTintColor: '#fff'
-}
+})
 
 export default AddTrailer

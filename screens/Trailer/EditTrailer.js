@@ -19,7 +19,7 @@ import alphabets from '../../constants/AlphabetsArray'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { api_url } from '../../constants/Api'
-
+import { Ionicons } from '@expo/vector-icons'
 const CardWrapper = styled.View`
   padding: 20px;
 `
@@ -340,8 +340,13 @@ const Compartment = (props) => {
   )
 }
 
-EditTrailer.navigationOptions = {
+EditTrailer.navigationOptions = (navigation) =>({
   title: 'Edit Trailer',
-}
+  headerLeft: () => (
+    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    </TouchableOpacity>
+  ),
+})
 
 export default EditTrailer

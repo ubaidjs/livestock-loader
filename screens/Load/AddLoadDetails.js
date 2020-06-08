@@ -14,7 +14,7 @@ import { StackActions, NavigationActions } from 'react-navigation'
 import { Feather } from '@expo/vector-icons'
 import colors from '../../constants/Colors'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
-
+import { Ionicons } from '@expo/vector-icons'
 const DateText = styled(Text)`
   font-weight: bold;
   color: ${colors.greyishBrown};
@@ -234,6 +234,11 @@ AddLoadDetails.navigationOptions = ({ navigation }) => {
 
   return {
     title: 'Add Load',
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
     headerRight: () => (
       <TouchableOpacity onPress={() => navigation.dispatch(resetAction)}>
         <Text style={{ color: '#fff', marginRight: 15 }}>Exit</Text>

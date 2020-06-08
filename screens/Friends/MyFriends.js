@@ -15,7 +15,7 @@ import {
 import styled from 'styled-components/native'
 import { api_url } from '../../constants/Api'
 import { CustomInput } from '../../constants/CommonStyles'
-
+import { Ionicons } from '@expo/vector-icons'
 const Container = styled.View`
   padding: 20px;
 `
@@ -139,8 +139,15 @@ const MyFriends = props => {
   )
 }
 
-MyFriends.navigationOptions = {
-  title: 'My Friends'
+MyFriends.navigationOptions = ({ navigation }) => {
+  return {
+  title: 'My Friends',
+  headerLeft: () => (
+    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    </TouchableOpacity>
+  ),
+}
 }
 
 export default MyFriends

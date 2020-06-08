@@ -25,7 +25,6 @@ const Container = styled.View`
 `
 
 const ButtonText = styled.Text`
-  margin-top: 50px;
   border-width: 1;
   border-color: ${colors.themeYellow};
   padding: 15px;
@@ -167,6 +166,7 @@ const Calculator = (props) => {
                 refRBSheet.current.close()
                 props.navigation.navigate('AddTrailer')
               }}
+              style={{alignItems: 'center',justifyContent: 'center',marginTop: 50}}
             >
               <ButtonText>Add a new Trailer</ButtonText>
             </TouchableOpacity>

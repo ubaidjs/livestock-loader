@@ -55,7 +55,7 @@ const navigator = createMaterialBottomTabNavigator(
     Notifications: {
       screen: NotificationStack,
       navigationOptions: () => ({
-        tabBarLabel: 'Alerts',
+        tabBarLabel: 'Notification',
         tabBarIcon: ({ focused }) => {
           if (focused) {
             return <Icon.alertActive />

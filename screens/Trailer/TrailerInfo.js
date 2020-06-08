@@ -15,8 +15,7 @@ import styled from 'styled-components/native'
 import colors from '../../constants/Colors'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
 import { api_url } from '../../constants/Api'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-
+import { MaterialCommunityIcons , Ionicons } from '@expo/vector-icons'
 const CardWrapper = styled.View`
   padding: 20px;
   margin-bottom: 40;
@@ -233,6 +232,11 @@ const Compartment = (props) => {
 TrailerInfo.navigationOptions = ({ navigation }) => {
   return {
     title: navigation.getParam('title'),
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
     headerStyle: {
       backgroundColor: colors.greyishBrown,
       elevation: 0, // for android

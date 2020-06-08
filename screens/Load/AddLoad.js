@@ -5,11 +5,13 @@ import styled from 'styled-components/native'
 import { Feather } from '@expo/vector-icons'
 import moment from 'moment'
 import DateTimePicker from '@react-native-community/datetimepicker'
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { StackActions, NavigationActions } from 'react-navigation'
 import colors from '../../constants/Colors'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
 import { Ionicons } from '@expo/vector-icons'
 import TimeZone from '../../validation/TimeZone'
+import GetCurrentTimeZone from '../../validation/GetCurrentTimeZone';
 const Float = styled(View)`
   position: absolute;
   bottom: 0;
@@ -79,6 +81,7 @@ const DateButtonWrap = styled.View`
 `
 
 const AddLoad = (props) => {
+  // const initialtimezone = GetCurrentTimeZone(new Date())
   const [pickupSelected, setPickupSelected] = useState(false)
   const [pickupDate, setPickupDate] = useState(false)
   const [dropoffDate, setDropoffDate] = useState(false)
@@ -95,7 +98,22 @@ const AddLoad = (props) => {
       setDropoffDate(moment(date).format('YYYY-MM-DD'))
     }
   }
-
+ const handleDateChange1 = date => {
+  let settimezon = TimeZone(date)
+  setPickTime(moment(date).format('h:mm A')+' '+settimezon)
+  setOpenPickTime(false)
+}
+const hideDatePicker1 = () => {
+    setOpenPickTime(false)
+};
+const handleDateChange2 = date => {
+  let settimezon = TimeZone(date)
+  setDropTime(moment(date).format('h:mm A')+' '+settimezon)
+  setOpenDropTime(false)
+}
+const hideDatePicker2 = () => {
+  setOpenDropTime(false)
+};
   const _onPressContinue = () => {
     let validate = false
     if (
@@ -143,11 +161,36 @@ const AddLoad = (props) => {
                 fontWeight: 'bold',
               }}
               previousTitle="&#8249;"
+              // selectedRangeStartStyle={{
+              //   backgroundColor: colors.greyishBrown,
+              // }}
+              // selectedRangeEndStyle={{
+              //   backgroundColor: colors.greyishBrown,
+              // }}
               selectedRangeStartStyle={{
                 backgroundColor: colors.greyishBrown,
+                borderTopLeftRadius: 30,
+                borderBottomLeftRadius: 30,
+                borderRadius: 0,                
+                width: 55,
+                height: 32,
+                borderColor: colors.themeYellow,
+                borderWidth: 2,
               }}
               selectedRangeEndStyle={{
                 backgroundColor: colors.greyishBrown,
+                borderRadius: 0,
+                borderTopRightRadius: 30,
+                borderBottomRightRadius: 30,
+                width: 55,
+                height: 32,
+                borderColor: colors.themeYellow,
+                borderWidth: 2,                
+              }}
+              selectedRangeStyle={{
+                backgroundColor: colors.themeYellow,
+                height: 24,  
+                color: colors.greyishBrown,
               }}
               dayLabelsWrapper={{
                 borderBottomWidth: 0,
@@ -157,7 +200,7 @@ const AddLoad = (props) => {
             />
           </CalendarWrap>
           <View>
-            {dropoffDate && (
+            {/* {dropoffDate && (
               <DateButtonWrap>
                 <TouchableOpacity onPress={() => setOpenPickTime(true)}>
                   <Text style={{ color: colors.linkBlue }}>
@@ -170,38 +213,58 @@ const AddLoad = (props) => {
                   </Text>
                 </TouchableOpacity>
               </DateButtonWrap>
-            )}
+            )} */}
 
             {openPickTime && (
-              <DateTimePicker
-                value={new Date()}
-                mode={'time'}
-                is24Hour={false}
-                display="default"
-                onChange={(e, date) => {
-                  setOpenPickTime(false)
-                  if(e.type != 'dismissed'){
-                    let settimezon = TimeZone(date)
-                  setPickTime(moment(date).format('h:mm A')+' '+settimezon)
-                  } 
-                }}
-              />
+              // <DateTimePicker
+              //   value={new Date()}
+              //   mode={'time'}
+              //   is24Hour={false}
+              //   display="default"
+              //   onChange={(e, date) => {
+              //     setOpenPickTime(false)
+              //     if(e.type != 'dismissed'){
+              //       let settimezon = TimeZone(date)
+              //     setPickTime(moment(date).format('h:mm A')+' '+settimezon)
+              //     } 
+              //   }}
+              // />
+              <DateTimePickerModal
+                                    isVisible={openPickTime}
+                                    mode="time"
+                                    display = 'default'
+                                    minimumDate={new Date()}
+                                    date={new Date()}
+                                    onConfirm={handleDateChange1}
+                                    onCancel={hideDatePicker1}
+                                    headerTextIOS = 'Pick up time'
+                                />
             )}
             {openDropTime && (
-              <DateTimePicker
-                value={new Date()}
-                mode={'time'}
-                is24Hour={false}
-                display="default"
-                onChange={(e, date) => {
-                  setOpenDropTime(false)
-                  if(e.type != 'dismissed'){
-                    let settimezon = TimeZone(date)
-                  setDropTime(moment(date).format('h:mm A')+' '+settimezon)
-                  }
-                }}
-                timeZoneOffsetInMinutes={-330}
-              />
+              // <DateTimePicker
+              //   value={new Date()}
+              //   mode={'time'}
+              //   is24Hour={false}
+              //   display="default"
+              //   onChange={(e, date) => {
+              //     setOpenDropTime(false)
+              //     if(e.type != 'dismissed'){
+              //       let settimezon = TimeZone(date)
+              //     setDropTime(moment(date).format('h:mm A')+' '+settimezon)
+              //     }
+              //   }}
+              //   timeZoneOffsetInMinutes={-330}
+              // />
+              <DateTimePickerModal
+                                    isVisible={openDropTime}
+                                    mode="time"
+                                    display = 'default'
+                                    minimumDate={new Date()}
+                                    date={new Date()}
+                                    onConfirm={handleDateChange2}
+                                    onCancel={hideDatePicker2}
+                                    headerTextIOS = 'Drop off time'
+                                />
             )}
           </View>
           {pickupDate && (
@@ -215,7 +278,7 @@ const AddLoad = (props) => {
                 <Text style={{ fontWeight: 'bold' }}>
                   {moment(pickupDate).format('MMM DD')}
                 </Text>
-                <Text style={{ color: colors.linkBlue }}>{pickTime}</Text>
+                <Text onPress={() => setOpenPickTime(true)} style={{ color: colors.linkBlue }}>{pickTime == false ? 'Pick up time' : pickTime}</Text>
               </BarLineTwo>
             </Bar>
           )}
@@ -234,7 +297,7 @@ const AddLoad = (props) => {
                 <Text style={{ fontWeight: 'bold' }}>
                   {moment(dropoffDate).format('MMM DD')}
                 </Text>
-                <Text style={{ color: colors.linkBlue }}>{dropTime}</Text>
+                <Text onPress={() => setOpenDropTime(true)} style={{ color: colors.linkBlue }}>{dropTime == false ? 'Drop off time' : dropTime}</Text>
               </BarLineTwo>
             </Bar>
           )}

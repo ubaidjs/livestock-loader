@@ -141,6 +141,11 @@ const MyMessages = (props) => {
 
 MyMessages.navigationOptions = ({ navigation }) => ({
   title: 'My Messages',
+  headerLeft: () => (
+    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    </TouchableOpacity>
+  ),
   headerRight: () => (
     <TouchableWithoutFeedback onPress={() => navigation.navigate('MyFriends')}>
       <Feather style={{ marginRight: 15 }} name="plus" color="#fff" size={22} />

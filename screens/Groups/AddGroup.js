@@ -12,18 +12,18 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
-  TextInput,
+  TextInput
 } from 'react-native'
 import styled from 'styled-components/native'
 import { api_url } from '../../constants/Api'
 import {
   CustomInput,
   ButtonText,
-  ButtonTextDisable,
+  ButtonTextDisable
 } from '../../constants/CommonStyles'
 import colors from '../../constants/Colors'
-
-const AddGroup = (props) => {
+import { Ionicons } from '@expo/vector-icons'
+const AddGroup = props => {
   const [groupName, setGroupName] = useState('')
   const [searchTerm, setSearchTerm] = useState(null)
   const [friends, setFriends] = useState(null)
@@ -44,8 +44,8 @@ const AddGroup = (props) => {
         method: 'POST',
         body: JSON.stringify({ token, page: 1 }),
         headers: {
-          'Content-Type': 'application/json',
-        },
+          'Content-Type': 'application/json'
+        }
       })
       const json = await response.json()
       if (json.status === '200') {
@@ -63,29 +63,20 @@ const AddGroup = (props) => {
   }
 
   const saveGroup = async () => {
-    // console.log(selectedFriends)
     setSaveLoading(true)
     try {
       // const creator_id = await AsyncStorage.getItem('USER_ID')
       const token = await AsyncStorage.getItem('USER_TOKEN')
-      const id = await AsyncStorage.getItem('USER_ID')
-      const userName = await AsyncStorage.getItem('USER_NAME')
-
       const response = await fetch(`${api_url}?action=addgroup`, {
         method: 'POST',
         body: JSON.stringify({
           title: groupName,
           creator_id: token,
-          participants: selectedFriends,
+          participants: selectedFriends
         }),
         headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      selectedFriends.forEach(async (item) => {
-        await fetch(
-          `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${item.push_token}&msg=${userName}%20added%20you%20to%20a%20group&sender_id=${id}&receiver_id=${item.u_id}&sender_name=${userName}&message_type=groupnotification`
-        )
+          'Content-Type': 'application/json'
+        }
       })
       const json = await response.json()
       if (json.status === '200') {
@@ -95,8 +86,8 @@ const AddGroup = (props) => {
           [
             {
               text: 'OK',
-              onPress: () => props.navigation.navigate('MyGroups'),
-            },
+              onPress: () => props.navigation.navigate('MyGroups')
+            }
           ],
           { cancelable: false }
         )
@@ -118,8 +109,8 @@ const AddGroup = (props) => {
         method: 'POST',
         body: JSON.stringify({ word: searchTerm }),
         headers: {
-          'Content-Type': 'application/json',
-        },
+          'Content-Type': 'application/json'
+        }
       })
       const json = await response.json()
       if (json.status === '200') {
@@ -136,7 +127,7 @@ const AddGroup = (props) => {
     <Container>
       <CustomInput
         placeholder="Enter Groupe name"
-        onChangeText={(val) => setGroupName(val)}
+        onChangeText={val => setGroupName(val)}
       />
 
       <ScrollView>
@@ -144,13 +135,13 @@ const AddGroup = (props) => {
           style={{
             paddingHorizontal: 10,
             backgroundColor: colors.lightGrey,
-            borderRadius: 10,
+            borderRadius: 10
           }}
         >
           <View style={{ padding: 10 }}>
             <SearchInput
               placeholder="Search to invite"
-              onChangeText={(val) => setSearchTerm(val)}
+              onChangeText={val => setSearchTerm(val)}
               onSubmitEditing={() => searchFriends()}
             />
           </View>
@@ -158,7 +149,7 @@ const AddGroup = (props) => {
             showsVerticalScrollIndicator={false}
             data={friends}
             extraData={checked}
-            keyExtractor={(item) => item.u_id}
+            keyExtractor={item => item.u_id}
             renderItem={({ item }) => {
               return (
                 <FriendView>
@@ -171,7 +162,7 @@ const AddGroup = (props) => {
                     <TouchableWithoutFeedback
                       onPress={() => {
                         const filterarr = selectedFriends.filter(
-                          (selected) => selected.u_id != item.u_id
+                          selected => selected.u_id != item.u_id
                         )
                         setSelectedFriends(filterarr)
                         handleChecked(item.u_id, false)
@@ -288,8 +279,15 @@ export const CustomButtonDisable = styled.View`
   justify-content: center;
 `
 
-AddGroup.navigationOptions = {
-  title: 'Add Group',
+AddGroup.navigationOptions = ({ navigation }) => {
+  return {
+    title: 'Add Group',
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
+  }
 }
 
 export default AddGroup

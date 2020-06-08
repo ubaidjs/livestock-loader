@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   AsyncStorage,
   TouchableWithoutFeedback,
+  TouchableOpacity
 } from 'react-native'
 import { NavigationEvents } from 'react-navigation'
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons'
@@ -71,12 +72,20 @@ const Card = styled.View`
   background-color: ${colors.lightGrey};
   margin: 10px 0;
   padding: 10px;
-  border-radius: 5px;
-  elevation: 1;
-  shadow-color: #000;
-  shadow-opacity: 0.8;
-  shadow-radius: 2;
+  border-radius: 8px; 
+  height: ${props=>props.height == undefined ? 'auto' : props.height}
 `
+
+// const Card = styled.View`
+//   background-color: ${colors.lightGrey};
+//   margin: 10px 0;
+//   padding: 10px;
+//   border-radius: 5px;
+//   elevation: 1;
+//   shadow-color: #000;
+//   shadow-opacity: 0.8;
+//   shadow-radius: 2;
+// `
 
 const CardTitle = styled.Text`
   color: ${colors.littleDarkGrey};
@@ -146,7 +155,7 @@ export default function Profile(props) {
           </RatingText>
         </AvatarNameWrapper>
         <DetailsWrapper>
-          <Card>
+          <Card height="115px">
             <CardTitle>About</CardTitle>
             <Text>{profile.u_about}</Text>
           </Card>
@@ -184,6 +193,11 @@ Profile.navigationOptions = ({ navigation }) => {
   return {
     title: profile.u_fullname,
     // headerLeft: null,
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
     headerRight: () => (
       <TouchableWithoutFeedback
         onPress={() =>

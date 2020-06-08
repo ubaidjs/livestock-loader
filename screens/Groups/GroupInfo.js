@@ -14,7 +14,7 @@ import {
 } from 'react-native'
 import styled from 'styled-components/native'
 import { CustomInput } from '../../constants/CommonStyles'
-
+import { Ionicons } from '@expo/vector-icons'
 const Container = styled.View`
   padding: 20px;
 `
@@ -76,7 +76,12 @@ const GroupInfo = props => {
 }
 
 GroupInfo.navigationOptions = ({ navigation }) => ({
-  title: navigation.getParam('title')
+  title: navigation.getParam('title'),
+  headerLeft: () => (
+    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    </TouchableOpacity>
+  ),
 })
 
 export default GroupInfo

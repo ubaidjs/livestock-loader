@@ -12,7 +12,7 @@ import { MaterialCommunityIcons, Feather } from '@expo/vector-icons'
 import colors from '../../constants/Colors'
 import styled from 'styled-components/native'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
-
+import { Ionicons } from '@expo/vector-icons'
 const ProfileContainer = styled.View`
   flex: 1;
   justify-content: space-between;
@@ -56,10 +56,6 @@ const Card = styled.View`
   margin: 20px 0;
   padding: 10px;
   border-radius: 5px;
-  elevation: 1;
-  shadow-color: #000;
-  shadow-opacity: 0.8;
-  shadow-radius: 2;
 `
 
 const CardTitle = styled.Text`
@@ -166,6 +162,11 @@ export default function Profile(props) {
 Profile.navigationOptions = ({ navigation }) => {
   return {
     title: 'Profile',
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
     headerStyle: {
       backgroundColor: colors.greyishBrown,
       elevation: 0, // for android

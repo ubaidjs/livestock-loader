@@ -13,11 +13,10 @@ import {
   Alert,
 } from 'react-native'
 import styled from 'styled-components/native'
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { Feather, MaterialCommunityIcons , Ionicons } from '@expo/vector-icons'
 import colors from '../../constants/Colors'
 import { api_url } from '../../constants/Api'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
-
 const Container = styled.View`
   flex: 1;
   padding: 20px;
@@ -422,8 +421,13 @@ const styles = StyleSheet.create({
   },
 })
 
-EditLoad.navigationOptions = {
+EditLoad.navigationOptions = (navigation) => ({
   title: 'Edit Load',
-}
+  headerLeft: () => (
+    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    </TouchableOpacity>
+  ),
+})
 
 export default EditLoad

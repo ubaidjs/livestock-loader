@@ -20,7 +20,7 @@ import { StackActions, NavigationActions } from 'react-navigation'
 import colors from '../../constants/Colors'
 import { api_url } from '../../constants/Api'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
-
+import { Ionicons } from '@expo/vector-icons'
 const CheckboxText = styled(Text)`
   line-height: 24;
   padding-right: 20px;
@@ -207,8 +207,8 @@ const AddAnotherTypequantity = () => {
               <View style={{ flex: 1, marginRight: 5 }}>
                 <RNPickerSelect
                   Icon={() => (
-                    <MaterialCommunityIcons name="chevron-down" size={15} />
-                  )}
+                    <MaterialCommunityIcons style={{marginTop: Platform.OS == 'ios' ? '-80%' : null }} name="chevron-down" size={15} />
+       )}
                   placeholder={{ label: 'Livestock Type', value: null }}
                   items={lsType}
                   onValueChange={(value) => {
@@ -227,8 +227,8 @@ const AddAnotherTypequantity = () => {
               <View style={{ flex: 1, marginHorizontal: 5 }}>
                 <RNPickerSelect
                   Icon={() => (
-                    <MaterialCommunityIcons name="chevron-down" size={15} />
-                  )}
+                    <MaterialCommunityIcons style={{marginTop: Platform.OS == 'ios' ? '-80%' : null }} name="chevron-down" size={15} />
+       )}
                   placeholder={{ label: 'Livestock Qty', value: null }}
                   items={qty}
                   onValueChange={(value) => {
@@ -412,6 +412,11 @@ AddLoadDetails.navigationOptions = ({ navigation }) => {
 
   return {
     title: 'Add Load',
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
     headerRight: () => (
       <TouchableOpacity onPress={() => navigation.dispatch(resetAction)}>
         <Text style={{ color: '#fff', marginRight: 15 }}>Exit</Text>

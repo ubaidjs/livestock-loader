@@ -17,12 +17,11 @@ import {
 } from 'react-native'
 import styled from 'styled-components/native'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons , Ionicons } from '@expo/vector-icons'
 import colors from '../../constants/Colors'
 import alphabets from '../../constants/AlphabetsArray'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
 import { api_url } from '../../constants/Api'
-
 const Container = styled.View`
   flex: 1;
   justify-content: space-between;
@@ -431,8 +430,13 @@ const styles = StyleSheet.create({
   },
 })
 
-AddTrailerTwo.navigationOptions = {
+AddTrailerTwo.navigationOptions = (navigation) => ({ 
   title: 'Add Trailer',
+  headerLeft: () => (
+    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    </TouchableOpacity>
+  ),
   headerStyle: {
     backgroundColor: colors.greyishBrown,
     elevation: 0, // for android
@@ -440,6 +444,6 @@ AddTrailerTwo.navigationOptions = {
     borderBottomWidth: 0, //for ios
   },
   headerTintColor: '#fff',
-}
+})
 
 export default AddTrailerTwo

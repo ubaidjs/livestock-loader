@@ -11,6 +11,7 @@ import {
   AsyncStorage,
   KeyboardAvoidingView,
   ScrollView,
+  Platform
 } from 'react-native'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import styled from 'styled-components/native'
@@ -295,7 +296,9 @@ const Join = (props) => {
             )}
           </View>
         </ScrollView>
-        <KeyboardSpacer />
+        {
+          Platform.OS == 'android' ? null : <KeyboardSpacer />
+        }
       </JoinWrapper>
     </TouchableWithoutFeedback>
   )

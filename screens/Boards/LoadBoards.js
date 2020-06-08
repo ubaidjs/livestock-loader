@@ -12,7 +12,7 @@ import {
   Dimensions,
   StyleSheet,
   RefreshControl,
-  Alert,
+  Alert
 } from 'react-native'
 import MapView from 'react-native-maps'
 import {
@@ -21,8 +21,9 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
   Octicons,
+  Ionicons
 } from '@expo/vector-icons'
-import { Location, Notifications } from 'expo'
+import { Location } from 'expo';
 import * as Permissions from 'expo-permissions'
 import styled from 'styled-components/native'
 import moment from 'moment'
@@ -36,7 +37,6 @@ import {
 import { TabView, SceneMap } from 'react-native-tab-view'
 import { api_url } from '../../constants/Api'
 import colors from '../../constants/Colors'
-
 const Container = styled.View`
   flex: 1;
   padding-horizontal: 20px;
@@ -123,10 +123,11 @@ const ButtonWrapper = styled.View`
   bottom: 0;
   width: 100%;
   padding-horizontal: 25px;
+  overflow: hidden;
 `
 
 const FilterButton = styled.View`
-  background-color: ${colors.themeYellow};
+  background-color: #ddba45;
   padding: 15px 10px;
   font-weight: bold;
   border-top-right-radius: 7px;
@@ -135,6 +136,12 @@ const FilterButton = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  width: 100px;
+  shadowRadius:  ${Platform.OS == "android" ?  18 : 10};
+  shadowOpacity: ${Platform.OS == "android" ?  30 : 0.16}; 
+  shadow-color: #000;
+  shadowOffset:{ width: ${Platform.OS == "android" ?  -1 : 0}, height: ${Platform.OS == "android" ?  9 : 10} };
+  elevation: ${Platform.OS == "android" ?  12 : 15};
 `
 const MapButton = styled.View`
   background-color: ${colors.themeYellow};
@@ -146,6 +153,12 @@ const MapButton = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  width: 100px;
+  shadowRadius:  ${Platform.OS == "android" ?  18 : 10};
+  shadowOpacity: ${Platform.OS == "android" ?  30 : 0.16}; 
+  shadow-color: #000;
+  shadowOffset:{ width: ${Platform.OS == "android" ?  -1 : 0}, height: ${Platform.OS == "android" ?  9 : 10} };
+  elevation: ${Platform.OS == "android" ?  12 : 15};
 `
 
 const ButtonTextLocal = styled.Text`
@@ -153,8 +166,13 @@ const ButtonTextLocal = styled.Text`
   color: ${colors.greyishBrown};
   margin-left: 10;
 `
-
-const FirstRoute = ({ props, loading, boards, genRandom, fetchLoadAgain }) => {
+const LineCreate = styled.View`
+height: 47px;
+width: 2px;
+flex-direction: column;
+background: rgb(211 ,176 ,58);
+`;
+const FirstRoute = ({ loading, boards, genRandom, fetchLoadAgain , props}) => {
   return (
     <Container>
       {loading && <ActivityIndicator color="#000" />}
@@ -235,7 +253,7 @@ const FirstRoute = ({ props, loading, boards, genRandom, fetchLoadAgain }) => {
                     </View>
                     <View style={{ alignItems: 'flex-end' }}>
                       <Text style={{ color: colors.linkBlue }}>Available</Text>
-                      <AddressText>${item.rate}</AddressText>
+                      <AddressText>{item.rate}</AddressText>
                     </View>
                   </DropWrap>
                   <DetailWrap>
@@ -253,7 +271,7 @@ const FirstRoute = ({ props, loading, boards, genRandom, fetchLoadAgain }) => {
   )
 }
 
-const SecondRoute = ({ trailerBoards, genRandom, fetchTrailerAgain }) => (
+const SecondRoute = ({ trailerBoards, genRandom, fetchTrailerAgain ,props}) => (
   <Container>
     {/* {loading && <ActivityIndicator color="#000" />} */}
     <FlatList
@@ -332,9 +350,8 @@ const LoadBoards = (props) => {
   const [page, setPage] = useState(0)
   const [trailerPage, setTrailerPage] = useState(0)
   const [index, setIndex] = React.useState(0)
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState(null)
   const [showSearch, setShowSearch] = useState(false)
-  const [deviceToken, setDeviceToken] = useState('')
 
   const refRBSheet = useRef()
 
@@ -343,55 +360,16 @@ const LoadBoards = (props) => {
   }
 
   useEffect(() => {
-    registerForPushNotificationsAsync()
     getUser()
     fetchLoadBoards()
     fetchTrailerBoards()
-    firstVisitFunction()
+    openRBSheet()
     askPermission()
   }, [])
 
   useEffect(() => {
     props.navigation.setParams({ index, toggleShowSearch })
   }, [index, showSearch])
-
-  const registerForPushNotificationsAsync = async () => {
-    const { status: existingStatus } = await Permissions.getAsync(
-      Permissions.NOTIFICATIONS
-    )
-    let finalStatus = existingStatus
-    if (existingStatus !== 'granted') {
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
-      finalStatus = status
-    }
-    // if (finalStatus !== 'granted') {
-    //   alert('Failed to get push token for push notification!');
-    //   return;
-    // }
-    token = await Notifications.getExpoPushTokenAsync()
-    await AsyncStorage.setItem('PUSH_TOKEN', token)
-    try {
-      let userId = await AsyncStorage.getItem('USER_ID')
-      const response = await fetch(`${api_url}?action=updatepushtoken`, {
-        method: 'POST',
-        body: JSON.stringify({ id: userId, push_token: token }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-    } catch (error) {
-      console.log(error)
-    }
-
-    if (Platform.OS === 'android') {
-      Notifications.createChannelAndroidAsync('default', {
-        name: 'default',
-        sound: true,
-        priority: 'max',
-        vibrate: [0, 250, 250, 250],
-      })
-    }
-  }
 
   const askPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION)
@@ -415,33 +393,16 @@ const LoadBoards = (props) => {
       //   { cancelable: false }
       // );
     }
-
+    
     // const userLocation = Location.getCurrentPositionAsync()
   }
 
-  const firstVisitFunction = async () => {
-    let userString = await AsyncStorage.getItem('USER')
-    userString = JSON.parse(userString)
-    const pushToken = await AsyncStorage.getItem('PUSH_TOKEN')
-    // const id = await AsyncStorage.getItem('USER_ID')
-    // const userName = await AsyncStorage.getItem('USER_NAME')
+
+
+  const openRBSheet = () => {
     const fromSignup = props.navigation.getParam('fromSignup')
     if (fromSignup) {
       refRBSheet.current.open()
-      Alert.alert(
-        '',
-        'Email verification link sent to your email.',
-        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
-        { cancelable: true }
-      )
-
-      await fetch(
-        `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${pushToken}&msg=${userString.u_fullname}%20Complete%20your%20account&sender_id=${userString.u_id}&receiver_id=${userString.u_id}&sender_name=${userString.u_fullname}&message_type=completeaccount`
-      )
-
-      await fetch(
-        `https://conveyenceadmin.livestockloader.com/emailservice/index.php?email=${userString.u_email}&token=${pushToken}&type=sendverifyemail`
-      )
     }
   }
 
@@ -543,11 +504,11 @@ const LoadBoards = (props) => {
       case 'first':
         return (
           <FirstRoute
-            props={props}
             loading={loading}
             boards={boards}
             genRandom={genRandom}
             fetchLoadAgain={fetchLoadAgain}
+            props={props}
           />
         )
       case 'second':
@@ -557,6 +518,7 @@ const LoadBoards = (props) => {
             trailerBoards={trailerBoards}
             genRandom={genRandom}
             fetchTrailerAgain={fetchTrailerAgain}
+            props={props}
           />
         )
       default:
@@ -643,6 +605,7 @@ const LoadBoards = (props) => {
             <Feather name="map" size={15} />
             <ButtonTextLocal>Map</ButtonTextLocal>
           </MapButton>
+          <LineCreate />
           <FilterButton>
             <Octicons name="settings" size={15} />
             <ButtonTextLocal>Filter</ButtonTextLocal>
@@ -657,7 +620,7 @@ LoadBoards.navigationOptions = ({ navigation }) => {
   let title = ''
   let idx = navigation.getParam('index')
   let toggle = navigation.getParam('toggleShowSearch')
-
+// alert(JSON.stringify(navigation))
   if (idx === 0) {
     title = 'Load Board'
   } else {
@@ -666,6 +629,11 @@ LoadBoards.navigationOptions = ({ navigation }) => {
 
   return {
     title: title,
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
     headerRight: () => (
       <TouchableWithoutFeedback onPress={toggle}>
         <Feather

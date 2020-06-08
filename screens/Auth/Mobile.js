@@ -61,19 +61,17 @@ const Mobile = (props) => {
   const [code, setCode] = useState('+1')
   const [country, setCountry] = useState('us')
   const [loading, setLoading] = useState(false)
-  const [msgshow, setMsgshow] = useState('')
+  const [msgshow,setMsgshow] = useState('')
   const countryList = [
     { label: 'United States', value: 'us' },
     { label: 'Canada', value: 'canada' },
     { label: 'United Kingdom', value: 'uk' },
     { label: 'Australia', value: 'australia' },
   ]
-
   const generateOtp = () => {
     var val = Math.floor(1000 + Math.random() * 9000)
     return val
   }
-
   const addPhoneNumber = async () => {
     const isphonenumber = PhoneNumberValidation(phone)
     if (!isphonenumber) {
@@ -92,7 +90,6 @@ const Mobile = (props) => {
         })
 
         const json = await res.json()
-        console.log(json)
         setLoading(false)
         if (json.status === '200') {
           // props.navigation.navigate('Otp')
@@ -165,8 +162,8 @@ const Mobile = (props) => {
           <CodeText>We'll send you an SMS verification code.</CodeText>
         </MobileWrapper>
         <ButtonWrapper>
-          {msgshow != '' && <Invalid>{msgshow}</Invalid>}
-          {phone ? (
+        {msgshow != '' && <Invalid>{msgshow}</Invalid>}
+          {phone ? ( 
             <TouchableOpacity onPress={() => addPhoneNumber()}>
               <CustomButton>
                 {loading ? (
@@ -177,7 +174,7 @@ const Mobile = (props) => {
               </CustomButton>
             </TouchableOpacity>
           ) : (
-            <CustomButtonDisable>
+            <CustomButtonDisable>   
               <ButtonTextDisable>SEND CODE</ButtonTextDisable>
             </CustomButtonDisable>
           )}

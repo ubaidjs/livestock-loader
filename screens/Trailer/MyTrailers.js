@@ -203,6 +203,11 @@ const MyTrailers = (props) => {
 MyTrailers.navigationOptions = ({ navigation }) => {
   return {
     title: 'My Trailers',
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
     headerRight: () => (
       <TouchableWithoutFeedback
         onPress={() => navigation.navigate('AddTrailer')}
