@@ -18,6 +18,7 @@ const Container = styled.View`
   padding: 20px;
   justify-content: space-between;
   padding-bottom: 0;
+  padding-top: 0;
 `
 
 const AddTrailer = props => {
@@ -92,7 +93,7 @@ const AddTrailer = props => {
   )
 }
 
-AddTrailer.navigationOptions = (navigation) => ({
+AddTrailer.navigationOptions = ({navigation}) => ({
   title: 'Add Trailer',
   headerLeft: () => (
     <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>

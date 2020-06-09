@@ -8,7 +8,7 @@ import DateTimePicker from '@react-native-community/datetimepicker'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { StackActions, NavigationActions } from 'react-navigation'
 import colors from '../../constants/Colors'
-import { CustomButton, ButtonText } from '../../constants/CommonStyles'
+import { CustomButton, ButtonText , CustomButtonDisable, ButtonTextDisable} from '../../constants/CommonStyles'
 import { Ionicons } from '@expo/vector-icons'
 import TimeZone from '../../validation/TimeZone'
 import GetCurrentTimeZone from '../../validation/GetCurrentTimeZone';
@@ -99,17 +99,18 @@ const AddLoad = (props) => {
     }
   }
  const handleDateChange1 = date => {
+  setOpenPickTime(false)
   let settimezon = TimeZone(date)
   setPickTime(moment(date).format('h:mm A')+' '+settimezon)
-  setOpenPickTime(false)
+  
 }
 const hideDatePicker1 = () => {
     setOpenPickTime(false)
 };
 const handleDateChange2 = date => {
+  setOpenDropTime(false)
   let settimezon = TimeZone(date)
   setDropTime(moment(date).format('h:mm A')+' '+settimezon)
-  setOpenDropTime(false)
 }
 const hideDatePicker2 = () => {
   setOpenDropTime(false)
@@ -304,13 +305,19 @@ const hideDatePicker2 = () => {
         </Container>
       </ScrollView>
       <Float>
-        {dropoffDate.length > 2 && pickupDate.length > 2 && (
+        {dropoffDate.length > 2 && pickupDate.length > 2 ? 
+        dropTime == false || pickTime == false ?
+        (
+          <CustomButtonDisable>
+            <ButtonTextDisable>CONTINUE</ButtonTextDisable>
+          </CustomButtonDisable>
+        ):(
           <TouchableOpacity onPress={_onPressContinue}>
             <CustomButton>
-              <ButtonText>CONTINUE</ButtonText>
+        <ButtonText>CONTINUE</ButtonText>
             </CustomButton>
           </TouchableOpacity>
-        )}
+        ):null}
       </Float>
     </View>
   )

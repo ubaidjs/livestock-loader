@@ -29,6 +29,20 @@ export const CustomButton = styled.View`
   shadowOffset:{ width: ${Platform.OS == "android" ?  -1 : 0}, height: ${Platform.OS == "android" ?  9 : 10} };
   elevation: ${Platform.OS == "android" ?  12 : 15};
 `
+export const CustomButtonWithoutShadow = styled.View`
+  background-color: ${colors.themeYellow};
+  align-self: stretch;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 5px;
+  color: ${colors.greyishBrown};
+  margin-bottom: 20px;
+  flex-direction: row;
+  height: 54px;
+  justify-content: center;
+  align-items: center;
+`
 
 export const CustomButtonDisable = styled.View`
   background-color: 'rgba(234, 197, 71, 0.5)';

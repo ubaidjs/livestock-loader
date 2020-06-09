@@ -4,7 +4,8 @@ import {
   Text,
   Keyboard,
   TouchableWithoutFeedback,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from 'react-native'
 import styled from 'styled-components/native'
 import colors from '../../constants/Colors'
@@ -30,6 +31,7 @@ const ButtonsWrap = styled.View`
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
+  margin-top: ${Dimensions.get('screen').height - 450};
   margin-bottom: 20;
 `
 
@@ -73,7 +75,7 @@ const ForgotPass = props => {
             reset link
           </Text>
           <CustomInput
-            placeholder="Email"
+            placeholder="Email Address"
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -83,7 +85,6 @@ const ForgotPass = props => {
           {msgshow != '' && (
           <Invalid>{msgshow}</Invalid>
         )}
-        </FormWrap>
         <ButtonsWrap>
           <TouchableOpacity onPress={() => props.navigation.navigate('Login')}>
             <Text style={{ color: colors.linkBlue }}>Cancel</Text>
@@ -92,6 +93,7 @@ const ForgotPass = props => {
             <Text>Reset</Text>
           </CustomButton>
         </ButtonsWrap>
+        </FormWrap>
       </Container>
     </TouchableWithoutFeedback>
   )

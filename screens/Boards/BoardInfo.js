@@ -29,10 +29,12 @@ const ParentView = styled.View`
 `
 
 const ButtonWrapper = styled.View`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding-horizontal: 25px;
+position: absolute;
+bottom: 0;
+width: 100%;
+padding-horizontal: 25px;
+overflow: hidden;
+align-items: center;
 `
 
 const Container = styled.View`
@@ -133,22 +135,28 @@ const Map = styled.View`
   width: 100%;
 `
 const CallButton = styled.View`
-  background-color: ${colors.themeYellow};
-  padding: 15px 10px;
-  font-weight: bold;
-  border-top-left-radius: 7px;
-  border-bottom-left-radius: 7px;
-  margin-bottom: 20px;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 100px;
-  shadowRadius:  ${Platform.OS == "android" ?  18 : 10};
-  shadowOpacity: ${Platform.OS == "android" ?  30 : 0.16}; 
-  shadow-color: #000;
-  shadowOffset:{ width: ${Platform.OS == "android" ?  -1 : 0}, height: ${Platform.OS == "android" ?  9 : 10} };
-  elevation: ${Platform.OS == "android" ?  12 : 15};
+background-color: ${colors.themeYellow};
+padding: 15px 10px;
+font-weight: bold;
+border-top-left-radius: 7px;
+border-bottom-left-radius: 7px;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+width: 100px;
+border-right-width:1px;
+border-color:rgb(211 ,176 ,58);
 `
+const BottomButton = styled.View`
+flexDirection: row; 
+border-radius: 7px;
+margin-bottom: 20px;
+shadowRadius:  ${Platform.OS == "android" ?  18 : 10};
+shadowOpacity: ${Platform.OS == "android" ?  30 : 0.16}; 
+shadow-color: #000;
+shadowOffset:{ width: ${Platform.OS == "android" ?  -1 : 0}, height: ${Platform.OS == "android" ?  9 : 10} };
+elevation: ${Platform.OS == "android" ?  12 : 15};
+`;
 const ButtonTextLocal = styled.Text`
   font-family: 'pt-mono-bold';
   color: ${colors.greyishBrown};
@@ -161,21 +169,17 @@ flex-direction: column;
 background: rgb(211 ,176 ,58);
 `;
 const ChatButton = styled.TouchableOpacity`
-  background-color: #ddba45;
-  padding: 15px 10px;
-  font-weight: bold;
-  border-top-right-radius: 7px;
-  border-bottom-right-radius: 7px;
-  margin-bottom: 20px;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 100px;
-  shadowRadius:  ${Platform.OS == "android" ?  18 : 10};
-  shadowOpacity: ${Platform.OS == "android" ?  30 : 0.16}; 
-  shadow-color: #000;
-  shadowOffset:{ width: ${Platform.OS == "android" ?  -1 : 0}, height: ${Platform.OS == "android" ?  9 : 10} };
-  elevation: ${Platform.OS == "android" ?  12 : 15};
+background-color: #ddba45;
+padding: 15px 10px;
+font-weight: bold;
+border-top-right-radius: 7px;
+border-bottom-right-radius: 7px;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+width: 100px;
+border-left-width:1px;
+border-color:rgb(211 ,176 ,58);
 `
 const LoadInfo = (props) => {
   const [loading, setLoading] = useState(false)
@@ -476,12 +480,12 @@ const LoadInfo = (props) => {
         </View>
       </ButtonWrapper> */}
        <ButtonWrapper>
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        <BottomButton>
           <CallButton>
           <MaterialIcons name="phone" size={15} />
             <ButtonTextLocal>Call</ButtonTextLocal>
           </CallButton>
-          <LineCreate />
+          {/* <LineCreate /> */}
           <ChatButton onPress={() =>
               props.navigation.navigate('Chat', {
                 friendId: load.u_id,
@@ -495,7 +499,7 @@ const LoadInfo = (props) => {
           <MaterialCommunityIcons name="chat" size={15} />
             <ButtonTextLocal>Chat</ButtonTextLocal>
           </ChatButton>
-        </View>
+        </BottomButton>
       </ButtonWrapper>
     </ParentView>
   )

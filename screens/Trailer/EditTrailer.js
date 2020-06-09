@@ -340,7 +340,7 @@ const Compartment = (props) => {
   )
 }
 
-EditTrailer.navigationOptions = (navigation) =>({
+EditTrailer.navigationOptions = ({navigation}) =>({
   title: 'Edit Trailer',
   headerLeft: () => (
     <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>

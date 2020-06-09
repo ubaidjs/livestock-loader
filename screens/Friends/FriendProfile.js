@@ -50,13 +50,23 @@ const DetailsWrapper = styled.View`
   margin: 30px 20px;
   margin-bottom: 50px;
 `
-
 const Card = styled.View`
   background-color: ${colors.lightGrey};
   margin: 20px 0;
   padding: 10px;
   border-radius: 5px;
+  height: ${props=>props.height == undefined ? 'auto' : props.height}
 `
+// const Card = styled.View`
+//   background-color: ${colors.lightGrey};
+//   margin: 20px 0;
+//   padding: 10px;
+//   border-radius: 5px;
+//   elevation: 1;
+//   shadow-color: #000;
+//   shadow-opacity: 0.8;
+//   shadow-radius: 2;
+// `
 
 const CardTitle = styled.Text`
   color: ${colors.littleDarkGrey};

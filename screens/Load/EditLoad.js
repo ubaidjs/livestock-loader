@@ -421,7 +421,7 @@ const styles = StyleSheet.create({
   },
 })
 
-EditLoad.navigationOptions = (navigation) => ({
+EditLoad.navigationOptions = ({navigation}) => ({
   title: 'Edit Load',
   headerLeft: () => (
     <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>

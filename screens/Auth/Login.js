@@ -49,7 +49,7 @@ const TagLine = styled.Text`
 const FormView = styled.View`
   align-self: stretch;
   justify-content: center;
-  margin-top: -50px;
+  margin-top: 50px;
   flex: 1;
 `
 
@@ -70,6 +70,7 @@ const JoinWrapper = styled.View`
   justify-content: center;
   flex-direction: row;
   padding-top: 50;
+  margin-bottom: 20px;
 `
 
 const Link = styled.Text`
@@ -166,6 +167,7 @@ const Login = (props) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <ScrollView>
       <Container>
         <ImageContainer>
           <Image
@@ -178,7 +180,7 @@ const Login = (props) => {
           <View>
             <LoginLine>Please log in.</LoginLine>
             <CustomInput
-              placeholder="Email"
+              placeholder="Email Address"
               autoCapitalize="none"
               autoCorrect={false}
               autoCompleteType="off"
@@ -271,6 +273,7 @@ const Login = (props) => {
 </ScrollView>
         </Modal>
       </Container>
+      </ScrollView>
     </TouchableWithoutFeedback>
   )
 }

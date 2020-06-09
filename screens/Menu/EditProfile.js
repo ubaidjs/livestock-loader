@@ -236,7 +236,7 @@ const EditProfile = (props) => {
             <InputWrap>
               <CustomInput
                 style={{ flexGrow: 1, marginRight: 15 }}
-                placeholder="email"
+                placeholder="Email Address"
                 keyboardType="email-address"
                 value={email}
                 onChangeText={(val) => setEmail(val)}

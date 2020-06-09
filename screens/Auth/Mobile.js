@@ -9,6 +9,8 @@ import {
   AsyncStorage,
   ActivityIndicator,
   StyleSheet,
+  ScrollView,
+  Dimensions
 } from 'react-native'
 import styled from 'styled-components/native'
 import RNPickerSelect from 'react-native-picker-select'
@@ -54,7 +56,9 @@ const CodeText = styled.Text`
   color: ${colors.warmGrey};
 `
 const MobileWrapper = styled.View``
-const ButtonWrapper = styled.View``
+const ButtonWrapper = styled.View`
+margin-top: ${Dimensions.get('window').height - 450};
+`
 
 const Mobile = (props) => {
   const [phone, setPhone] = useState('')
@@ -110,6 +114,7 @@ const Mobile = (props) => {
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <ScrollView>
       <Container>
         <MobileWrapper>
           <ScreenTitle>Mobile Verification</ScreenTitle>
@@ -137,18 +142,18 @@ const Mobile = (props) => {
                 }}
               />
             </View>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row' , backgroundColor: 'rgb(247, 247, 247)' , height: 54,borderRadius: 5, marginBottom: 25}}>
               <View
                 style={{
                   backgroundColor: 'rgb(247, 247, 247)',
-                  height: 49,
+                  height: '100%',
                   width: 49,
                   borderRadius: 5,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
               >
-                <Text>{code}</Text>
+                <Text style={{fontSize: 20 , color: 'rgb(112 ,112 ,112)'}}>{code}</Text>
               </View>
               <CustomInput
                 placeholder="Phone Number"
@@ -180,6 +185,7 @@ const Mobile = (props) => {
           )}
         </ButtonWrapper>
       </Container>
+      </ScrollView>
     </TouchableWithoutFeedback>
   )
 }

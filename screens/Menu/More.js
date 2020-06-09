@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect , useRef } from 'react'
 import {
   View,
   Text,
@@ -15,7 +15,7 @@ import styled from 'styled-components/native'
 import { Ionicons, Entypo } from '@expo/vector-icons'
 import { api_url } from '../../constants/Api'
 import colors from '../../constants/Colors'
-
+import RBSheet from 'react-native-raw-bottom-sheet'
 const Container = styled.View`
   flex: 1;
   justify-content: space-between;
@@ -73,11 +73,26 @@ const UserName = styled.Text`
   font-weight: bold;
   margin-left: 20px;
 `
-
+const NoTrailerText = styled.Text`
+  color: ${colors.greyishBrown};
+  font-family: 'pt-mono-bold';
+  font-size: 20;
+  text-align: center;
+  margin-top: 20;
+`
+const ButtonText = styled.Text`
+  margin-top: 50px;
+  border-width: 1;
+  border-color: ${colors.themeYellow};
+  padding: 15px;
+  margin-horizontal: 70px;
+  border-radius: 10;
+  text-align: center;
+`
 const More = (props) => {
   const [loading, setLoading] = useState(false)
   const [profile, setProfile] = useState(false)
-
+  const refRBSheet = useRef()
   useEffect(() => {
     getprofile()
   }, [])
@@ -102,7 +117,24 @@ const More = (props) => {
       setLoading(false)
     }
   }
-
+ 
+  const MyTrailersCall = async () => {
+    const token = await AsyncStorage.getItem('USER_TOKEN')
+      const response = await fetch(`${api_url}?action=getCustomTrailer`, {
+        method: 'POST',
+        body: JSON.stringify({ token, limit: 'all' }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const json = await response.json()
+      if (json.status === '200') {
+        props.navigation.navigate('MyTrailers')
+      }
+      if (!json.data.length) {
+        refRBSheet.current.open()
+      }
+  }
   return (
     <Container>
       <NavigationEvents onDidFocus={() => getprofile()} />
@@ -169,7 +201,7 @@ const More = (props) => {
       </TouchableWithoutFeedback>
       <LinksContainer>
         <TouchableWithoutFeedback
-          onPress={() => props.navigation.navigate('MyTrailers')}
+          onPress={MyTrailersCall}
         >
           <LinkWrapper>
             <Image
@@ -298,6 +330,40 @@ const More = (props) => {
           <Entypo name="log-out" size={20} color={colors.littleDarkGrey} />
         </LinkWrapper>
       </SignoutContainer>
+      <RBSheet
+          ref={refRBSheet}
+          // onClose={() => {
+          //   props.navigation.goBack()
+          // }}
+          closeOnDragDown={true}
+          closeOnPressMask={true}
+          closeOnPressBack={true}
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'rgba(242,242,242,0.5)',
+            },
+            container: {
+              elevation: 1,
+              borderTopLeftRadius: 15,
+              borderTopRightRadius: 15,
+            },
+            draggableIcon: {
+              backgroundColor: colors.themeYellow,
+            },
+          }}
+        >
+          <View>
+            <NoTrailerText>You have no saved trailer</NoTrailerText>
+            <TouchableOpacity
+              onPress={() => {
+                refRBSheet.current.close()
+                props.navigation.navigate('AddTrailer')
+              }}
+            >
+              <ButtonText>Add a new Trailer</ButtonText>
+            </TouchableOpacity>
+          </View>
+        </RBSheet>
     </Container>
   )
 }

@@ -31,13 +31,12 @@ import {
 } from '../../constants/CommonStyles'
 
 const JoinWrapper = styled.View`
-  padding-top: 50px;
   justify-content: space-between;
   align-items: stretch;
   margin: 0 20px;
-  flex: 1;
+  flex: 1;  
 `
-
+// padding-top: 50px;
 const ScreenTitle = styled.Text`
   font-size: 20px;
   color: ${colors.greyishBrown};
@@ -184,7 +183,7 @@ const Join = (props) => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <JoinWrapper>
-        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        <ScrollView  showsVerticalScrollIndicator={false} style={{paddingTop: 50}}> 
           <ScreenTitle>Create Account</ScreenTitle>
           <TouchableWithoutFeedback onPress={_pickImage}>
             <PhotoContainer>
@@ -228,7 +227,7 @@ const Join = (props) => {
               }}
             />
             <CustomInput
-              placeholder="Password"
+              placeholder="Create Password"
               secureTextEntry={true}
               value={password}
               onChangeText={(val) => setPassword(val)}

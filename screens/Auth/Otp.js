@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity , ScrollView ,  Dimensions} from 'react-native'
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 import styled from 'styled-components/native'
 import colors from '../../constants/Colors'
@@ -54,6 +54,7 @@ const Otp = (props) => {
     }
   }
   return (
+    <ScrollView>
     <Container>
       <View>
         <ScreenTitle>Mobile Verification</ScreenTitle>
@@ -74,6 +75,7 @@ const Otp = (props) => {
       </View>
       <TouchableOpacity
         onPress={onVerifyotp}
+        style={{marginTop: Dimensions.get('screen').height - 450}}
       >
         {msgshow != '' && (
           <Invalid>{msgshow}</Invalid>
@@ -83,6 +85,7 @@ const Otp = (props) => {
         </CustomButton>
       </TouchableOpacity>
     </Container>
+    </ScrollView>
   )
 }
 
