@@ -15,12 +15,12 @@ export function add() {
           />
         </ClipPath>
       </Defs>
-      <G transform="translate(-.435)" clipPath="url(#prefix__a)">
+      {/* <G transform="translate(-.435)" clipPath="url(#prefix__a)"> */}
         <Path
           d="M18.194 11.713v.581a.582.582 0 01-.581.581h-4.742v4.738a.582.582 0 01-.581.581h-.577a.582.582 0 01-.584-.581v-4.742H6.387a.582.582 0 01-.581-.581v-.577a.582.582 0 01.581-.581h4.742V6.387a.582.582 0 01.581-.581h.581a.582.582 0 01.581.581v4.742h4.741a.582.582 0 01.581.584zm5.806.29a12 12 0 11-12-12A12 12 0 0124 12zm-1.548 0A10.452 10.452 0 1012 22.452 10.451 10.451 0 0022.452 12z"
           fill="#423f33"
         />
-      </G>
+      {/* </G> */}
     </Svg>
   )
 }
@@ -29,7 +29,7 @@ export function addActive() {
   return (
     <Svg width={48} height={32} viewBox="0 7 48 32">
       <Defs>
-        <ClipPath id="prefix__a">
+        {/* <ClipPath id="prefix__a">
           <Path
             data-name="Rectangle 409"
             transform="translate(.435)"
@@ -37,7 +37,7 @@ export function addActive() {
             stroke="#707070"
             d="M0 0h24v24H0z"
           />
-        </ClipPath>
+        </ClipPath> */}
       </Defs>
       <G fill="rgba(255,255,255,0)" stroke="rgba(0,0,0,0)">
         <Path stroke="none" d="M0 0h48v32H0z" />

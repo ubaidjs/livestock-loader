@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect } from 'react'
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Keyboard
 } from 'react-native'
 import styled from 'styled-components/native'
 import moment from 'moment'
@@ -75,6 +76,7 @@ const AddLoadDetails = (props) => {
   const [pickAddress, setPickAddress] = useState(false)
   const [dropAddress, setDropAddress] = useState(false)
   const [focusState, setFocusState] = useState(null)
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [emptyFeilds, setEmptyFeilds] = useState({
     pickAddress: false,
     dropAddress: false,
@@ -105,7 +107,25 @@ const AddLoadDetails = (props) => {
       })
     }
   }
-
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true); // or some other action
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false); // or some other action
+      }
+    );
+  
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
       <ScrollView>
@@ -140,7 +160,7 @@ const AddLoadDetails = (props) => {
                 }}
                 placeholder="Enter pick up address.."
                 multiline={true}
-                numberOfLines={5}
+                numberOfLines={1}
                 textAlignVertical="top"
                 maxLength={200}
                 onChangeText={(val) => setPickAddress(val)}
@@ -180,7 +200,8 @@ const AddLoadDetails = (props) => {
                 }}
                 placeholder="Enter drop off address.."
                 multiline={true}
-                numberOfLines={5}
+                numberOfLines={1}
+                // numberOfLines={5}
                 textAlignVertical="top"
                 maxLength={200}
                 onChangeText={(val) => setDropAddress(val)}
@@ -188,7 +209,17 @@ const AddLoadDetails = (props) => {
             </BarLineThree>
           </Bar>
         </Container>
+        {isKeyboardVisible ? 
+        <TouchableOpacity
+        style={{ paddingHorizontal: 20 }}
+        onPress={handleSubmit}
+      >
+        <CustomButton>
+          <ButtonText>CONTINUE</ButtonText>
+        </CustomButton>
+      </TouchableOpacity> : null }
       </ScrollView>
+      {isKeyboardVisible ? null :
       <TouchableOpacity
         style={{ paddingHorizontal: 20 }}
         onPress={handleSubmit}
@@ -196,7 +227,7 @@ const AddLoadDetails = (props) => {
         <CustomButton>
           <ButtonText>CONTINUE</ButtonText>
         </CustomButton>
-      </TouchableOpacity>
+      </TouchableOpacity> }
     </KeyboardAvoidingView>
   )
 }

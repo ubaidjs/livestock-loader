@@ -24,7 +24,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer'
 import firebase from 'firebase'
 import * as ImagePicker from 'expo-image-picker'
 import * as DocumentPicker from 'expo-document-picker'
-import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'
+import { MaterialCommunityIcons, AntDesign , Ionicons } from '@expo/vector-icons'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import { api_url } from '../../constants/Api'
 import LoadItem from '../../components/LoadItem'
@@ -32,7 +32,7 @@ import LoadItemChat from '../../components/LoadItemChat'
 import LoadInfoChat from '../../components/LoadInfoChat'
 import Colors from '../../constants/Colors'
 
-export default class Chat extends Component {
+class Chat extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -93,6 +93,11 @@ export default class Chat extends Component {
   static navigationOptions = function ({ navigation }) {
     return {
       title: navigation.getParam('fname'),
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+            <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+        </TouchableOpacity>
+      ),
       headerRight: function () {
         return (
           <TouchableWithoutFeedback
@@ -443,13 +448,14 @@ export default class Chat extends Component {
         style={{
           marginLeft: 10,
           backgroundColor: '#f7f7f7',
-          borderRadius: 20,
+          borderRadius: 20, 
           padding: 3,
+          overflow: 'hidden',
         }}
         color="grey"
         onPress={() => this.RBSheet.open()}
       />
-    )
+    ) 
   }
 
   handleModal() {
@@ -733,8 +739,10 @@ export default class Chat extends Component {
             <MessageText {...props} linkStyle={{ right: { color: 'black' } }} />
           )}
         />
-        {Platform.OS === 'android' && <KeyboardSpacer />}
+        {/* {Platform.OS === 'android' ? null :  <KeyboardSpacer />} */} 
       </View>
     )
   }
 }
+
+export default  Chat

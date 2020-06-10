@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef , useEffect} from 'react'
 import {
   View,
   Text,
@@ -11,7 +11,8 @@ import {
   AsyncStorage,
   ActivityIndicator,
   Alert,
-  FlatList
+  FlatList,
+  Keyboard
 } from 'react-native'
 import styled from 'styled-components/native'
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
@@ -129,6 +130,7 @@ const AddLoadDetails = (props) => {
   const [livestockQty, setLivestockQty] = useState('')
   const [focusState, setFocusState] = useState(null)
   const [allstock, setAllstock] = useState([0])
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [emptyFeilds, setEmptyFeilds] = useState({
     details: false,
     weight: false,
@@ -189,6 +191,25 @@ const AddAnotherTypequantity = () => {
   setAllstock(allstock => [...allstock, allstock.length]);
   // setAllstock([...allstock,findlength])
 }
+useEffect(() => {
+  const keyboardDidShowListener = Keyboard.addListener(
+    'keyboardDidShow',
+    () => {
+      setKeyboardVisible(true); // or some other action
+    }
+  );
+  const keyboardDidHideListener = Keyboard.addListener(
+    'keyboardDidHide',
+    () => {
+      setKeyboardVisible(false); // or some other action
+    }
+  );
+
+  return () => {
+    keyboardDidHideListener.remove();
+    keyboardDidShowListener.remove();
+  };
+}, []);
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
       <ScrollView>
@@ -330,8 +351,8 @@ const AddAnotherTypequantity = () => {
             setChecked={setCallChecked}
           />
         </Container>
-      </ScrollView>
-      <TouchableOpacity
+        {isKeyboardVisible ?
+        <TouchableOpacity
         style={{ paddingHorizontal: 20 }}
         onPress={() => {
           handleSubmit()
@@ -340,7 +361,19 @@ const AddAnotherTypequantity = () => {
         <CustomButton>
           <ButtonText>PREVIEW</ButtonText>
         </CustomButton>
-      </TouchableOpacity>
+      </TouchableOpacity> : null }
+      </ScrollView>
+      {!isKeyboardVisible ?
+        <TouchableOpacity
+        style={{ paddingHorizontal: 20 }}
+        onPress={() => {
+          handleSubmit()
+        }}
+      >
+        <CustomButton>
+          <ButtonText>PREVIEW</ButtonText>
+        </CustomButton>
+      </TouchableOpacity> : null }
     </KeyboardAvoidingView>
   )
 }
@@ -392,6 +425,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     borderRadius: 5,
     width: 100,
+    height: 43,
   },
   picker: {
     color: 'black',

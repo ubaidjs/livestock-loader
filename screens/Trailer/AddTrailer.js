@@ -100,8 +100,9 @@ AddTrailer.navigationOptions = ({navigation}) => ({
         <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
     </TouchableOpacity>
   ),
-  headerStyle: {
+  headerStyle: {    
     backgroundColor: colors.greyishBrown,
+    height: 80, 
     elevation: 0, // for android
     shadowOpacity: 0, //for ios
     borderBottomWidth: 0 //for ios

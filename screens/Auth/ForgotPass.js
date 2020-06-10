@@ -5,13 +5,16 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Image,
+  ScrollView
 } from 'react-native'
 import styled from 'styled-components/native'
 import colors from '../../constants/Colors'
-import { CustomButton, CustomInput } from '../../constants/CommonStyles'
+import { CustomButton, CustomInput , ButtonText, CustomButtonWithoutShadow,} from '../../constants/CommonStyles'
 import EmailValidation from '../../validation/Emailvalidation'
-
+import { Ionicons , Octicons} from '@expo/vector-icons'
+import BackArrowHeader from '../../components/BackArrowHeader'
 const Container = styled.View`
   padding: 30px 20px;
   padding-bottom: 10px;
@@ -44,6 +47,27 @@ const Invalid = styled.Text`
   text-align: center;
   margin-bottom: 10px;
 `
+const ImageContainer = styled.View`
+  align-items: center;
+  margin-top: 40px;
+`
+
+const TagLine = styled.Text`
+  margin: 20px 0 0 0;
+  text-align: center;
+  font-size: 20px;
+  font-family: 'din-alternate-bold';
+  color: ${colors.greyishBrown};
+`
+const BorderButton = styled.TouchableOpacity`
+border-width: 1;
+border-color: ${colors.themeYellow};
+border-radius: 10;
+margin-top: 10px;
+align-items: center;
+justify-content: center;
+padding: 10px;
+`;
 const ForgotPass = props => {
   const [msgshow,setMsgshow] = useState('');
   const [email, setEmail] = useState('')
@@ -67,40 +91,71 @@ const ForgotPass = props => {
   }
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <Container>
-        <ScreenTitle>Forgot Password</ScreenTitle>
+      {/* <Container> */}
+      <ScrollView style={{padding: 30}}>
+      {/* <BackArrowHeader onBack={()=>{
+        alert(JSON.stringify(props))
+        props.navigation.goBack(null)}} /> */}
+      <ImageContainer>
+          <Image
+            style={{ height: 100, width: 180, resizeMode: 'contain' }}
+            source={require('../../assets/images/logo.png')}
+          />
+          <TagLine>Calculate. Load. Transport</TagLine>
+        </ImageContainer>
+        {/* <ScreenTitle>Forgot Password</ScreenTitle> */}
         <FormWrap>
-          <Text style={{ textAlign: 'center', marginBottom: 40 }}>
-            Please enter your registered email where we can send you password
-            reset link
+          <Text style={{ textAlign: 'left',marginLeft: 5, marginBottom: 30 , color: '#747269' , marginTop: 40}}>
+            Retrive your password
+            {/* Please enter your registered email where we can send you password
+            reset link */}
           </Text>
           <CustomInput
-            placeholder="Email Address"
+            placeholder="Email your Email ID"
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
             value={email}
             onChangeText={(val) => setEmail(val)}
           />
+          <Text style={{ textAlign: 'left',marginLeft: 5, marginBottom: 30 , color: '#b7b6b0', fontSize: 12}}>
+            Enter your email id to get verification code
+            {/* Please enter your registered email where we can send you password
+            reset link */}
+          </Text>
           {msgshow != '' && (
           <Invalid>{msgshow}</Invalid>
         )}
-        <ButtonsWrap>
+        <TouchableOpacity  onPress={handleSave} style={{marginTop: 80}}>
+            <CustomButton>
+                <ButtonText>SEND</ButtonText>
+            </CustomButton>
+          </TouchableOpacity>
+          <BorderButton  onPress={() => props.navigation.navigate('Login')}>
+              <ButtonText>CANCEL</ButtonText>
+          </BorderButton>
+        {/* <ButtonsWrap>
           <TouchableOpacity onPress={() => props.navigation.navigate('Login')}>
             <Text style={{ color: colors.linkBlue }}>Cancel</Text>
           </TouchableOpacity>
           <CustomButton onStartShouldSetResponder={handleSave} style={{ marginBottom: 0, paddingHorizontal: 30 }}>
             <Text>Reset</Text>
           </CustomButton>
-        </ButtonsWrap>
+        </ButtonsWrap> */}
         </FormWrap>
-      </Container>
+        </ScrollView>
+      {/* </Container> */}
     </TouchableWithoutFeedback>
   )
 }
 
-ForgotPass.navigationOptions = {
-  header: null
-}
+// ForgotPass.navigationOptions = ({ navigation }) => ({
+//   title: 'test',
+//   headerLeft: () => (
+//     <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+//         <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+//     </TouchableOpacity>
+//   ), 
+// })
 
 export default ForgotPass

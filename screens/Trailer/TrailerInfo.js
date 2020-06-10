@@ -25,11 +25,18 @@ const Card = styled.View`
   margin: 20px 0;
   padding: 10px;
   border-radius: 5px;
-  elevation: 1;
-  shadow-color: #000;
-  shadow-opacity: 0.8;
-  shadow-radius: 2;
 `
+// const Card = styled.View`
+//   background-color: ${colors.lightGrey};
+//   margin: 20px 0;
+//   padding: 10px;
+//   border-radius: 5px;
+//   elevation: 1;
+//   shadow-color: #000;
+//   shadow-opacity: 0.8;
+//   shadow-radius: 2;
+// `
+
 const CardTitle = styled.Text`
   color: ${colors.littleDarkGrey};
   margin-bottom: 10px;
@@ -238,6 +245,7 @@ TrailerInfo.navigationOptions = ({ navigation }) => {
       </TouchableOpacity>
     ),
     headerStyle: {
+      height: 80, 
       backgroundColor: colors.greyishBrown,
       elevation: 0, // for android
       shadowOpacity: 0, //for ios

@@ -37,12 +37,17 @@ const Card = styled.View`
   margin: 20px 0;
   padding: 10px;
   border-radius: 5px;
-  elevation: 1;
-  shadow-color: #000;
-  shadow-opacity: 0.8;
-  shadow-radius: 2;
 `
-
+// const Card = styled.View`
+//   background-color: ${colors.lightGrey};
+//   margin: 20px 0;
+//   padding: 10px;
+//   border-radius: 5px;
+//   elevation: 1;
+//   shadow-color: #000;
+//   shadow-opacity: 0.8;
+//   shadow-radius: 2;
+// `
 const CardTitle = styled.Text`
   color: ${colors.littleDarkGrey};
   margin-bottom: 10px;
@@ -260,6 +265,7 @@ const AddTrailerTwo = (props) => {
                       fillErr.name && styles.errorBorder,
                       {
                         width: 150,
+                        
                       },
                     ]}
                     maxLength={30}
@@ -460,6 +466,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     borderRadius: 5,
     height: 24,
+    height : 43
   },
   errorBorder: {
     borderColor: '#d66b6b',
@@ -480,6 +487,7 @@ AddTrailerTwo.navigationOptions = ({navigation}) => {
     </TouchableOpacity>
   ),
   headerStyle: {
+    height: 80, 
     backgroundColor: colors.greyishBrown,
     elevation: 0, // for android
     shadowOpacity: 0, //for ios

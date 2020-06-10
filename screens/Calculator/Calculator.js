@@ -212,4 +212,15 @@ const Calculator = (props) => {
   )
 }
 
+Calculator.navigationOptions = ({ navigation }) => {
+  return {
+    title: 'Calculate',
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
+  }
+}
+
 export default Calculator

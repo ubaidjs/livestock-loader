@@ -178,6 +178,7 @@ Profile.navigationOptions = ({ navigation }) => {
       </TouchableOpacity>
     ),
     headerStyle: {
+      height: 80, 
       backgroundColor: colors.greyishBrown,
       elevation: 0, // for android
       shadowOpacity: 0, //for ios

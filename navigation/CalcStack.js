@@ -28,15 +28,14 @@ const navigator = createStackNavigator(
         return <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
       },
       headerTitleStyle: {
-        fontFamily: 'pt-mono-bold',
-        fontSize: 24
+        fontFamily: 'pt-mono-bold'
       },
       headerStyle: {
         backgroundColor: colors.greyishBrown,
+        height: 80, 
         elevation: 0, // for android
         shadowOpacity: 0, //for ios
-        borderBottomWidth: 0, //for ios
-        height: 80
+        borderBottomWidth: 0 //for ios
         // borderBottomLeftRadius: 18,
         // borderBottomRightRadius: 18
       },

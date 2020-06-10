@@ -82,7 +82,7 @@ const LoadItem = props => {
               On Route
             </Text>
             <Text style={{ fontSize: 20, color: colors.greyishBrown }}>
-              $ {rate}
+              {rate}
             </Text>
           </View>
         </LoadDropoff>

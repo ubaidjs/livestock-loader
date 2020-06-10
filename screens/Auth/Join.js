@@ -68,12 +68,25 @@ const FormWrapper = styled.View`
 const NotMember = styled.Text`
   margin-right: 10px;
   color: ${colors.warmGrey};
+  font-size: 13px;
 `
 
 const Link = styled.Text`
   color: ${colors.linkBlue};
+  font-size: 13px;
 `
-
+const AvatarWrapper = styled.View`
+  border-width: 3;
+  border-color: ${colors.themeYellow};
+  border-radius: 100px;
+  margin: 20px 0;
+  position: relative;
+`
+const UserImg = styled.Image`
+  height: 100;
+  width: 100;
+  border-radius: 50;
+`
 const Join = (props) => {
   const [uri, setUri] = useState()
   const [name, setName] = useState('')
@@ -188,7 +201,9 @@ const Join = (props) => {
           <TouchableWithoutFeedback onPress={_pickImage}>
             <PhotoContainer>
               {uri ? (
-                <AvatarImg source={{ uri: uri }} />
+                <AvatarWrapper>
+                   <UserImg source={{ uri: uri }} />
+              </AvatarWrapper>
               ) : (
                 <View>
                   <AvatarImg
@@ -253,10 +268,11 @@ const Join = (props) => {
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
+                // alignItems: 'center',
                 marginTop: 25,
               }}
             >
-              <Text style={{ color: colors.warmGrey }}>
+              <Text style={{ color: colors.warmGrey , fontSize: 13}}>
                 By joining you agree with our{' '}
               </Text>
               <TouchableOpacity>
@@ -273,7 +289,7 @@ const Join = (props) => {
           )}
           {emailExist && <InvalidText>This email already exist</InvalidText>}
           {invalidEmail && <InvalidText>Incorrect emailid</InvalidText>}
-          <View style={{ marginTop: 30 }}>
+          <View style={{ marginTop: 30 , marginBottom: 50}}>
             {!name.length || !email.length || !password.length ? (
               <View>
                 <CustomButtonDisable>

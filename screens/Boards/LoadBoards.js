@@ -310,6 +310,7 @@ const FirstRoute = ({ loading, boards, genRandom, fetchLoadAgain , props}) => {
                     <TextGrey>Livestock: 10</TextGrey>
                     <TextGrey>Loads: 1</TextGrey>
                     <TextGrey>Weight: {item.total_weight} lbs</TextGrey>
+                    {/* <TextGrey> 1hrs</TextGrey> */}
                   </DetailWrap>
                 </View>
               </TouchableOpacity>

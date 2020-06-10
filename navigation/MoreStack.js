@@ -55,6 +55,7 @@ const navigator = createStackNavigator(
         },
         headerStyle: {
           backgroundColor: colors.greyishBrown,
+          height: 80, 
           marginBottom: 10,
           elevation: 0, // for android
           shadowOpacity: 0, //for ios
