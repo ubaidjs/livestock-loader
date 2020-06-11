@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef , useEffect} from 'react'
 import {
   View,
   Text,
@@ -11,7 +11,8 @@ import {
   AsyncStorage,
   ActivityIndicator,
   Alert,
-  FlatList
+  FlatList,
+  Keyboard
 } from 'react-native'
 import styled from 'styled-components/native'
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
@@ -20,7 +21,7 @@ import { StackActions, NavigationActions } from 'react-navigation'
 import colors from '../../constants/Colors'
 import { api_url } from '../../constants/Api'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
-
+import { Ionicons } from '@expo/vector-icons'
 const CheckboxText = styled(Text)`
   line-height: 24;
   padding-right: 20px;
@@ -129,6 +130,7 @@ const AddLoadDetails = (props) => {
   const [livestockQty, setLivestockQty] = useState('')
   const [focusState, setFocusState] = useState(null)
   const [allstock, setAllstock] = useState([0])
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [emptyFeilds, setEmptyFeilds] = useState({
     details: false,
     weight: false,
@@ -189,6 +191,25 @@ const AddAnotherTypequantity = () => {
   setAllstock(allstock => [...allstock, allstock.length]);
   // setAllstock([...allstock,findlength])
 }
+useEffect(() => {
+  const keyboardDidShowListener = Keyboard.addListener(
+    'keyboardDidShow',
+    () => {
+      setKeyboardVisible(true); // or some other action
+    }
+  );
+  const keyboardDidHideListener = Keyboard.addListener(
+    'keyboardDidHide',
+    () => {
+      setKeyboardVisible(false); // or some other action
+    }
+  );
+
+  return () => {
+    keyboardDidHideListener.remove();
+    keyboardDidShowListener.remove();
+  };
+}, []);
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
       <ScrollView>
@@ -207,8 +228,8 @@ const AddAnotherTypequantity = () => {
               <View style={{ flex: 1, marginRight: 5 }}>
                 <RNPickerSelect
                   Icon={() => (
-                    <MaterialCommunityIcons name="chevron-down" size={15} />
-                  )}
+                    <MaterialCommunityIcons style={{marginTop: Platform.OS == 'ios' ? '-80%' : null }} name="chevron-down" size={15} />
+       )}
                   placeholder={{ label: 'Livestock Type', value: null }}
                   items={lsType}
                   onValueChange={(value) => {
@@ -227,8 +248,8 @@ const AddAnotherTypequantity = () => {
               <View style={{ flex: 1, marginHorizontal: 5 }}>
                 <RNPickerSelect
                   Icon={() => (
-                    <MaterialCommunityIcons name="chevron-down" size={15} />
-                  )}
+                    <MaterialCommunityIcons style={{marginTop: Platform.OS == 'ios' ? '-80%' : null }} name="chevron-down" size={15} />
+       )}
                   placeholder={{ label: 'Livestock Qty', value: null }}
                   items={qty}
                   onValueChange={(value) => {
@@ -330,8 +351,8 @@ const AddAnotherTypequantity = () => {
             setChecked={setCallChecked}
           />
         </Container>
-      </ScrollView>
-      <TouchableOpacity
+        {isKeyboardVisible ?
+        <TouchableOpacity
         style={{ paddingHorizontal: 20 }}
         onPress={() => {
           handleSubmit()
@@ -340,7 +361,19 @@ const AddAnotherTypequantity = () => {
         <CustomButton>
           <ButtonText>PREVIEW</ButtonText>
         </CustomButton>
-      </TouchableOpacity>
+      </TouchableOpacity> : null }
+      </ScrollView>
+      {!isKeyboardVisible ?
+        <TouchableOpacity
+        style={{ paddingHorizontal: 20 }}
+        onPress={() => {
+          handleSubmit()
+        }}
+      >
+        <CustomButton>
+          <ButtonText>PREVIEW</ButtonText>
+        </CustomButton>
+      </TouchableOpacity> : null }
     </KeyboardAvoidingView>
   )
 }
@@ -392,6 +425,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     borderRadius: 5,
     width: 100,
+    height: 43,
   },
   picker: {
     color: 'black',
@@ -412,6 +446,11 @@ AddLoadDetails.navigationOptions = ({ navigation }) => {
 
   return {
     title: 'Add Load',
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
     headerRight: () => (
       <TouchableOpacity onPress={() => navigation.dispatch(resetAction)}>
         <Text style={{ color: '#fff', marginRight: 15 }}>Exit</Text>

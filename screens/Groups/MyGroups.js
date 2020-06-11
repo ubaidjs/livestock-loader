@@ -110,6 +110,11 @@ const MyGroups = (props) => {
 
 MyGroups.navigationOptions = ({ navigation }) => ({
   title: 'My Groups',
+  headerLeft: () => (
+    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    </TouchableOpacity>
+  ),
   headerRight: () => {
     return (
       <TouchableWithoutFeedback onPress={() => navigation.navigate('AddGroup')}>

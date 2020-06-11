@@ -12,7 +12,7 @@ import { MaterialCommunityIcons, Feather } from '@expo/vector-icons'
 import colors from '../../constants/Colors'
 import styled from 'styled-components/native'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
-
+import { Ionicons } from '@expo/vector-icons'
 const ProfileContainer = styled.View`
   flex: 1;
   justify-content: space-between;
@@ -50,17 +50,23 @@ const DetailsWrapper = styled.View`
   margin: 30px 20px;
   margin-bottom: 50px;
 `
-
 const Card = styled.View`
   background-color: ${colors.lightGrey};
   margin: 20px 0;
   padding: 10px;
   border-radius: 5px;
-  elevation: 1;
-  shadow-color: #000;
-  shadow-opacity: 0.8;
-  shadow-radius: 2;
+  height: ${props=>props.height == undefined ? 'auto' : props.height}
 `
+// const Card = styled.View`
+//   background-color: ${colors.lightGrey};
+//   margin: 20px 0;
+//   padding: 10px;
+//   border-radius: 5px;
+//   elevation: 1;
+//   shadow-color: #000;
+//   shadow-opacity: 0.8;
+//   shadow-radius: 2;
+// `
 
 const CardTitle = styled.Text`
   color: ${colors.littleDarkGrey};
@@ -166,7 +172,13 @@ export default function Profile(props) {
 Profile.navigationOptions = ({ navigation }) => {
   return {
     title: 'Profile',
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
     headerStyle: {
+      height: 80, 
       backgroundColor: colors.greyishBrown,
       elevation: 0, // for android
       shadowOpacity: 0, //for ios

@@ -15,8 +15,7 @@ import styled from 'styled-components/native'
 import colors from '../../constants/Colors'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
 import { api_url } from '../../constants/Api'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-
+import { MaterialCommunityIcons , Ionicons } from '@expo/vector-icons'
 const CardWrapper = styled.View`
   padding: 20px;
   margin-bottom: 40;
@@ -26,11 +25,18 @@ const Card = styled.View`
   margin: 20px 0;
   padding: 10px;
   border-radius: 5px;
-  elevation: 1;
-  shadow-color: #000;
-  shadow-opacity: 0.8;
-  shadow-radius: 2;
 `
+// const Card = styled.View`
+//   background-color: ${colors.lightGrey};
+//   margin: 20px 0;
+//   padding: 10px;
+//   border-radius: 5px;
+//   elevation: 1;
+//   shadow-color: #000;
+//   shadow-opacity: 0.8;
+//   shadow-radius: 2;
+// `
+
 const CardTitle = styled.Text`
   color: ${colors.littleDarkGrey};
   margin-bottom: 10px;
@@ -233,7 +239,13 @@ const Compartment = (props) => {
 TrailerInfo.navigationOptions = ({ navigation }) => {
   return {
     title: navigation.getParam('title'),
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
     headerStyle: {
+      height: 80, 
       backgroundColor: colors.greyishBrown,
       elevation: 0, // for android
       shadowOpacity: 0, //for ios

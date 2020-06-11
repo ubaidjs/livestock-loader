@@ -24,7 +24,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer'
 import firebase from 'firebase'
 import * as ImagePicker from 'expo-image-picker'
 import * as DocumentPicker from 'expo-document-picker'
-import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'
+import { MaterialCommunityIcons, AntDesign , Ionicons } from '@expo/vector-icons'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import { api_url } from '../../constants/Api'
 import LoadItem from '../../components/LoadItem'
@@ -32,7 +32,7 @@ import LoadItemChat from '../../components/LoadItemChat'
 import LoadInfoChat from '../../components/LoadInfoChat'
 import Colors from '../../constants/Colors'
 
-export default class Chat extends Component {
+class Chat extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -43,7 +43,6 @@ export default class Chat extends Component {
       modalLoader: false,
       loads: [],
       selectedLoad: null,
-      pushToken: '',
     }
     this.user = {
       id: props.navigation.getParam('userId'),
@@ -84,7 +83,6 @@ export default class Chat extends Component {
     this.handleLoadTouch = this.handleLoadTouch.bind(this)
     this.renderCustomView = this.renderCustomView.bind(this)
     this.setSelectedLoad = this.setSelectedLoad.bind(this)
-    this.sendNotification = this.sendNotification.bind(this)
 
     props.navigation.setParams({
       fname: props.navigation.getParam('friendName'),
@@ -95,6 +93,11 @@ export default class Chat extends Component {
   static navigationOptions = function ({ navigation }) {
     return {
       title: navigation.getParam('fname'),
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+            <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+        </TouchableOpacity>
+      ),
       headerRight: function () {
         return (
           <TouchableWithoutFeedback
@@ -124,29 +127,6 @@ export default class Chat extends Component {
           </TouchableWithoutFeedback>
         )
       },
-    }
-  }
-
-  async fetchPushToken() {
-    try {
-      const response = await fetch(`${api_url}?action=gettokenbyid`, {
-        method: 'POST',
-        body: JSON.stringify({ id: this.friend.id }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      const json = await response.json()
-      if (json.status === '200') {
-        this.setState((prevState) => {
-          return {
-            ...prevState,
-            pushToken: json.data.push_token,
-          }
-        })
-      }
-    } catch (error) {
-      console.log(error)
     }
   }
 
@@ -331,12 +311,6 @@ export default class Chat extends Component {
     }
   }
 
-  async sendNotification() {
-    await fetch(
-      `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${pushToken}&msg=${this.user.name}%20messaged%20you&sender_id=${this.user.id}&receiver_id=${this.friend.id}&sender_name=${this.user.name}&message_type=chatmessage`
-    )
-  }
-
   onSend(messages = []) {
     messages.forEach((message) => {
       var now = new Date().getTime()
@@ -355,7 +329,6 @@ export default class Chat extends Component {
         order: -1 * now,
       })
     })
-    this.sendNotification()
   }
 
   listenForItems(chatRef) {
@@ -475,13 +448,14 @@ export default class Chat extends Component {
         style={{
           marginLeft: 10,
           backgroundColor: '#f7f7f7',
-          borderRadius: 20,
+          borderRadius: 20, 
           padding: 3,
+          overflow: 'hidden',
         }}
         color="grey"
         onPress={() => this.RBSheet.open()}
       />
-    )
+    ) 
   }
 
   handleModal() {
@@ -765,8 +739,10 @@ export default class Chat extends Component {
             <MessageText {...props} linkStyle={{ right: { color: 'black' } }} />
           )}
         />
-        {Platform.OS === 'android' && <KeyboardSpacer />}
+        {/* {Platform.OS === 'android' ? null :  <KeyboardSpacer />} */} 
       </View>
     )
   }
 }
+
+export default  Chat

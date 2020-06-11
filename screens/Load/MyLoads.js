@@ -173,10 +173,19 @@ const MyLoads = (props) => {
   )
 }
 
-MyLoads.navigationOptions = {
-  title: 'My Loads',
+// MyLoads.navigationOptions = {
+//   title: 'My Loads',
+// }
+MyLoads.navigationOptions = ({ navigation }) => {
+  return {
+    title: 'My Load',
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
+  }
 }
-
 const ButtonInactive = styled.Text`
   padding: 10px;
   margin-right: 10px;
@@ -190,6 +199,7 @@ const ButtonActive = styled.Text`
   margin-right: 10px;
   background-color: ${colors.themeYellow};
   border-radius: 10;
+  overflow: hidden;
 `
 
 const FilterWrapper = styled.View`

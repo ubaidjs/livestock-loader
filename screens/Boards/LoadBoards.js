@@ -13,6 +13,7 @@ import {
   StyleSheet,
   RefreshControl,
   Alert,
+  ImageBackground
 } from 'react-native'
 import MapView from 'react-native-maps'
 import {
@@ -21,28 +22,28 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
   Octicons,
+  Ionicons
 } from '@expo/vector-icons'
-import { Location, Notifications } from 'expo'
+import { Location  } from 'expo';
+import { LinearGradient } from 'expo-linear-gradient';
 import * as Permissions from 'expo-permissions'
 import styled from 'styled-components/native'
 import moment from 'moment'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import genRandom from '../../constants/RandomNumber'
 import {
-  CustomButton,
+  CustomButtonWithoutShadow,
   ButtonText,
   CustomInput,
 } from '../../constants/CommonStyles'
 import { TabView, SceneMap } from 'react-native-tab-view'
 import { api_url } from '../../constants/Api'
 import colors from '../../constants/Colors'
-
 const Container = styled.View`
   flex: 1;
   padding-horizontal: 20px;
-  padding-top: 20px;
   background-color: ${colors.lightGrey};
-`
+` 
 
 const BoardWrap = styled.View`
   background-color: #fff;
@@ -100,7 +101,8 @@ const UserWrap = styled.View`
 	flex-direction: row
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 15px;
+  margin-bottom: 15px;
+  margin: 10px;
 `
 
 const ActionSheetWrapper = styled.View`
@@ -123,18 +125,31 @@ const ButtonWrapper = styled.View`
   bottom: 0;
   width: 100%;
   padding-horizontal: 25px;
+  overflow: hidden;
+  align-items: center;
 `
-
+const BottomButton = styled.View`
+flexDirection: row; 
+border-radius: 7px;
+margin-bottom: 20px;
+shadowRadius:  ${Platform.OS == "android" ?  18 : 10};
+shadowOpacity: ${Platform.OS == "android" ?  30 : 0.16}; 
+shadow-color: #000;
+shadowOffset:{ width: ${Platform.OS == "android" ?  -1 : 0}, height: ${Platform.OS == "android" ?  9 : 10} };
+elevation: ${Platform.OS == "android" ?  12 : 15};
+`;
 const FilterButton = styled.View`
-  background-color: ${colors.themeYellow};
+  background-color: #ddba45;
   padding: 15px 10px;
   font-weight: bold;
   border-top-right-radius: 7px;
   border-bottom-right-radius: 7px;
-  margin-bottom: 20px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  width: 100px;
+  border-left-width:1px;
+  border-color:rgb(211 ,176 ,58);
 `
 const MapButton = styled.View`
   background-color: ${colors.themeYellow};
@@ -142,10 +157,12 @@ const MapButton = styled.View`
   font-weight: bold;
   border-top-left-radius: 7px;
   border-bottom-left-radius: 7px;
-  margin-bottom: 20px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  width: 100px;
+  border-right-width:1px;
+  border-color:rgb(211 ,176 ,58);
 `
 
 const ButtonTextLocal = styled.Text`
@@ -153,12 +170,18 @@ const ButtonTextLocal = styled.Text`
   color: ${colors.greyishBrown};
   margin-left: 10;
 `
-
-const FirstRoute = ({ props, loading, boards, genRandom, fetchLoadAgain }) => {
+const LineCreate = styled.View`
+height: 47px;
+width: 2px;
+flex-direction: column;
+background: rgb(211 ,176 ,58);
+`;
+const FirstRoute = ({ loading, boards, genRandom, fetchLoadAgain , props}) => {
   return (
     <Container>
       {loading && <ActivityIndicator color="#000" />}
       <FlatList
+       style={{paddingTop: 20}}
         data={boards}
         extraData={boards}
         keyExtractor={(item) => genRandom()}
@@ -176,12 +199,48 @@ const FirstRoute = ({ props, loading, boards, genRandom, fetchLoadAgain }) => {
                 }}
               >
                 <View>
-                  <UserWrap>
+                  <Map>
+                    <ImageBackground
+                    style={{
+                      height: 164,
+                      resizeMode: 'cover',
+                      width: '100%',
+                    }}
+                    source={require('../../assets/images/map.jpg')}
+                    >
+                      <LinearGradient
+                      //  colors={['#fff', 'rgba(255,255,255,0)']}
+                      colors={['#fff', 'rgba(255,255,255,0)']}
+                      // start={[0,0]}
+                      // end={[1,1]} 
+                       >  
+                     <UserWrap> 
+                  <View
+                style={{
+                  borderWidth: 3,
+                  borderRadius: 50,
+                  borderColor: colors.themeYellow,
+                }}
+              >
                     <Image
                       style={{ height: 50, width: 50, borderRadius: 50 }}
                       source={{ uri: item.u_image }}
                     />
+                    <View
+                  style={{
+                    height: 15,
+                    width: 15,
+                    borderRadius: 50,
+                    position: 'absolute',
+                    backgroundColor: 'green',
+                    right: -5,
+                    borderWidth: 2,
+                    borderColor: colors.themeYellow,
+                  }}
+                ></View>
+                    </View>
                     <View style={{ flex: 1, marginLeft: 15 }}>
+                    <View style={{ alignSelf: 'flex-start' }}>
                       <Text
                         style={{
                           fontSize: 18,
@@ -191,6 +250,12 @@ const FirstRoute = ({ props, loading, boards, genRandom, fetchLoadAgain }) => {
                       >
                         {item.u_fullname}
                       </Text>
+                      <Ionicons
+                    style={{ position: 'absolute', right: -15 }}
+                    name="ios-checkmark-circle"
+                    color={colors.linkBlue}
+                  />
+                  </View>
                       <Text>
                         5
                         <MaterialCommunityIcons
@@ -200,17 +265,17 @@ const FirstRoute = ({ props, loading, boards, genRandom, fetchLoadAgain }) => {
                         />
                       </Text>
                     </View>
-                    <Entypo name="dots-three-horizontal" size={20} />
                   </UserWrap>
-                  <Map>
-                    <Image
+                  </LinearGradient>
+                    </ImageBackground>
+                    {/* <Image
                       style={{
                         height: 100,
                         resizeMode: 'cover',
                         width: '100%',
                       }}
                       source={require('../../assets/images/map.jpg')}
-                    />
+                    /> */}
                   </Map>
                   <PickWrap>
                     <Feather name="arrow-up-circle" color="black" size={18} />
@@ -219,6 +284,9 @@ const FirstRoute = ({ props, loading, boards, genRandom, fetchLoadAgain }) => {
                         Pick up {moment(item.pickup_date).format('MMM DD')}
                       </TextGrey>
                       <AddressText>{item.pickup_address}</AddressText>
+                    </View>
+                    <View style={{position: 'absolute',right: 10}}>
+                    <Entypo name="dots-three-horizontal" size={20} />
                     </View>
                   </PickWrap>
                   <DropWrap>
@@ -235,13 +303,14 @@ const FirstRoute = ({ props, loading, boards, genRandom, fetchLoadAgain }) => {
                     </View>
                     <View style={{ alignItems: 'flex-end' }}>
                       <Text style={{ color: colors.linkBlue }}>Available</Text>
-                      <AddressText>${item.rate}</AddressText>
+                      <AddressText>{item.rate}</AddressText>
                     </View>
                   </DropWrap>
                   <DetailWrap>
                     <TextGrey>Livestock: 10</TextGrey>
                     <TextGrey>Loads: 1</TextGrey>
                     <TextGrey>Weight: {item.total_weight} lbs</TextGrey>
+                    {/* <TextGrey> 1hrs</TextGrey> */}
                   </DetailWrap>
                 </View>
               </TouchableOpacity>
@@ -253,7 +322,7 @@ const FirstRoute = ({ props, loading, boards, genRandom, fetchLoadAgain }) => {
   )
 }
 
-const SecondRoute = ({ trailerBoards, genRandom, fetchTrailerAgain }) => (
+const SecondRoute = ({ trailerBoards, genRandom, fetchTrailerAgain ,props}) => (
   <Container>
     {/* {loading && <ActivityIndicator color="#000" />} */}
     <FlatList
@@ -332,9 +401,8 @@ const LoadBoards = (props) => {
   const [page, setPage] = useState(0)
   const [trailerPage, setTrailerPage] = useState(0)
   const [index, setIndex] = React.useState(0)
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState(null)
   const [showSearch, setShowSearch] = useState(false)
-  const [deviceToken, setDeviceToken] = useState('')
 
   const refRBSheet = useRef()
 
@@ -343,55 +411,16 @@ const LoadBoards = (props) => {
   }
 
   useEffect(() => {
-    registerForPushNotificationsAsync()
     getUser()
     fetchLoadBoards()
     fetchTrailerBoards()
-    firstVisitFunction()
+    openRBSheet()
     askPermission()
   }, [])
 
   useEffect(() => {
     props.navigation.setParams({ index, toggleShowSearch })
   }, [index, showSearch])
-
-  const registerForPushNotificationsAsync = async () => {
-    const { status: existingStatus } = await Permissions.getAsync(
-      Permissions.NOTIFICATIONS
-    )
-    let finalStatus = existingStatus
-    if (existingStatus !== 'granted') {
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
-      finalStatus = status
-    }
-    // if (finalStatus !== 'granted') {
-    //   alert('Failed to get push token for push notification!');
-    //   return;
-    // }
-    token = await Notifications.getExpoPushTokenAsync()
-    await AsyncStorage.setItem('PUSH_TOKEN', token)
-    try {
-      let userId = await AsyncStorage.getItem('USER_ID')
-      const response = await fetch(`${api_url}?action=updatepushtoken`, {
-        method: 'POST',
-        body: JSON.stringify({ id: userId, push_token: token }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-    } catch (error) {
-      console.log(error)
-    }
-
-    if (Platform.OS === 'android') {
-      Notifications.createChannelAndroidAsync('default', {
-        name: 'default',
-        sound: true,
-        priority: 'max',
-        vibrate: [0, 250, 250, 250],
-      })
-    }
-  }
 
   const askPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION)
@@ -415,33 +444,16 @@ const LoadBoards = (props) => {
       //   { cancelable: false }
       // );
     }
-
+    
     // const userLocation = Location.getCurrentPositionAsync()
   }
 
-  const firstVisitFunction = async () => {
-    let userString = await AsyncStorage.getItem('USER')
-    userString = JSON.parse(userString)
-    const pushToken = await AsyncStorage.getItem('PUSH_TOKEN')
-    // const id = await AsyncStorage.getItem('USER_ID')
-    // const userName = await AsyncStorage.getItem('USER_NAME')
+
+
+  const openRBSheet = () => {
     const fromSignup = props.navigation.getParam('fromSignup')
     if (fromSignup) {
       refRBSheet.current.open()
-      Alert.alert(
-        '',
-        'Email verification link sent to your email.',
-        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
-        { cancelable: true }
-      )
-
-      await fetch(
-        `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${pushToken}&msg=${userString.u_fullname}%20Complete%20your%20account&sender_id=${userString.u_id}&receiver_id=${userString.u_id}&sender_name=${userString.u_fullname}&message_type=completeaccount`
-      )
-
-      await fetch(
-        `https://conveyenceadmin.livestockloader.com/emailservice/index.php?email=${userString.u_email}&token=${pushToken}&type=sendverifyemail`
-      )
     }
   }
 
@@ -543,11 +555,11 @@ const LoadBoards = (props) => {
       case 'first':
         return (
           <FirstRoute
-            props={props}
             loading={loading}
             boards={boards}
             genRandom={genRandom}
             fetchLoadAgain={fetchLoadAgain}
+            props={props}
           />
         )
       case 'second':
@@ -557,6 +569,7 @@ const LoadBoards = (props) => {
             trailerBoards={trailerBoards}
             genRandom={genRandom}
             fetchTrailerAgain={fetchTrailerAgain}
+            props={props}
           />
         )
       default:
@@ -599,9 +612,9 @@ const LoadBoards = (props) => {
             }}
             style={{ marginTop: 40 }}
           >
-            <CustomButton>
+            <CustomButtonWithoutShadow>
               <ButtonText>COMPLETE PROFILE</ButtonText>
-            </CustomButton>
+            </CustomButtonWithoutShadow>
           </TouchableOpacity>
         </ActionSheetWrapper>
       </RBSheet>
@@ -638,16 +651,17 @@ const LoadBoards = (props) => {
         initialLayout={initialLayout}
       />
       <ButtonWrapper>
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        <BottomButton>
           <MapButton>
             <Feather name="map" size={15} />
             <ButtonTextLocal>Map</ButtonTextLocal>
           </MapButton>
+          {/* <LineCreate /> */}
           <FilterButton>
             <Octicons name="settings" size={15} />
             <ButtonTextLocal>Filter</ButtonTextLocal>
           </FilterButton>
-        </View>
+        </BottomButton>
       </ButtonWrapper>
     </View>
   )
@@ -657,7 +671,7 @@ LoadBoards.navigationOptions = ({ navigation }) => {
   let title = ''
   let idx = navigation.getParam('index')
   let toggle = navigation.getParam('toggleShowSearch')
-
+// alert(JSON.stringify(navigation))
   if (idx === 0) {
     title = 'Load Board'
   } else {
@@ -666,6 +680,11 @@ LoadBoards.navigationOptions = ({ navigation }) => {
 
   return {
     title: title,
+    // headerLeft: () => (
+    //   <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+    //       <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    //   </TouchableOpacity>
+    // ),
     headerRight: () => (
       <TouchableWithoutFeedback onPress={toggle}>
         <Feather

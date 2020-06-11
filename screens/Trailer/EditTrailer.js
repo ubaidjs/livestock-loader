@@ -19,7 +19,7 @@ import alphabets from '../../constants/AlphabetsArray'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { api_url } from '../../constants/Api'
-
+import { Ionicons } from '@expo/vector-icons'
 const CardWrapper = styled.View`
   padding: 20px;
 `
@@ -28,11 +28,17 @@ const Card = styled.View`
   margin: 20px 0;
   padding: 10px;
   border-radius: 5px;
-  elevation: 1;
-  shadow-color: #000;
-  shadow-opacity: 0.8;
-  shadow-radius: 2;
 `
+// const Card = styled.View`
+//   background-color: ${colors.lightGrey};
+//   margin: 20px 0;
+//   padding: 10px;
+//   border-radius: 5px;
+//   elevation: 1;
+//   shadow-color: #000;
+//   shadow-opacity: 0.8;
+//   shadow-radius: 2;
+// `
 const CardTitle = styled.Text`
   color: ${colors.littleDarkGrey};
   margin-bottom: 10px;
@@ -340,8 +346,13 @@ const Compartment = (props) => {
   )
 }
 
-EditTrailer.navigationOptions = {
+EditTrailer.navigationOptions = ({navigation}) =>({
   title: 'Edit Trailer',
-}
+  headerLeft: () => (
+    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    </TouchableOpacity>
+  ),
+})
 
 export default EditTrailer

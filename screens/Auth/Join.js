@@ -11,6 +11,7 @@ import {
   AsyncStorage,
   KeyboardAvoidingView,
   ScrollView,
+  Platform
 } from 'react-native'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import styled from 'styled-components/native'
@@ -30,13 +31,12 @@ import {
 } from '../../constants/CommonStyles'
 
 const JoinWrapper = styled.View`
-  padding-top: 50px;
   justify-content: space-between;
   align-items: stretch;
   margin: 0 20px;
-  flex: 1;
+  flex: 1;  
 `
-
+// padding-top: 50px;
 const ScreenTitle = styled.Text`
   font-size: 20px;
   color: ${colors.greyishBrown};
@@ -68,12 +68,25 @@ const FormWrapper = styled.View`
 const NotMember = styled.Text`
   margin-right: 10px;
   color: ${colors.warmGrey};
+  font-size: 13px;
 `
 
 const Link = styled.Text`
   color: ${colors.linkBlue};
+  font-size: 13px;
 `
-
+const AvatarWrapper = styled.View`
+  border-width: 3;
+  border-color: ${colors.themeYellow};
+  border-radius: 100px;
+  margin: 20px 0;
+  position: relative;
+`
+const UserImg = styled.Image`
+  height: 100;
+  width: 100;
+  border-radius: 50;
+`
 const Join = (props) => {
   const [uri, setUri] = useState()
   const [name, setName] = useState('')
@@ -183,12 +196,14 @@ const Join = (props) => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <JoinWrapper>
-        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        <ScrollView  showsVerticalScrollIndicator={false} style={{paddingTop: 50}}> 
           <ScreenTitle>Create Account</ScreenTitle>
           <TouchableWithoutFeedback onPress={_pickImage}>
             <PhotoContainer>
               {uri ? (
-                <AvatarImg source={{ uri: uri }} />
+                <AvatarWrapper>
+                   <UserImg source={{ uri: uri }} />
+              </AvatarWrapper>
               ) : (
                 <View>
                   <AvatarImg
@@ -227,7 +242,7 @@ const Join = (props) => {
               }}
             />
             <CustomInput
-              placeholder="Password"
+              placeholder="Create Password"
               secureTextEntry={true}
               value={password}
               onChangeText={(val) => setPassword(val)}
@@ -253,10 +268,11 @@ const Join = (props) => {
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
+                // alignItems: 'center',
                 marginTop: 25,
               }}
             >
-              <Text style={{ color: colors.warmGrey }}>
+              <Text style={{ color: colors.warmGrey , fontSize: 13}}>
                 By joining you agree with our{' '}
               </Text>
               <TouchableOpacity>
@@ -273,7 +289,7 @@ const Join = (props) => {
           )}
           {emailExist && <InvalidText>This email already exist</InvalidText>}
           {invalidEmail && <InvalidText>Incorrect emailid</InvalidText>}
-          <View style={{ marginTop: 30 }}>
+          <View style={{ marginTop: 30 , marginBottom: 50}}>
             {!name.length || !email.length || !password.length ? (
               <View>
                 <CustomButtonDisable>
@@ -295,7 +311,9 @@ const Join = (props) => {
             )}
           </View>
         </ScrollView>
-        <KeyboardSpacer />
+        {
+          Platform.OS == 'android' ? null : <KeyboardSpacer />
+        }
       </JoinWrapper>
     </TouchableWithoutFeedback>
   )

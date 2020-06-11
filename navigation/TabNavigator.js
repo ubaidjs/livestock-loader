@@ -73,7 +73,7 @@ const navigator = createMaterialBottomTabNavigator(
           if (focused) {
             return <Icon.moreActive />
           } else {
-            return <Icon.more />
+            return <Icon.more /> 
           }
         },
       },

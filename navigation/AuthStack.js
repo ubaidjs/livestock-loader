@@ -9,7 +9,6 @@ import Invite from '../screens/Auth/Invite'
 import ForgotPass from '../screens/Auth/ForgotPass'
 import ResetPassword from '../screens/Auth/ResetPassword'
 import EmailOtp from '../screens/Auth/EmailOtp'
-
 const navigator = createSwitchNavigator(
   {
     Login: Login,

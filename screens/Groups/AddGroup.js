@@ -22,7 +22,7 @@ import {
   ButtonTextDisable,
 } from '../../constants/CommonStyles'
 import colors from '../../constants/Colors'
-
+import { Ionicons } from '@expo/vector-icons'
 const AddGroup = (props) => {
   const [groupName, setGroupName] = useState('')
   const [searchTerm, setSearchTerm] = useState(null)
@@ -80,6 +80,8 @@ const AddGroup = (props) => {
   const saveGroup = async () => {
     setSaveLoading(true)
     try {
+      // const creator_id = await AsyncStorage.getItem('USER_ID')
+      const token = await AsyncStorage.getItem('USER_TOKEN')
       const response = await fetch(`${api_url}?action=addgroup`, {
         method: 'POST',
         body: JSON.stringify({
@@ -91,7 +93,6 @@ const AddGroup = (props) => {
           'Content-Type': 'application/json',
         },
       })
-
       const json = await response.json()
       if (json.status === '200') {
         let temp = selectedFriends.filter(
@@ -311,8 +312,18 @@ export const CustomButtonDisable = styled.View`
   justify-content: center;
 `
 
-AddGroup.navigationOptions = {
-  title: 'Add Group',
+AddGroup.navigationOptions = ({ navigation }) => {
+  return {
+    title: 'Add Group',
+    headerLeft: () => (
+      <TouchableOpacity
+        onPress={() => navigation.goBack(null)}
+        style={{ marginLeft: 15 }}
+      >
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
+  }
 }
 
 export default AddGroup

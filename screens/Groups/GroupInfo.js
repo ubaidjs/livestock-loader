@@ -13,8 +13,12 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import styled from 'styled-components/native'
-import { CustomInput } from '../../constants/CommonStyles'
-import { CustomButton, ButtonText } from '../../constants/CommonStyles'
+import {
+  CustomInput,
+  CustomButton,
+  ButtonText,
+} from '../../constants/CommonStyles'
+import { Ionicons } from '@expo/vector-icons'
 
 const Container = styled.View`
   flex: 1;
@@ -114,6 +118,14 @@ const GroupInfo = (props) => {
 
 GroupInfo.navigationOptions = ({ navigation }) => ({
   title: navigation.getParam('title'),
+  headerLeft: () => (
+    <TouchableOpacity
+      onPress={() => navigation.goBack(null)}
+      style={{ marginLeft: 15 }}
+    >
+      <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    </TouchableOpacity>
+  ),
 })
 
 export default GroupInfo

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef , useEffect } from 'react'
 import {
   View,
   Text,
@@ -17,12 +17,11 @@ import {
 } from 'react-native'
 import styled from 'styled-components/native'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons , Ionicons } from '@expo/vector-icons'
 import colors from '../../constants/Colors'
 import alphabets from '../../constants/AlphabetsArray'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
 import { api_url } from '../../constants/Api'
-
 const Container = styled.View`
   flex: 1;
   justify-content: space-between;
@@ -32,18 +31,23 @@ const Container = styled.View`
 const CardWrapper = styled.View`
   padding: 20px;
 `
-
+ 
 const Card = styled.View`
   background-color: ${colors.lightGrey};
   margin: 20px 0;
   padding: 10px;
   border-radius: 5px;
-  elevation: 1;
-  shadow-color: #000;
-  shadow-opacity: 0.8;
-  shadow-radius: 2;
 `
-
+// const Card = styled.View`
+//   background-color: ${colors.lightGrey};
+//   margin: 20px 0;
+//   padding: 10px;
+//   border-radius: 5px;
+//   elevation: 1;
+//   shadow-color: #000;
+//   shadow-opacity: 0.8;
+//   shadow-radius: 2;
+// `
 const CardTitle = styled.Text`
   color: ${colors.littleDarkGrey};
   margin-bottom: 10px;
@@ -54,6 +58,7 @@ const CustomInput = styled.TextInput`
   padding: 1px 10px;
   margin-horizontal: 5px;
   border-radius: 5px;
+  height: 24px;
 `
 
 const CompartmentWrapper = styled.View`
@@ -83,7 +88,7 @@ const AddTrailerTwo = (props) => {
     livestockType: false,
     vin: false,
   })
-
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   // const name_input = useRef(null)
   const lstype_input = useRef(null)
   const vin_input = useRef(null)
@@ -168,7 +173,25 @@ const AddTrailerTwo = (props) => {
     }
     return { l, w, h }
   }
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true); // or some other action
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false); // or some other action
+      }
+    );
 
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
   return (
     <Container>
       <ScrollView>
@@ -242,6 +265,7 @@ const AddTrailerTwo = (props) => {
                       fillErr.name && styles.errorBorder,
                       {
                         width: 150,
+                        
                       },
                     ]}
                     maxLength={30}
@@ -312,11 +336,28 @@ const AddTrailerTwo = (props) => {
                   />
                 </AboutWrapper>
               </Card>
-              <KeyboardSpacer></KeyboardSpacer>
+              {/* <KeyboardSpacer></KeyboardSpacer> */}
             </CardWrapper>
           </View>
         </TouchableWithoutFeedback>
+        {isKeyboardVisible ? 
+        <View style={{ paddingHorizontal: 20 }}>
+        <TouchableOpacity
+          onPress={() => {
+            addTrailer()
+          }}
+        >
+          <CustomButton>
+            {loading ? (
+              <ActivityIndicator color="#000" />
+            ) : (
+              <ButtonText>ADD</ButtonText>
+            )}
+          </CustomButton>
+        </TouchableOpacity>
+      </View> : null }
       </ScrollView>
+      {isKeyboardVisible ? null :
       <View style={{ paddingHorizontal: 20 }}>
         <TouchableOpacity
           onPress={() => {
@@ -331,7 +372,7 @@ const AddTrailerTwo = (props) => {
             )}
           </CustomButton>
         </TouchableOpacity>
-      </View>
+            </View> }
     </Container>
   )
 }
@@ -424,6 +465,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginHorizontal: 5,
     borderRadius: 5,
+    height: 24,
+    height : 43
   },
   errorBorder: {
     borderColor: '#d66b6b',
@@ -431,15 +474,26 @@ const styles = StyleSheet.create({
   },
 })
 
-AddTrailerTwo.navigationOptions = {
-  title: 'Add Trailer',
+AddTrailerTwo.navigationOptions = ({navigation}) => { 
+  return{title: 'Add Trailer',
+  headerLeft: () => (
+    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    </TouchableOpacity>
+  ),
+  headerRight: () => (
+    <TouchableOpacity onPress={() => {}}>
+      <Text style={{ color: '#fff', marginRight: 15 }}>Exit</Text>
+    </TouchableOpacity>
+  ),
   headerStyle: {
+    height: 80, 
     backgroundColor: colors.greyishBrown,
     elevation: 0, // for android
     shadowOpacity: 0, //for ios
     borderBottomWidth: 0, //for ios
   },
-  headerTintColor: '#fff',
+  headerTintColor: '#fff',}
 }
 
 export default AddTrailerTwo

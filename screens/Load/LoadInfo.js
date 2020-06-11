@@ -13,7 +13,7 @@ import {
 import styled from 'styled-components/native'
 import colors from '../../constants/Colors'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { Feather, MaterialCommunityIcons , Ionicons} from '@expo/vector-icons'
 import moment from 'moment'
 import { api_url } from '../../constants/Api'
 
@@ -201,6 +201,11 @@ const LoadInfo = (props) => {
 
 LoadInfo.navigationOptions = ({ navigation }) => ({
   title: 'Load Info',
+  headerLeft: () => (
+    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    </TouchableOpacity>
+  ),
   headerRight: () => (
     <TouchableWithoutFeedback
       onPress={() =>

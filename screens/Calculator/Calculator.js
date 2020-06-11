@@ -25,7 +25,6 @@ const Container = styled.View`
 `
 
 const ButtonText = styled.Text`
-  margin-top: 50px;
   border-width: 1;
   border-color: ${colors.themeYellow};
   padding: 15px;
@@ -167,6 +166,7 @@ const Calculator = (props) => {
                 refRBSheet.current.close()
                 props.navigation.navigate('AddTrailer')
               }}
+              style={{alignItems: 'center',justifyContent: 'center',marginTop: 50}}
             >
               <ButtonText>Add a new Trailer</ButtonText>
             </TouchableOpacity>
@@ -210,6 +210,17 @@ const Calculator = (props) => {
       </Container>
     </ScrollView>
   )
+}
+
+Calculator.navigationOptions = ({ navigation }) => {
+  return {
+    title: 'Calculate',
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
+  }
 }
 
 export default Calculator

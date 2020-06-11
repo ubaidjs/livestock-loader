@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from 'react-native'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons , Ionicons} from '@expo/vector-icons'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
@@ -22,7 +22,6 @@ import {
 } from '../../constants/CommonStyles'
 import styled from 'styled-components/native'
 import { api_url } from '../../constants/Api'
-
 const Section = styled(View)`
   border-bottom-width: 1;
   border-bottom-color: #e0e0e0;
@@ -58,12 +57,6 @@ const InputWrap = styled.View`
 
 const NotVerified = styled.Text`
   color: red;
-  margin-top: 5;
-`
-
-const Verified = styled.Text`
-  color: green;
-  margin-top: 5;
 `
 
 const EditProfile = (props) => {
@@ -171,6 +164,7 @@ const EditProfile = (props) => {
               multiline={true}
               numberOfLines={5}
               maxLength={200}
+              height="115px"
               textAlignVertical="top"
               onChangeText={(val) => setAbout(val)}
             />
@@ -242,16 +236,12 @@ const EditProfile = (props) => {
             <InputWrap>
               <CustomInput
                 style={{ flexGrow: 1, marginRight: 15 }}
-                placeholder="email"
+                placeholder="Email Address"
                 keyboardType="email-address"
                 value={email}
                 onChangeText={(val) => setEmail(val)}
               />
-              {profile.email_verified === '0' ? (
-                <NotVerified>not verified</NotVerified>
-              ) : (
-                <Verified>verified</Verified>
-              )}
+              <NotVerified>not verified</NotVerified>
             </InputWrap>
             <InputWrap>
               <CustomInput
@@ -261,11 +251,7 @@ const EditProfile = (props) => {
                 keyboardType="phone-pad"
                 onChangeText={(val) => setPhone(val)}
               />
-              {profile.phone_verified === '0' ? (
-                <NotVerified>not verified</NotVerified>
-              ) : (
-                <Verified>verified</Verified>
-              )}
+              <NotVerified>not verified</NotVerified>
             </InputWrap>
           </View>
         </View>
@@ -286,15 +272,32 @@ const EditProfile = (props) => {
   )
 }
 
-EditProfile.navigationOptions = {
-  title: 'Edit Profile',
-  headerStyle: {
-    backgroundColor: colors.greyishBrown,
-    elevation: 0, // for android
-    shadowOpacity: 0, //for ios
-    borderBottomWidth: 0, //for ios
-  },
-  headerTintColor: '#fff',
+// EditProfile.navigationOptions = {
+//   title: 'Edit Profile',
+//   headerStyle: {
+//     backgroundColor: colors.greyishBrown,
+//     elevation: 0, // for android
+//     shadowOpacity: 0, //for ios
+//     borderBottomWidth: 0, //for ios
+//   },
+//   headerTintColor: '#fff',
+// }
+EditProfile.navigationOptions = ({ navigation }) => {
+  return {
+    title: 'Edit Profile',
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      </TouchableOpacity>
+    ),
+    headerStyle: {
+          backgroundColor: colors.greyishBrown,
+          height: 80, 
+          elevation: 0, // for android
+          shadowOpacity: 0, //for ios
+          borderBottomWidth: 0, //for ios
+        },
+        headerTintColor: '#fff',
+  }
 }
-
 export default EditProfile

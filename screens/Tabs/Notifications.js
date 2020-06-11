@@ -17,35 +17,9 @@ import moment from 'moment'
 import { NavigationEvents } from 'react-navigation'
 import { api_url } from '../../constants/Api'
 import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons'
+import React from 'react'
+import { View, Text, Image } from 'react-native'
 import colors from '../../constants/Colors'
-
-const BarBottom = styled(View)`
-  padding-horizontal: 20;
-  padding-vertical: 5;
-  align-self: flex-end;
-`
-
-const BarTop = styled(View)`
-  flex-direction: row;
-  justify-content: space-between;
-  padding-bottom: 10;
-  border-bottom-width: 0.5;
-  padding: 15px 20px;
-  border-bottom-color: ${colors.darkGrey};
-`
-
-const Bar = styled.View`
-  background-color: #f7f7f7;
-
-  padding-bottom: 5;
-  margin: 20px;
-  border-radius: 10;
-  elevation: 1;
-`
-
-const Name = styled.Text`
-  font-size: 18;
-`
 
 const Notifications = () => {
   const [loading, setLoading] = useState(false)
@@ -151,10 +125,6 @@ const Notifications = () => {
       </ScrollView>
     </View>
   )
-}
-
-Notifications.navigationOptions = {
-  title: 'Alerts',
 }
 
 export default Notifications
