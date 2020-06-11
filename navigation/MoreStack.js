@@ -21,6 +21,7 @@ import MyGroups from '../screens/Groups/MyGroups'
 import AddGroup from '../screens/Groups/AddGroup'
 import GroupInfo from '../screens/Groups/GroupInfo'
 import MyMessages from '../screens/Friends/MyMessages'
+import GroupChat from '../screens/Groups/GroupChat'
 
 const navigator = createStackNavigator(
   {
@@ -41,7 +42,8 @@ const navigator = createStackNavigator(
     AddGroup,
     GroupInfo,
     Chat,
-    MyMessages
+    MyMessages,
+    GroupChat,
   },
   {
     headerLayoutPreset: 'center',
@@ -51,20 +53,20 @@ const navigator = createStackNavigator(
           return <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
         },
         headerTitleStyle: {
-          fontFamily: 'pt-mono-bold'
+          fontFamily: 'pt-mono-bold',
         },
         headerStyle: {
           backgroundColor: colors.greyishBrown,
           marginBottom: 10,
           elevation: 0, // for android
           shadowOpacity: 0, //for ios
-          borderBottomWidth: 0 //for ios
+          borderBottomWidth: 0, //for ios
           // borderBottomLeftRadius: 18,
           // borderBottomRightRadius: 18
         },
-        headerTintColor: '#fff'
+        headerTintColor: '#fff',
       }
-    }
+    },
   }
 )
 

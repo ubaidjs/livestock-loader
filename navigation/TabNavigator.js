@@ -84,7 +84,7 @@ const navigator = createMaterialBottomTabNavigator(
     defaultNavigationOptions: ({ navigation }) => {
       let tabBarVisible = true
       let routeName = navigation.state.routes[navigation.state.index].routeName
-      if (routeName == 'Chat') {
+      if (routeName == 'Chat' || routeName == 'GroupChat') {
         tabBarVisible = false
       }
 

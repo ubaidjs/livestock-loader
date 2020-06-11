@@ -10,7 +10,7 @@ import {
   RefreshControl,
   FlatList,
   TouchableHighlight,
-  TouchableNativeFeedback
+  TouchableNativeFeedback,
 } from 'react-native'
 import { Feather, Ionicons } from '@expo/vector-icons'
 import styled from 'styled-components/native'
@@ -41,7 +41,7 @@ const GroupName = styled.Text`
   font-size: 18px;
 `
 
-const MyGroups = props => {
+const MyGroups = (props) => {
   const [groups, setGroups] = useState([])
   const [loading, setLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
@@ -49,14 +49,13 @@ const MyGroups = props => {
   const fetchGroups = async () => {
     setLoading(true)
     try {
-      // const creator_id = await AsyncStorage.getItem('USER_ID')
-      const token = await AsyncStorage.getItem('USER_TOKEN')
-      const response = await fetch(`${api_url}?action=getgroupofuser`, {
+      const id = await AsyncStorage.getItem('USER_ID')
+      const response = await fetch(`${api_url}?action=getmygroup`, {
         method: 'POST',
-        body: JSON.stringify({ token, creator_id: token }),
+        body: JSON.stringify({ u_id: id }),
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       })
       const json = await response.json()
       if (json.status === '200') {
@@ -83,18 +82,18 @@ const MyGroups = props => {
       <NavigationEvents onWillFocus={() => fetchGroups()} />
       <Container>
         {loading && <ActivityIndicator color="#000" />}
-        {groups.map(item => (
+        {groups.map((item, index) => (
           <TouchableOpacity
-            key={item.id}
+            key={index}
             onPress={() =>
               props.navigation.navigate('GroupInfo', {
-                group: item
+                group: item.group_participant,
               })
             }
           >
             <Bar>
               <BarItem>
-                <GroupName>{item.title}</GroupName>
+                <GroupName>{item.group_name}</GroupName>
                 <Ionicons
                   name="ios-arrow-round-forward"
                   size={25}
@@ -122,7 +121,7 @@ MyGroups.navigationOptions = ({ navigation }) => ({
         />
       </TouchableWithoutFeedback>
     )
-  }
+  },
 })
 
 export default MyGroups

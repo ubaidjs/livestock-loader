@@ -31,10 +31,20 @@ const AddGroup = (props) => {
   const [saveLoading, setSaveLoading] = useState(false)
   const [selectedFriends, setSelectedFriends] = useState([])
   const [checked, setChecked] = useState({})
+  const [user, setUser] = useState({})
 
   useEffect(() => {
+    fetchUser()
     fetchFriends()
   }, [])
+
+  const fetchUser = async () => {
+    let res = await AsyncStorage.getItem('USER')
+    let temp = JSON.parse(res)
+    setUser(temp)
+    temp.group_role = 'admin'
+    setSelectedFriends([...selectedFriends, temp])
+  }
 
   const fetchFriends = async () => {
     setLoading(true)
@@ -49,7 +59,12 @@ const AddGroup = (props) => {
       })
       const json = await response.json()
       if (json.status === '200') {
-        setFriends(json.data)
+        let temp = []
+        json.data.forEach((item) => {
+          item.group_role = 'participant'
+          temp.push(item)
+        })
+        setFriends(temp)
       }
     } catch (error) {
       console.log('error: ', error)
@@ -63,32 +78,32 @@ const AddGroup = (props) => {
   }
 
   const saveGroup = async () => {
-    // console.log(selectedFriends)
     setSaveLoading(true)
     try {
-      // const creator_id = await AsyncStorage.getItem('USER_ID')
-      const token = await AsyncStorage.getItem('USER_TOKEN')
-      const id = await AsyncStorage.getItem('USER_ID')
-      const userName = await AsyncStorage.getItem('USER_NAME')
-
       const response = await fetch(`${api_url}?action=addgroup`, {
         method: 'POST',
         body: JSON.stringify({
           title: groupName,
-          creator_id: token,
+          creator_id: user.u_token,
           participants: selectedFriends,
         }),
         headers: {
           'Content-Type': 'application/json',
         },
       })
-      selectedFriends.forEach(async (item) => {
-        await fetch(
-          `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${item.push_token}&msg=${userName}%20added%20you%20to%20a%20group&sender_id=${id}&receiver_id=${item.u_id}&sender_name=${userName}&message_type=groupnotification`
-        )
-      })
+
       const json = await response.json()
       if (json.status === '200') {
+        let temp = selectedFriends.filter(
+          (item) => item.group_role === 'participant'
+        )
+
+        temp.forEach(async (item) => {
+          await fetch(
+            `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${item.push_token}&msg=${user.u_fullname}%20added%20you%20to%20a%20group&sender_id=${user.u_id}&receiver_id=${item.u_id}&sender_name=${user.u_fullname}&message_type=groupnotification&group_id=${json.group_id}`
+          )
+        })
+
         Alert.alert(
           '',
           'Group saved',
@@ -106,6 +121,14 @@ const AddGroup = (props) => {
     } finally {
       setSaveLoading(false)
     }
+  }
+
+  const sendPushNotification = (groupId) => {
+    selectedFriends.forEach(async (item) => {
+      await fetch(
+        `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${item.push_token}&msg=${user.u_fullname}%20added%20you%20to%20a%20group&sender_id=${user.u_id}&receiver_id=${item.u_id}&sender_name=${user.u_fullname}&message_type=groupnotification&group_id=${groupId}`
+      )
+    })
   }
 
   const searchFriends = async () => {
