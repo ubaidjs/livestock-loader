@@ -14,7 +14,7 @@ import colors from '../../constants/Colors'
 import { CustomButton, CustomInput , ButtonText, CustomButtonWithoutShadow,} from '../../constants/CommonStyles'
 import EmailValidation from '../../validation/Emailvalidation'
 import { Ionicons , Octicons} from '@expo/vector-icons'
-import BackArrowHeader from '../../components/BackArrowHeader'
+// import BackArrowHeader from '../../components/BackArrowHeader'
 const Container = styled.View`
   padding: 30px 20px;
   padding-bottom: 10px;
