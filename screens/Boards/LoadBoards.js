@@ -13,7 +13,7 @@ import {
   StyleSheet,
   RefreshControl,
   Alert,
-  ImageBackground
+  ImageBackground,
 } from 'react-native'
 import MapView from 'react-native-maps'
 import {
@@ -22,10 +22,10 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
   Octicons,
-  Ionicons
+  Ionicons,
 } from '@expo/vector-icons'
-import { Location  } from 'expo';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Location } from 'expo'
+import { LinearGradient } from 'expo-linear-gradient'
 import * as Permissions from 'expo-permissions'
 import styled from 'styled-components/native'
 import moment from 'moment'
@@ -39,11 +39,29 @@ import {
 import { TabView, SceneMap } from 'react-native-tab-view'
 import { api_url } from '../../constants/Api'
 import colors from '../../constants/Colors'
+
+const BottomSheetOption = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  padding-horizontal: 20;
+  padding-vertical: 10;
+  border-bottom-width: 0.5;
+  border-bottom-color: #e9e9e9;
+`
+
+const BottomSheetImage = styled(Image)`
+  height: 50;
+  width: 50;
+  border-radius: 50;
+  align-self: center;
+  margin-top: 20;
+`
+
 const Container = styled.View`
   flex: 1;
   padding-horizontal: 20px;
   background-color: ${colors.lightGrey};
-` 
+`
 
 const BoardWrap = styled.View`
   background-color: #fff;
@@ -132,12 +150,14 @@ const BottomButton = styled.View`
 flexDirection: row; 
 border-radius: 7px;
 margin-bottom: 20px;
-shadowRadius:  ${Platform.OS == "android" ?  18 : 10};
-shadowOpacity: ${Platform.OS == "android" ?  30 : 0.16}; 
+shadowRadius:  ${Platform.OS == 'android' ? 18 : 10};
+shadowOpacity: ${Platform.OS == 'android' ? 30 : 0.16}; 
 shadow-color: #000;
-shadowOffset:{ width: ${Platform.OS == "android" ?  -1 : 0}, height: ${Platform.OS == "android" ?  9 : 10} };
-elevation: ${Platform.OS == "android" ?  12 : 15};
-`;
+shadowOffset:{ width: ${Platform.OS == 'android' ? -1 : 0}, height: ${
+  Platform.OS == 'android' ? 9 : 10
+} };
+elevation: ${Platform.OS == 'android' ? 12 : 15};
+`
 const FilterButton = styled.View`
   background-color: #ddba45;
   padding: 15px 10px;
@@ -148,8 +168,8 @@ const FilterButton = styled.View`
   justify-content: center;
   align-items: center;
   width: 100px;
-  border-left-width:1px;
-  border-color:rgb(211 ,176 ,58);
+  border-left-width: 1px;
+  border-color: rgb(211, 176, 58);
 `
 const MapButton = styled.View`
   background-color: ${colors.themeYellow};
@@ -161,8 +181,8 @@ const MapButton = styled.View`
   justify-content: center;
   align-items: center;
   width: 100px;
-  border-right-width:1px;
-  border-color:rgb(211 ,176 ,58);
+  border-right-width: 1px;
+  border-color: rgb(211, 176, 58);
 `
 
 const ButtonTextLocal = styled.Text`
@@ -171,17 +191,25 @@ const ButtonTextLocal = styled.Text`
   margin-left: 10;
 `
 const LineCreate = styled.View`
-height: 47px;
-width: 2px;
-flex-direction: column;
-background: rgb(211 ,176 ,58);
-`;
-const FirstRoute = ({ loading, boards, genRandom, fetchLoadAgain , props}) => {
+  height: 47px;
+  width: 2px;
+  flex-direction: column;
+  background: rgb(211, 176, 58);
+`
+const FirstRoute = ({
+  loading,
+  boards,
+  genRandom,
+  fetchLoadAgain,
+  props,
+  refRBSheetProfile,
+  setSheetUser,
+}) => {
   return (
     <Container>
       {loading && <ActivityIndicator color="#000" />}
       <FlatList
-       style={{paddingTop: 20}}
+        style={{ paddingTop: 20 }}
         data={boards}
         extraData={boards}
         keyExtractor={(item) => genRandom()}
@@ -190,83 +218,87 @@ const FirstRoute = ({ loading, boards, genRandom, fetchLoadAgain , props}) => {
         renderItem={({ item }) => {
           return (
             <BoardWrap key={item.id}>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => {
-                  props.navigation.navigate('BoardInfo', {
-                    board: item,
-                  })
-                }}
-              >
-                <View>
+              <View>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={() => {
+                    props.navigation.navigate('BoardInfo', {
+                      board: item,
+                    })
+                  }}
+                >
                   <Map>
                     <ImageBackground
-                    style={{
-                      height: 164,
-                      resizeMode: 'cover',
-                      width: '100%',
-                    }}
-                    source={require('../../assets/images/map.jpg')}
+                      style={{
+                        height: 164,
+                        resizeMode: 'cover',
+                        width: '100%',
+                      }}
+                      source={require('../../assets/images/map.jpg')}
                     >
                       <LinearGradient
-                      //  colors={['#fff', 'rgba(255,255,255,0)']}
-                      colors={['#fff', 'rgba(255,255,255,0)']}
-                      // start={[0,0]}
-                      // end={[1,1]} 
-                       >  
-                     <UserWrap> 
-                  <View
-                style={{
-                  borderWidth: 3,
-                  borderRadius: 50,
-                  borderColor: colors.themeYellow,
-                }}
-              >
-                    <Image
-                      style={{ height: 50, width: 50, borderRadius: 50 }}
-                      source={{ uri: item.u_image }}
-                    />
-                    <View
-                  style={{
-                    height: 15,
-                    width: 15,
-                    borderRadius: 50,
-                    position: 'absolute',
-                    backgroundColor: 'green',
-                    right: -5,
-                    borderWidth: 2,
-                    borderColor: colors.themeYellow,
-                  }}
-                ></View>
-                    </View>
-                    <View style={{ flex: 1, marginLeft: 15 }}>
-                    <View style={{ alignSelf: 'flex-start' }}>
-                      <Text
-                        style={{
-                          fontSize: 18,
-                          fontWeight: 'bold',
-                          color: colors.greyishBrown,
-                        }}
+                        //  colors={['#fff', 'rgba(255,255,255,0)']}
+                        colors={['#fff', 'rgba(255,255,255,0)']}
+                        // start={[0,0]}
+                        // end={[1,1]}
                       >
-                        {item.u_fullname}
-                      </Text>
-                      <Ionicons
-                    style={{ position: 'absolute', right: -15 }}
-                    name="ios-checkmark-circle"
-                    color={colors.linkBlue}
-                  />
-                  </View>
-                      <Text>
-                        5
-                        <MaterialCommunityIcons
-                          name="star"
-                          size={15}
-                          color={colors.themeYellow}
-                        />
-                      </Text>
-                    </View>
-                  </UserWrap>
-                  </LinearGradient>
+                        <UserWrap>
+                          <View
+                            style={{
+                              borderWidth: 3,
+                              borderRadius: 50,
+                              borderColor: colors.themeYellow,
+                            }}
+                          >
+                            <Image
+                              style={{
+                                height: 50,
+                                width: 50,
+                                borderRadius: 50,
+                              }}
+                              source={{ uri: item.u_image }}
+                            />
+                            <View
+                              style={{
+                                height: 15,
+                                width: 15,
+                                borderRadius: 50,
+                                position: 'absolute',
+                                backgroundColor: 'green',
+                                right: -5,
+                                borderWidth: 2,
+                                borderColor: colors.themeYellow,
+                              }}
+                            ></View>
+                          </View>
+                          <View style={{ flex: 1, marginLeft: 15 }}>
+                            <View style={{ alignSelf: 'flex-start' }}>
+                              <Text
+                                style={{
+                                  fontSize: 18,
+                                  fontWeight: 'bold',
+                                  color: colors.greyishBrown,
+                                }}
+                              >
+                                {item.u_fullname}
+                              </Text>
+                              <Ionicons
+                                style={{ position: 'absolute', right: -15 }}
+                                name="ios-checkmark-circle"
+                                color={colors.linkBlue}
+                              />
+                            </View>
+                            <Text>
+                              5
+                              <MaterialCommunityIcons
+                                name="star"
+                                size={15}
+                                color={colors.themeYellow}
+                              />
+                            </Text>
+                          </View>
+                        </UserWrap>
+                      </LinearGradient>
                     </ImageBackground>
                     {/* <Image
                       style={{
@@ -277,43 +309,54 @@ const FirstRoute = ({ loading, boards, genRandom, fetchLoadAgain , props}) => {
                       source={require('../../assets/images/map.jpg')}
                     /> */}
                   </Map>
-                  <PickWrap>
-                    <Feather name="arrow-up-circle" color="black" size={18} />
-                    <View style={{ marginLeft: 10 }}>
-                      <TextGrey>
-                        Pick up {moment(item.pickup_date).format('MMM DD')}
-                      </TextGrey>
-                      <AddressText>{item.pickup_address}</AddressText>
-                    </View>
-                    <View style={{position: 'absolute',right: 10}}>
-                    <Entypo name="dots-three-horizontal" size={20} />
-                    </View>
-                  </PickWrap>
-                  <DropWrap>
-                    <Feather
-                      name="arrow-down-circle"
-                      color={colors.themeYellow}
-                      size={18}
-                    />
-                    <View style={{ flex: 1, marginLeft: 10 }}>
-                      <TextGrey>
-                        Drop off {moment(item.drop_date).format('MMM DD')}
-                      </TextGrey>
-                      <AddressText>{item.drop_address}</AddressText>
-                    </View>
-                    <View style={{ alignItems: 'flex-end' }}>
-                      <Text style={{ color: colors.linkBlue }}>Available</Text>
-                      <AddressText>{item.rate}</AddressText>
-                    </View>
-                  </DropWrap>
-                  <DetailWrap>
-                    <TextGrey>Livestock: 10</TextGrey>
-                    <TextGrey>Loads: 1</TextGrey>
-                    <TextGrey>Weight: {item.total_weight} lbs</TextGrey>
-                    {/* <TextGrey> 1hrs</TextGrey> */}
-                  </DetailWrap>
-                </View>
-              </TouchableOpacity>
+                </TouchableOpacity>
+                <PickWrap>
+                  <Feather name="arrow-up-circle" color="black" size={18} />
+                  <View style={{ marginLeft: 10 }}>
+                    <TextGrey>
+                      Pick up {moment(item.pickup_date).format('MMM DD')}
+                    </TextGrey>
+                    <AddressText>{item.pickup_address}</AddressText>
+                  </View>
+                  <View style={{ position: 'absolute', right: 10 }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setSheetUser({
+                          id: item.u_id,
+                          name: item.u_fullname,
+                          image: item.u_image,
+                        })
+                        refRBSheetProfile.current.open()
+                      }}
+                    >
+                      <Entypo name="dots-three-horizontal" size={20} />
+                    </TouchableOpacity>
+                  </View>
+                </PickWrap>
+                <DropWrap>
+                  <Feather
+                    name="arrow-down-circle"
+                    color={colors.themeYellow}
+                    size={18}
+                  />
+                  <View style={{ flex: 1, marginLeft: 10 }}>
+                    <TextGrey>
+                      Drop off {moment(item.drop_date).format('MMM DD')}
+                    </TextGrey>
+                    <AddressText>{item.drop_address}</AddressText>
+                  </View>
+                  <View style={{ alignItems: 'flex-end' }}>
+                    <Text style={{ color: colors.linkBlue }}>Available</Text>
+                    <AddressText>{item.rate}</AddressText>
+                  </View>
+                </DropWrap>
+                <DetailWrap>
+                  <TextGrey>Livestock: 10</TextGrey>
+                  <TextGrey>Loads: 1</TextGrey>
+                  <TextGrey>Weight: {item.total_weight} lbs</TextGrey>
+                  {/* <TextGrey> 1hrs</TextGrey> */}
+                </DetailWrap>
+              </View>
             </BoardWrap>
           )
         }}
@@ -322,7 +365,12 @@ const FirstRoute = ({ loading, boards, genRandom, fetchLoadAgain , props}) => {
   )
 }
 
-const SecondRoute = ({ trailerBoards, genRandom, fetchTrailerAgain ,props}) => (
+const SecondRoute = ({
+  trailerBoards,
+  genRandom,
+  fetchTrailerAgain,
+  props,
+}) => (
   <Container>
     {/* {loading && <ActivityIndicator color="#000" />} */}
     <FlatList
@@ -403,18 +451,23 @@ const LoadBoards = (props) => {
   const [index, setIndex] = React.useState(0)
   const [user, setUser] = useState(null)
   const [showSearch, setShowSearch] = useState(false)
+  const [deviceToken, setDeviceToken] = useState('')
+  const [sheetUser, setSheetUser] = useState({})
 
   const refRBSheet = useRef()
+  const refRBSheetProfile = useRef()
 
   const toggleShowSearch = () => {
     setShowSearch(!showSearch)
   }
 
   useEffect(() => {
+    registerForPushNotificationsAsync()
     getUser()
     fetchLoadBoards()
     fetchTrailerBoards()
     openRBSheet()
+    firstVisitFunction()
     askPermission()
   }, [])
 
@@ -426,29 +479,61 @@ const LoadBoards = (props) => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION)
 
     if (status !== 'granted') {
-      // Alert.alert(
-      //   'Alert Title',
-      //   'My Alert Msg',
-      //   [
-      //     {
-      //       text: 'Ask me later',
-      //       onPress: () => console.log('Ask me later pressed')
-      //     },
-      //     {
-      //       text: 'Cancel',
-      //       onPress: () => console.log('Cancel Pressed'),
-      //       style: 'cancel'
-      //     },
-      //     { text: 'OK', onPress: () => console.log('OK Pressed') }
-      //   ],
-      //   { cancelable: false }
-      // );
     }
-    
-    // const userLocation = Location.getCurrentPositionAsync()
   }
 
+  const registerForPushNotificationsAsync = async () => {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    )
+    let finalStatus = existingStatus
+    if (existingStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
+      finalStatus = status
+    }
+    token = await Notifications.getExpoPushTokenAsync()
+    await AsyncStorage.setItem('PUSH_TOKEN', token)
+    try {
+      let userId = await AsyncStorage.getItem('USER_ID')
+      const response = await fetch(`${api_url}?action=updatepushtoken`, {
+        method: 'POST',
+        body: JSON.stringify({ id: userId, push_token: token }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    } catch (error) {
+      console.log(error)
+    }
 
+    if (Platform.OS === 'android') {
+      Notifications.createChannelAndroidAsync('default', {
+        name: 'default',
+        sound: true,
+        priority: 'max',
+        vibrate: [0, 250, 250, 250],
+      })
+    }
+  }
+
+  const firstVisitFunction = async () => {
+    let userString = await AsyncStorage.getItem('USER')
+    userString = JSON.parse(userString)
+    const pushToken = await AsyncStorage.getItem('PUSH_TOKEN')
+    // const id = await AsyncStorage.getItem('USER_ID')
+    // const userName = await AsyncStorage.getItem('USER_NAME')
+    const fromSignup = props.navigation.getParam('fromSignup')
+    if (fromSignup) {
+      refRBSheet.current.open()
+      await fetch(
+        `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${pushToken}&msg=${userString.u_fullname}%20Complete%20your%20account&sender_id=${userString.u_id}&receiver_id=${userString.u_id}&sender_name=${userString.u_fullname}&message_type=completeaccount`
+      )
+
+      await fetch(
+        `https://conveyenceadmin.livestockloader.com/emailservice/index.php?email=${userString.u_email}&token=${pushToken}&type=sendverifyemail`
+      )
+    }
+  }
 
   const openRBSheet = () => {
     const fromSignup = props.navigation.getParam('fromSignup')
@@ -560,6 +645,8 @@ const LoadBoards = (props) => {
             genRandom={genRandom}
             fetchLoadAgain={fetchLoadAgain}
             props={props}
+            setSheetUser={setSheetUser}
+            refRBSheetProfile={refRBSheetProfile}
           />
         )
       case 'second':
@@ -618,6 +705,63 @@ const LoadBoards = (props) => {
           </TouchableOpacity>
         </ActionSheetWrapper>
       </RBSheet>
+
+      <RBSheet
+        height={300}
+        ref={refRBSheetProfile}
+        closeOnDragDown={true}
+        closeOnPressMask={true}
+        closeOnPressBack={true}
+        customStyles={{
+          wrapper: {
+            backgroundColor: 'rgba(242,242,242,0.5)',
+          },
+          container: {
+            elevation: 1,
+            borderTopLeftRadius: 15,
+            borderTopRightRadius: 15,
+          },
+          draggableIcon: {
+            backgroundColor: colors.themeYellow,
+          },
+        }}
+      >
+        <View>
+          <BottomSheetImage source={{ uri: sheetUser.image }} />
+          <ActionSheetText>{sheetUser.name}</ActionSheetText>
+          <TouchableOpacity
+            onPress={() => {
+              refRBSheetProfile.current.close()
+              props.navigation.navigate('Chat', {
+                friendId: sheetUser.id,
+                friendName: sheetUser.name,
+                friendImage: sheetUser.image,
+                userId: user.u_id,
+                userName: user.u_fullname,
+                userImage: user.u_image,
+              })
+            }}
+          >
+            <BottomSheetOption>
+              <MaterialCommunityIcons name="chat" size={15} color="gray" />
+              <Text
+                style={{ color: colors.linkBlue, fontSize: 18, marginLeft: 10 }}
+              >
+                Message
+              </Text>
+            </BottomSheetOption>
+          </TouchableOpacity>
+          <BottomSheetOption>
+            <MaterialIcons name="phone" size={15} color="gray" />
+            <Text
+              style={{ color: colors.linkBlue, fontSize: 18, marginLeft: 10 }}
+            >
+              Call
+            </Text>
+          </BottomSheetOption>
+        </View>
+      </RBSheet>
+
       <View
         style={{
           height: 20,
@@ -671,7 +815,7 @@ LoadBoards.navigationOptions = ({ navigation }) => {
   let title = ''
   let idx = navigation.getParam('index')
   let toggle = navigation.getParam('toggleShowSearch')
-// alert(JSON.stringify(navigation))
+  // alert(JSON.stringify(navigation))
   if (idx === 0) {
     title = 'Load Board'
   } else {

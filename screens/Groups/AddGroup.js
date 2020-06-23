@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   View,
   Text,
@@ -13,16 +13,74 @@ import {
   ActivityIndicator,
   Alert,
   TextInput,
+  Dimensions,
 } from 'react-native'
 import styled from 'styled-components/native'
+import RBSheet from 'react-native-raw-bottom-sheet'
 import { api_url } from '../../constants/Api'
 import {
   CustomInput,
   ButtonText,
   ButtonTextDisable,
 } from '../../constants/CommonStyles'
+import { TabView } from 'react-native-tab-view'
 import colors from '../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
+
+const FirstRoute = ({
+  friends,
+  checked,
+  selectedFriends,
+  setSelectedFriends,
+  handleChecked,
+}) => {
+  return (
+    <FlatList
+      showsVerticalScrollIndicator={false}
+      data={friends}
+      extraData={checked}
+      keyExtractor={(item) => item.u_id}
+      renderItem={({ item }) => {
+        return (
+          <FriendView>
+            <Image
+              style={{ height: 50, width: 50, borderRadius: 50 }}
+              source={{ uri: item.u_image }}
+            />
+            <Name>{item.u_fullname}</Name>
+            {checked[item.u_id] ? (
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  const filterarr = selectedFriends.filter(
+                    (selected) => selected.u_id != item.u_id
+                  )
+                  setSelectedFriends(filterarr)
+                  handleChecked(item.u_id, false)
+                }}
+              >
+                <UndoAddBtn>Invite</UndoAddBtn>
+              </TouchableWithoutFeedback>
+            ) : (
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  setSelectedFriends([...selectedFriends, item])
+                  handleChecked(item.u_id, true)
+                }}
+              >
+                <AddBtn>Invite</AddBtn>
+              </TouchableWithoutFeedback>
+            )}
+          </FriendView>
+        )
+      }}
+    />
+  )
+}
+
+const SecondRoute = () => {
+  return <View></View>
+}
+
 const AddGroup = (props) => {
   const [groupName, setGroupName] = useState('')
   const [searchTerm, setSearchTerm] = useState(null)
@@ -32,6 +90,9 @@ const AddGroup = (props) => {
   const [selectedFriends, setSelectedFriends] = useState([])
   const [checked, setChecked] = useState({})
   const [user, setUser] = useState({})
+  const [index, setIndex] = useState(0)
+
+  const refRBSheet = useRef()
 
   useEffect(() => {
     fetchUser()
@@ -94,6 +155,7 @@ const AddGroup = (props) => {
         },
       })
       const json = await response.json()
+
       if (json.status === '200') {
         let temp = selectedFriends.filter(
           (item) => item.group_role === 'participant'
@@ -105,31 +167,13 @@ const AddGroup = (props) => {
           )
         })
 
-        Alert.alert(
-          '',
-          'Group saved',
-          [
-            {
-              text: 'OK',
-              onPress: () => props.navigation.navigate('MyGroups'),
-            },
-          ],
-          { cancelable: false }
-        )
+        refRBSheet.current.open()
       }
     } catch (error) {
       console.log('error: ', error)
     } finally {
       setSaveLoading(false)
     }
-  }
-
-  const sendPushNotification = (groupId) => {
-    selectedFriends.forEach(async (item) => {
-      await fetch(
-        `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${item.push_token}&msg=${user.u_fullname}%20added%20you%20to%20a%20group&sender_id=${user.u_id}&receiver_id=${item.u_id}&sender_name=${user.u_fullname}&message_type=groupnotification&group_id=${groupId}`
-      )
-    })
   }
 
   const searchFriends = async () => {
@@ -156,12 +200,88 @@ const AddGroup = (props) => {
     }
   }
 
+  const renderTabBar = (props) => {
+    return (
+      <View style={styles.tabBar}>
+        {props.navigationState.routes.map((route, i) => {
+          return (
+            <TouchableOpacity
+              key={i}
+              style={styles.tabItem}
+              onPress={() => setIndex(i)}
+            >
+              <Text
+                style={
+                  route.key === props.navigationState.routes[index].key
+                    ? styles.tabTextActive
+                    : styles.tabText
+                }
+              >
+                {route.title}
+              </Text>
+            </TouchableOpacity>
+          )
+        })}
+      </View>
+    )
+  }
+
+  const renderScene = ({ route }) => {
+    switch (route.key) {
+      case 'first':
+        return (
+          <FirstRoute
+            friends={friends}
+            checked={checked}
+            selectedFriends={selectedFriends}
+            setSelectedFriends={setSelectedFriends}
+            handleChecked={handleChecked}
+          />
+        )
+      case 'second':
+        return <SecondRoute />
+      default:
+        return null
+    }
+  }
+
   return (
     <Container>
       <CustomInput
         placeholder="Enter Groupe name"
         onChangeText={(val) => setGroupName(val)}
       />
+
+      <RBSheet
+        onClose={() => {
+          props.navigation.navigate('MyGroups')
+        }}
+        height={300}
+        ref={refRBSheet}
+        closeOnPressBack={true}
+        closeOnDragDown={true}
+        closeOnPressMask={true}
+        customStyles={{
+          wrapper: {
+            backgroundColor: 'gray',
+          },
+          container: {
+            elevation: 1,
+            borderTopLeftRadius: 15,
+            borderTopRightRadius: 15,
+          },
+          draggableIcon: {
+            backgroundColor: colors.themeYellow,
+          },
+        }}
+      >
+        <ActionSheetWrapper>
+          <ActionSheetText>Group "{groupName}" added!</ActionSheetText>
+          <Text style={{ marginTop: 40, color: colors.linkBlue }}>
+            Complete later
+          </Text>
+        </ActionSheetWrapper>
+      </RBSheet>
 
       <ScrollView>
         <View
@@ -178,44 +298,18 @@ const AddGroup = (props) => {
               onSubmitEditing={() => searchFriends()}
             />
           </View>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={friends}
-            extraData={checked}
-            keyExtractor={(item) => item.u_id}
-            renderItem={({ item }) => {
-              return (
-                <FriendView>
-                  <Image
-                    style={{ height: 50, width: 50, borderRadius: 50 }}
-                    source={{ uri: item.u_image }}
-                  />
-                  <Name>{item.u_fullname}</Name>
-                  {checked[item.u_id] ? (
-                    <TouchableWithoutFeedback
-                      onPress={() => {
-                        const filterarr = selectedFriends.filter(
-                          (selected) => selected.u_id != item.u_id
-                        )
-                        setSelectedFriends(filterarr)
-                        handleChecked(item.u_id, false)
-                      }}
-                    >
-                      <UndoAddBtn>Invite</UndoAddBtn>
-                    </TouchableWithoutFeedback>
-                  ) : (
-                    <TouchableWithoutFeedback
-                      onPress={() => {
-                        setSelectedFriends([...selectedFriends, item])
-                        handleChecked(item.u_id, true)
-                      }}
-                    >
-                      <AddBtn>Invite</AddBtn>
-                    </TouchableWithoutFeedback>
-                  )}
-                </FriendView>
-              )
+          <TabView
+            navigationState={{
+              index,
+              routes: [
+                { key: 'first', title: 'Members' },
+                { key: 'second', title: 'Contacts' },
+              ],
             }}
+            renderScene={renderScene}
+            renderTabBar={renderTabBar}
+            onIndexChange={setIndex}
+            initialLayout={{ width: Dimensions.get('window').width }}
           />
           {loading && <ActivityIndicator />}
         </View>
@@ -238,6 +332,20 @@ const AddGroup = (props) => {
     </Container>
   )
 }
+
+const ActionSheetWrapper = styled.View`
+  padding-top: 50px;
+  display: flex;
+  align-items: center;
+`
+
+const ActionSheetText = styled.Text`
+  color: ${colors.greyishBrown};
+  font-family: 'pt-mono';
+  font-size: 22;
+  text-align: center;
+  margin-top: 20;
+`
 
 const Container = styled.View`
   padding: 20px;
@@ -325,5 +433,31 @@ AddGroup.navigationOptions = ({ navigation }) => {
     ),
   }
 }
+
+const styles = StyleSheet.create({
+  tabBar: {
+    flexDirection: 'row',
+    marginHorizontal: 10,
+  },
+  tabItem: {
+    // flex: 1,
+    alignItems: 'center',
+    padding: 10,
+  },
+  tabText: {
+    color: 'gray',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    borderColor: colors.darkGrey,
+  },
+  tabTextActive: {
+    borderWidth: 1,
+    borderRadius: 10,
+    backgroundColor: colors.themeYellow,
+    borderColor: colors.themeYellow,
+    padding: 10,
+  },
+})
 
 export default AddGroup

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   View,
   Text,
@@ -74,11 +74,9 @@ const Float = styled.View`
 `
 
 const EditTrailer = (props) => {
-  const [trailer, setTrailer] = useState(props.navigation.getParam('tr'))
+  const trailer = props.navigation.getParam('tr')
   const [trailerMeasurement, setTrailerMeasurement] = useState({})
   const [loading, setLoading] = useState(false)
-  //seperate state instead of using from trailer bcoz the might be edited
-  //by user
   const [trailerName, setTrailerName] = useState(
     props.navigation.getParam('tr').t_name
   )
@@ -87,13 +85,29 @@ const EditTrailer = (props) => {
   )
   const [vin, setVin] = useState(props.navigation.getParam('tr').t_vin)
 
+  useEffect(() => {
+    updateTrailerMeasurement()
+  }, [])
+
+  const updateTrailerMeasurement = () => {
+    let obj = {}
+    trailer.t_cmeasurement.map((item) => {
+      obj[Object.keys(item)[0]] = item[Object.keys(item)[0]]
+    })
+    console.log(obj)
+    setTrailerMeasurement(obj)
+  }
+
   const updateTrailer = async () => {
+    console.log(trailerMeasurement)
     let arr = []
     for (item in trailerMeasurement) {
       arr.push({
         [item]: trailerMeasurement[item],
       })
     }
+
+    let total = calcTotal()
 
     try {
       setLoading(true)
@@ -108,6 +122,7 @@ const EditTrailer = (props) => {
           trailerType: 3,
           trailerMeasurement: arr,
           vin: vin,
+          totalWeight: total,
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -131,6 +146,19 @@ const EditTrailer = (props) => {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  const calcTotal = () => {
+    let l = 0
+    let w = 0
+    let h = 0
+
+    for (const compartment in trailerMeasurement) {
+      l += parseFloat(trailerMeasurement[compartment].L)
+      w += parseFloat(trailerMeasurement[compartment].W)
+      h += parseFloat(trailerMeasurement[compartment].H)
+    }
+    return { l, w, h }
   }
 
   return (
@@ -269,6 +297,13 @@ const Compartment = (props) => {
   const w_input = useRef(null)
   const h_input = useRef(null)
 
+  const updateTrailerMeasurement = () => {
+    props.setTrailerMeasurement({
+      ...props.trailerMeasurement,
+      [props.value]: measurement,
+    })
+  }
+
   return (
     <CompartmentWrapper>
       <Text>Compartment {props.value}</Text>
@@ -278,13 +313,11 @@ const Compartment = (props) => {
           ref={l_input}
           returnKeyType="next"
           blurOnSubmit={false}
-          onSubmitEditing={() => w_input.current.focus()}
-          onEndEditing={() => {
-            props.setTrailerMeasurement({
-              ...props.trailerMeasurement,
-              [props.value]: measurement,
-            })
+          onSubmitEditing={() => {
+            w_input.current.focus()
+            updateTrailerMeasurement()
           }}
+          onEndEditing={updateTrailerMeasurement}
           placeholder="L"
           maxLength={5}
           keyboardType="numeric"
@@ -301,13 +334,11 @@ const Compartment = (props) => {
           ref={w_input}
           returnKeyType="next"
           blurOnSubmit={false}
-          onSubmitEditing={() => h_input.current.focus()}
-          onEndEditing={() => {
-            props.setTrailerMeasurement({
-              ...props.trailerMeasurement,
-              [props.value]: measurement,
-            })
+          onSubmitEditing={() => {
+            h_input.current.focus()
+            updateTrailerMeasurement()
           }}
+          onEndEditing={updateTrailerMeasurement}
           placeholder="W"
           maxLength={5}
           keyboardType="numeric"
@@ -324,7 +355,10 @@ const Compartment = (props) => {
           ref={h_input}
           returnKeyType="next"
           blurOnSubmit={false}
-          onSubmitEditing={() => l_input.current.focus()}
+          onSubmitEditing={() => {
+            l_input.current.focus()
+            updateTrailerMeasurement()
+          }}
           placeholder="H"
           maxLength={5}
           keyboardType="numeric"
@@ -334,23 +368,21 @@ const Compartment = (props) => {
               H: val,
             })
           }}
-          onEndEditing={() => {
-            props.setTrailerMeasurement({
-              ...props.trailerMeasurement,
-              [props.value]: measurement,
-            })
-          }}
+          onEndEditing={updateTrailerMeasurement}
         />
       </InputWrapper>
     </CompartmentWrapper>
   )
 }
 
-EditTrailer.navigationOptions = ({navigation}) =>({
+EditTrailer.navigationOptions = ({ navigation }) => ({
   title: 'Edit Trailer',
   headerLeft: () => (
-    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
-        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    <TouchableOpacity
+      onPress={() => navigation.goBack(null)}
+      style={{ marginLeft: 15 }}
+    >
+      <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
     </TouchableOpacity>
   ),
 })

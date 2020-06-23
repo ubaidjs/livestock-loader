@@ -88,6 +88,8 @@ const MyGroups = (props) => {
             onPress={() =>
               props.navigation.navigate('GroupInfo', {
                 group: item.group_participant,
+                groupId: item.group_id,
+                groupName: item.group_name,
               })
             }
           >
@@ -111,8 +113,11 @@ const MyGroups = (props) => {
 MyGroups.navigationOptions = ({ navigation }) => ({
   title: 'My Groups',
   headerLeft: () => (
-    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
-        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    <TouchableOpacity
+      onPress={() => navigation.goBack(null)}
+      style={{ marginLeft: 15 }}
+    >
+      <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
     </TouchableOpacity>
   ),
   headerRight: () => {

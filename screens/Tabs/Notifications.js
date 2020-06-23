@@ -17,9 +17,34 @@ import moment from 'moment'
 import { NavigationEvents } from 'react-navigation'
 import { api_url } from '../../constants/Api'
 import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons'
-import React from 'react'
-import { View, Text, Image } from 'react-native'
 import colors from '../../constants/Colors'
+
+const BarBottom = styled(View)`
+  padding-horizontal: 20;
+  padding-vertical: 5;
+  align-self: flex-end;
+`
+
+const BarTop = styled(View)`
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: 10;
+  border-bottom-width: 0.5;
+  padding: 15px 20px;
+  border-bottom-color: ${colors.darkGrey};
+`
+
+const Bar = styled.View`
+  background-color: #f7f7f7;
+  padding-bottom: 5;
+  margin: 20px;
+  border-radius: 10;
+  elevation: 1;
+`
+
+const Name = styled.Text`
+  font-size: 18;
+`
 
 const Notifications = () => {
   const [loading, setLoading] = useState(false)
@@ -63,10 +88,7 @@ const Notifications = () => {
         },
       })
       const json = await response.json()
-      console.log(json)
-      // if (json.status === '200') {
-      //   json.data && setAlerts(json.data.reverse())
-      // }
+      fetchAlerts()
     } catch (error) {
       console.log('error: ', error)
     }
@@ -100,10 +122,13 @@ const Notifications = () => {
       >
         {alerts.map((item) => {
           let isGroup = item.message_type === 'groupnotification'
+          let groupId = item.group_id != 'accept' && item.group_id != 'reject'
           return (
             <Bar key={item.id}>
               <TouchableOpacity
-                onPress={() => isGroup && sendAlert(item.group_id, item.id)}
+                onPress={() =>
+                  isGroup && groupId ? sendAlert(item.group_id, item.id) : null
+                }
               >
                 <BarTop>
                   <Name>{item.msg}</Name>

@@ -187,7 +187,7 @@ const MyTrailers = (props) => {
                     <TrailerInfoText>
                       Type: {item.t_trailertype}
                     </TrailerInfoText>
-                    <TrailerInfoText>Load: 25</TrailerInfoText>
+                    {/* <TrailerInfoText>Load: 25</TrailerInfoText> */}
                   </TrailerInfoWrap>
                 </View>
               </TrailerItem>
@@ -204,8 +204,11 @@ MyTrailers.navigationOptions = ({ navigation }) => {
   return {
     title: 'My Trailers',
     headerLeft: () => (
-      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
-          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      <TouchableOpacity
+        onPress={() => navigation.goBack(null)}
+        style={{ marginLeft: 15 }}
+      >
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
       </TouchableOpacity>
     ),
     headerRight: () => (

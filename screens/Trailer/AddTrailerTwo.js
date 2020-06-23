@@ -1,4 +1,4 @@
-import React, { useState, useRef , useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   View,
   Text,
@@ -16,12 +16,14 @@ import {
   Alert,
 } from 'react-native'
 import styled from 'styled-components/native'
+import RNPickerSelect from 'react-native-picker-select'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
-import { MaterialCommunityIcons , Ionicons } from '@expo/vector-icons'
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons'
 import colors from '../../constants/Colors'
 import alphabets from '../../constants/AlphabetsArray'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
 import { api_url } from '../../constants/Api'
+
 const Container = styled.View`
   flex: 1;
   justify-content: space-between;
@@ -31,7 +33,7 @@ const Container = styled.View`
 const CardWrapper = styled.View`
   padding: 20px;
 `
- 
+
 const Card = styled.View`
   background-color: ${colors.lightGrey};
   margin: 20px 0;
@@ -58,7 +60,7 @@ const CustomInput = styled.TextInput`
   padding: 1px 10px;
   margin-horizontal: 5px;
   border-radius: 5px;
-  height: 24px;
+  height: 35px;
 `
 
 const CompartmentWrapper = styled.View`
@@ -79,16 +81,38 @@ const AboutWrapper = styled.View`
   margin: 10px 0;
 `
 
+const AddLivestockText = styled(Text)`
+  margin-left: 5;
+  color: ${colors.greyishBrown};
+`
+
+const lsType = [
+  { label: 'Bull', value: 'bull' },
+  { label: 'Cow', value: 'cow' },
+  { label: 'Heifer', value: 'heifer' },
+  { label: 'Fats', value: 'fats' },
+  { label: 'Calf', value: 'calf' },
+]
+
+const qty = [
+  { label: '10', value: '10' },
+  { label: '20', value: '20' },
+  { label: '30', value: '30' },
+  { label: '40', value: '40' },
+  { label: '50', value: '50' },
+]
+
 const AddTrailerTwo = (props) => {
   const [trailerInfo, setTrailerInfo] = useState({})
   const [trailerMeasurement, setTrailerMeasurement] = useState({})
   const [loading, setLoading] = useState(false)
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false)
+  const [livestockType, setLivestockType] = useState('')
   const [fillErr, setFillErr] = useState({
     name: false,
     livestockType: false,
     vin: false,
   })
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   // const name_input = useRef(null)
   const lstype_input = useRef(null)
   const vin_input = useRef(null)
@@ -177,21 +201,21 @@ const AddTrailerTwo = (props) => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       () => {
-        setKeyboardVisible(true); // or some other action
+        setKeyboardVisible(true) // or some other action
       }
-    );
+    )
     const keyboardDidHideListener = Keyboard.addListener(
       'keyboardDidHide',
       () => {
-        setKeyboardVisible(false); // or some other action
+        setKeyboardVisible(false) // or some other action
       }
-    );
+    )
 
     return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
+      keyboardDidHideListener.remove()
+      keyboardDidShowListener.remove()
+    }
+  }, [])
   return (
     <Container>
       <ScrollView>
@@ -265,7 +289,6 @@ const AddTrailerTwo = (props) => {
                       fillErr.name && styles.errorBorder,
                       {
                         width: 150,
-                        
                       },
                     ]}
                     maxLength={30}
@@ -287,8 +310,67 @@ const AddTrailerTwo = (props) => {
                   <Text>{trailer.t_name}</Text>
                 </AboutWrapper>
                 <AboutWrapper>
-                  <Text>Carries</Text>
-                  <TextInput
+                  {/* <Text>Carries</Text> */}
+                  <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                    <View style={{ flex: 1, marginRight: 5 }}>
+                      <RNPickerSelect
+                        Icon={() => (
+                          <MaterialCommunityIcons
+                            style={{
+                              marginTop: Platform.OS == 'ios' ? '-80%' : null,
+                            }}
+                            name="chevron-down"
+                            size={15}
+                          />
+                        )}
+                        placeholder={{ label: 'Livestock Type', value: null }}
+                        items={lsType}
+                        onValueChange={(value) => {
+                          // setLivestockType(value)
+                          setTrailerInfo({
+                            ...trailerInfo,
+                            livestockType: value,
+                          })
+                        }}
+                        style={{
+                          inputAndroid: styles.picker,
+                          inputIOS: styles.picker,
+                          iconContainer: {
+                            paddingTop: 18,
+                            paddingRight: 5,
+                          },
+                        }}
+                      />
+                    </View>
+                    <View style={{ flex: 1, marginHorizontal: 5 }}>
+                      <RNPickerSelect
+                        Icon={() => (
+                          <MaterialCommunityIcons
+                            style={{
+                              marginTop: Platform.OS == 'ios' ? '-80%' : null,
+                            }}
+                            name="chevron-down"
+                            size={15}
+                          />
+                        )}
+                        placeholder={{ label: 'Livestock Qty', value: null }}
+                        items={qty}
+                        onValueChange={(value) => {
+                          // setLivestockQty(value)
+                        }}
+                        style={{
+                          inputAndroid: styles.picker,
+                          inputIOS: styles.picker,
+                          iconContainer: {
+                            paddingTop: 18,
+                            paddingRight: 5,
+                          },
+                        }}
+                      />
+                    </View>
+                  </View>
+
+                  {/* <TextInput
                     ref={lstype_input}
                     returnKeyType="next"
                     onSubmitEditing={() => vin_input.current.focus()}
@@ -311,8 +393,14 @@ const AddTrailerTwo = (props) => {
                         livestockType: val,
                       })
                     }
-                  />
+                  /> */}
                 </AboutWrapper>
+                {/* <View style={{ marginVertical: 15, flexDirection: 'row' }}>
+                  <MaterialCommunityIcons name="plus-box" size={20} />
+                  <AddLivestockText>
+                    Add another livestock type and qty
+                  </AddLivestockText>
+                </View> */}
                 <AboutWrapper>
                   <Text>Vin Number</Text>
                   <TextInput
@@ -340,39 +428,41 @@ const AddTrailerTwo = (props) => {
             </CardWrapper>
           </View>
         </TouchableWithoutFeedback>
-        {isKeyboardVisible ? 
-        <View style={{ paddingHorizontal: 20 }}>
-        <TouchableOpacity
-          onPress={() => {
-            addTrailer()
-          }}
-        >
-          <CustomButton>
-            {loading ? (
-              <ActivityIndicator color="#000" />
-            ) : (
-              <ButtonText>ADD</ButtonText>
-            )}
-          </CustomButton>
-        </TouchableOpacity>
-      </View> : null }
+        {isKeyboardVisible ? (
+          <View style={{ paddingHorizontal: 20 }}>
+            <TouchableOpacity
+              onPress={() => {
+                addTrailer()
+              }}
+            >
+              <CustomButton>
+                {loading ? (
+                  <ActivityIndicator color="#000" />
+                ) : (
+                  <ButtonText>ADD</ButtonText>
+                )}
+              </CustomButton>
+            </TouchableOpacity>
+          </View>
+        ) : null}
       </ScrollView>
-      {isKeyboardVisible ? null :
-      <View style={{ paddingHorizontal: 20 }}>
-        <TouchableOpacity
-          onPress={() => {
-            addTrailer()
-          }}
-        >
-          <CustomButton>
-            {loading ? (
-              <ActivityIndicator color="#000" />
-            ) : (
-              <ButtonText>ADD</ButtonText>
-            )}
-          </CustomButton>
-        </TouchableOpacity>
-            </View> }
+      {isKeyboardVisible ? null : (
+        <View style={{ paddingHorizontal: 20 }}>
+          <TouchableOpacity
+            onPress={() => {
+              addTrailer()
+            }}
+          >
+            <CustomButton>
+              {loading ? (
+                <ActivityIndicator color="#000" />
+              ) : (
+                <ButtonText>ADD</ButtonText>
+              )}
+            </CustomButton>
+          </TouchableOpacity>
+        </View>
+      )}
     </Container>
   )
 }
@@ -466,34 +556,48 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     borderRadius: 5,
     height: 24,
-    height : 43
+    height: 43,
   },
   errorBorder: {
     borderColor: '#d66b6b',
     borderWidth: 1,
   },
+  picker: {
+    color: 'black',
+    // fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    paddingRight: 30, // to ensure the text is never behind the icon
+    backgroundColor: '#fff',
+  },
 })
 
-AddTrailerTwo.navigationOptions = ({navigation}) => { 
-  return{title: 'Add Trailer',
-  headerLeft: () => (
-    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
+AddTrailerTwo.navigationOptions = ({ navigation }) => {
+  return {
+    title: 'Add Trailer',
+    headerLeft: () => (
+      <TouchableOpacity
+        onPress={() => navigation.goBack(null)}
+        style={{ marginLeft: 15 }}
+      >
         <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
-    </TouchableOpacity>
-  ),
-  headerRight: () => (
-    <TouchableOpacity onPress={() => {}}>
-      <Text style={{ color: '#fff', marginRight: 15 }}>Exit</Text>
-    </TouchableOpacity>
-  ),
-  headerStyle: {
-    height: 80, 
-    backgroundColor: colors.greyishBrown,
-    elevation: 0, // for android
-    shadowOpacity: 0, //for ios
-    borderBottomWidth: 0, //for ios
-  },
-  headerTintColor: '#fff',}
+      </TouchableOpacity>
+    ),
+    headerRight: () => (
+      <TouchableOpacity onPress={() => {}}>
+        <Text style={{ color: '#fff', marginRight: 15 }}>Exit</Text>
+      </TouchableOpacity>
+    ),
+    headerStyle: {
+      height: 80,
+      backgroundColor: colors.greyishBrown,
+      elevation: 0, // for android
+      shadowOpacity: 0, //for ios
+      borderBottomWidth: 0, //for ios
+    },
+    headerTintColor: '#fff',
+  }
 }
 
 export default AddTrailerTwo

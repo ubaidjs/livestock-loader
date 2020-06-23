@@ -1,4 +1,4 @@
-import React, { useState, useRef , useEffect} from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
-  Keyboard
+  Keyboard,
 } from 'react-native'
 import styled from 'styled-components/native'
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
@@ -126,11 +126,11 @@ const AddLoadDetails = (props) => {
   const [weight, setWeight] = useState(false)
   // const [numOfLoad, setNumOfLoad] = useState(false)
   const [rate, setRate] = useState(false)
-  const [livestockType, setLivestockType] = useState('')
-  const [livestockQty, setLivestockQty] = useState('')
+  const [livestockType, setLivestockType] = useState({})
+  const [livestockQty, setLivestockQty] = useState({})
   const [focusState, setFocusState] = useState(null)
   const [allstock, setAllstock] = useState([0])
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false)
   const [emptyFeilds, setEmptyFeilds] = useState({
     details: false,
     weight: false,
@@ -140,20 +140,16 @@ const AddLoadDetails = (props) => {
 
   const rate_input = useRef(null)
   const prevDetails = props.navigation.getParam('details')
- 
+
   const onAddCurrency = (val) => {
-     if(val.charAt(0) == '$')
-     {
-        setRate(val.replace(/[- #*+;,.<>\{\}\[\]\\\/]/gi, ''))
-    if(val.length <= 1)
-     {
-      setRate('')
-     }
-     }
-     else
-     {
-      setRate('$'+val.replace(/[- #*+;,.<>\{\}\[\]\\\/]/gi, ''))
-     }
+    if (val.charAt(0) == '$') {
+      setRate(val.replace(/[- #*+;,.<>\{\}\[\]\\\/]/gi, ''))
+      if (val.length <= 1) {
+        setRate('')
+      }
+    } else {
+      setRate('$' + val.replace(/[- #*+;,.<>\{\}\[\]\\\/]/gi, ''))
+    }
   }
 
   const handleSubmit = () => {
@@ -183,33 +179,34 @@ const AddLoadDetails = (props) => {
           callChecked,
           livestockType,
           livestockQty,
+          allstock,
         },
       })
     }
   }
-const AddAnotherTypequantity = () => {
-  setAllstock(allstock => [...allstock, allstock.length]);
-  // setAllstock([...allstock,findlength])
-}
-useEffect(() => {
-  const keyboardDidShowListener = Keyboard.addListener(
-    'keyboardDidShow',
-    () => {
-      setKeyboardVisible(true); // or some other action
-    }
-  );
-  const keyboardDidHideListener = Keyboard.addListener(
-    'keyboardDidHide',
-    () => {
-      setKeyboardVisible(false); // or some other action
-    }
-  );
+  const AddAnotherTypequantity = () => {
+    setAllstock((allstock) => [...allstock, allstock.length])
+    // setAllstock([...allstock,findlength])
+  }
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true) // or some other action
+      }
+    )
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false) // or some other action
+      }
+    )
 
-  return () => {
-    keyboardDidHideListener.remove();
-    keyboardDidShowListener.remove();
-  };
-}, []);
+    return () => {
+      keyboardDidHideListener.remove()
+      keyboardDidShowListener.remove()
+    }
+  }, [])
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
       <ScrollView>
@@ -221,59 +218,75 @@ useEffect(() => {
               <BarLineOneText>Livestock Type & Quantity</BarLineOneText>
             </BarLineOne>
             <FlatList
-            data = {allstock}
-            extraData = {allstock}
-            renderItem={()=>{
-              return(<View style={{ flexDirection: 'row', marginTop: 20 }}>
-              <View style={{ flex: 1, marginRight: 5 }}>
-                <RNPickerSelect
-                  Icon={() => (
-                    <MaterialCommunityIcons style={{marginTop: Platform.OS == 'ios' ? '-80%' : null }} name="chevron-down" size={15} />
-       )}
-                  placeholder={{ label: 'Livestock Type', value: null }}
-                  items={lsType}
-                  onValueChange={(value) => {
-                    setLivestockType(value)
-                  }}
-                  style={{
-                    inputAndroid: styles.picker,
-                    inputIOS: styles.picker,
-                    iconContainer: {
-                      paddingTop: 18,
-                      paddingRight: 5,
-                    },
-                  }}
-                />
-              </View>
-              <View style={{ flex: 1, marginHorizontal: 5 }}>
-                <RNPickerSelect
-                  Icon={() => (
-                    <MaterialCommunityIcons style={{marginTop: Platform.OS == 'ios' ? '-80%' : null }} name="chevron-down" size={15} />
-       )}
-                  placeholder={{ label: 'Livestock Qty', value: null }}
-                  items={qty}
-                  onValueChange={(value) => {
-                    setLivestockQty(value)
-                  }}
-                  style={{
-                    inputAndroid: styles.picker,
-                    inputIOS: styles.picker,
-                    iconContainer: {
-                      paddingTop: 18,
-                      paddingRight: 5,
-                    },
-                  }}
-                />
-              </View>
-            </View>)
-            }}
+              data={allstock}
+              extraData={allstock}
+              renderItem={({ item }) => {
+                return (
+                  <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                    <View style={{ flex: 1, marginRight: 5 }}>
+                      <RNPickerSelect
+                        Icon={() => (
+                          <MaterialCommunityIcons
+                            style={{
+                              marginTop: Platform.OS == 'ios' ? '-80%' : null,
+                            }}
+                            name="chevron-down"
+                            size={15}
+                          />
+                        )}
+                        placeholder={{ label: 'Livestock Type', value: null }}
+                        items={lsType}
+                        onValueChange={(value) => {
+                          setLivestockType({ ...livestockType, [item]: value })
+                        }}
+                        style={{
+                          inputAndroid: styles.picker,
+                          inputIOS: styles.picker,
+                          iconContainer: {
+                            paddingTop: 18,
+                            paddingRight: 5,
+                          },
+                        }}
+                      />
+                    </View>
+                    <View style={{ flex: 1, marginHorizontal: 5 }}>
+                      <RNPickerSelect
+                        Icon={() => (
+                          <MaterialCommunityIcons
+                            style={{
+                              marginTop: Platform.OS == 'ios' ? '-80%' : null,
+                            }}
+                            name="chevron-down"
+                            size={15}
+                          />
+                        )}
+                        placeholder={{ label: 'Livestock Qty', value: null }}
+                        items={qty}
+                        onValueChange={(value) => {
+                          setLivestockQty({ ...livestockQty, [item]: value })
+                        }}
+                        style={{
+                          inputAndroid: styles.picker,
+                          inputIOS: styles.picker,
+                          iconContainer: {
+                            paddingTop: 18,
+                            paddingRight: 5,
+                          },
+                        }}
+                      />
+                    </View>
+                  </View>
+                )
+              }}
             />
-            <View style={{ marginVertical: 15, flexDirection: 'row' }}>
-              <MaterialCommunityIcons name="plus-box" size={20} onPress={AddAnotherTypequantity} />
-              <AddLivestockText>
-                Add another livestock type and qty
-              </AddLivestockText>
-            </View>
+            <TouchableOpacity onPress={AddAnotherTypequantity}>
+              <View style={{ marginVertical: 15, flexDirection: 'row' }}>
+                <MaterialCommunityIcons name="plus-box" size={20} />
+                <AddLivestockText>
+                  Add another livestock type and qty
+                </AddLivestockText>
+              </View>
+            </TouchableOpacity>
           </Bar>
           <Bar>
             <BarLineOne>
@@ -292,8 +305,10 @@ useEffect(() => {
                   setFocusState('weight')
                 }}
                 placeholder="per load"
-                value = {weight}
-                onChangeText={(val) =>  {setWeight(val.replace(/[- #*;,.<>\{\}\[\]\\\/]/gi, ''))}}
+                value={weight}
+                onChangeText={(val) => {
+                  setWeight(val.replace(/[- #*;,.<>\{\}\[\]\\\/]/gi, ''))
+                }}
                 keyboardType="numeric"
                 returnKeyType="next"
                 onSubmitEditing={() => rate_input.current.focus()}
@@ -304,7 +319,7 @@ useEffect(() => {
             <DInputWrap>
               <Label>Rate</Label>
               <TextInput
-              value={rate}
+                value={rate}
                 ref={rate_input}
                 style={[
                   styles.detailsInput,
@@ -351,29 +366,31 @@ useEffect(() => {
             setChecked={setCallChecked}
           />
         </Container>
-        {isKeyboardVisible ?
-        <TouchableOpacity
-        style={{ paddingHorizontal: 20 }}
-        onPress={() => {
-          handleSubmit()
-        }}
-      >
-        <CustomButton>
-          <ButtonText>PREVIEW</ButtonText>
-        </CustomButton>
-      </TouchableOpacity> : null }
+        {isKeyboardVisible ? (
+          <TouchableOpacity
+            style={{ paddingHorizontal: 20 }}
+            onPress={() => {
+              handleSubmit()
+            }}
+          >
+            <CustomButton>
+              <ButtonText>PREVIEW</ButtonText>
+            </CustomButton>
+          </TouchableOpacity>
+        ) : null}
       </ScrollView>
-      {!isKeyboardVisible ?
+      {!isKeyboardVisible ? (
         <TouchableOpacity
-        style={{ paddingHorizontal: 20 }}
-        onPress={() => {
-          handleSubmit()
-        }}
-      >
-        <CustomButton>
-          <ButtonText>PREVIEW</ButtonText>
-        </CustomButton>
-      </TouchableOpacity> : null }
+          style={{ paddingHorizontal: 20 }}
+          onPress={() => {
+            handleSubmit()
+          }}
+        >
+          <CustomButton>
+            <ButtonText>PREVIEW</ButtonText>
+          </CustomButton>
+        </TouchableOpacity>
+      ) : null}
     </KeyboardAvoidingView>
   )
 }
@@ -447,8 +464,11 @@ AddLoadDetails.navigationOptions = ({ navigation }) => {
   return {
     title: 'Add Load',
     headerLeft: () => (
-      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
-          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      <TouchableOpacity
+        onPress={() => navigation.goBack(null)}
+        style={{ marginLeft: 15 }}
+      >
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
       </TouchableOpacity>
     ),
     headerRight: () => (

@@ -9,11 +9,21 @@ import {
   ActivityIndicator,
   Alert,
   AsyncStorage,
+  Modal,
+  FlatList,
+  StyleSheet,
 } from 'react-native'
+import MapView from 'react-native-maps'
+import RNPickerSelect from 'react-native-picker-select'
 import styled from 'styled-components/native'
 import colors from '../../constants/Colors'
 import { CustomButton, ButtonText } from '../../constants/CommonStyles'
-import { Feather, MaterialCommunityIcons , Ionicons} from '@expo/vector-icons'
+import {
+  Feather,
+  MaterialCommunityIcons,
+  Ionicons,
+  MaterialIcons,
+} from '@expo/vector-icons'
 import moment from 'moment'
 import { api_url } from '../../constants/Api'
 
@@ -76,9 +86,30 @@ const Float = styled.View`
   padding-horizontal: 25px;
 `
 
+const Map = styled.View`
+  height: 130px;
+  width: 100%;
+`
+
+const lsType = [
+  { label: 'Bull', value: 'bull' },
+  { label: 'Cow', value: 'cow' },
+  { label: 'Heifer', value: 'heifer' },
+  { label: 'Fats', value: 'fats' },
+  { label: 'Calf', value: 'calf' },
+]
+const qty = [
+  { label: '10', value: '10' },
+  { label: '20', value: '20' },
+  { label: '30', value: '30' },
+  { label: '40', value: '40' },
+  { label: '50', value: '50' },
+]
+
 const LoadInfo = (props) => {
-  const [loading, setLoading] = useState(false)
   const load = props.navigation.getParam('load')
+  const [loading, setLoading] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false)
 
   useEffect(() => {
     props.navigation.setParams({
@@ -123,6 +154,78 @@ const LoadInfo = (props) => {
   return (
     <>
       <ScrollView>
+        <Modal
+          onRequestClose={() => setModalVisible(!modalVisible)}
+          animationType="fade"
+          transparent={false}
+          visible={modalVisible}
+        >
+          <View>
+            <MapView
+              style={{
+                height: '100%',
+                width: '100%',
+                borderRadius: 15,
+                overflow: 'hidden',
+              }}
+              showsMyLocationButton={true}
+              showsUserLocation={true}
+              region={{
+                latitude: 37.88825,
+                longitude: -121.453,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0831,
+              }}
+            />
+            <Text
+              style={{
+                position: 'absolute',
+                right: 30,
+                bottom: 30,
+                backgroundColor: 'white',
+                padding: 10,
+                color: 'red',
+              }}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              CLOSE
+            </Text>
+          </View>
+        </Modal>
+        <Map>
+          <MapView
+            style={{
+              height: 130,
+              width: '100%',
+              borderRadius: 15,
+              overflow: 'hidden',
+            }}
+            showsMyLocationButton={true}
+            showsUserLocation={true}
+            region={{
+              latitude: 37.88825,
+              longitude: -121.453,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0831,
+            }}
+          />
+          <View
+            style={{
+              position: 'absolute',
+              right: 10,
+              bottom: 10,
+              backgroundColor: 'white',
+            }}
+          >
+            <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+              <MaterialIcons
+                name="zoom-out-map"
+                size={30}
+                color={colors.greyishBrown}
+              />
+            </TouchableOpacity>
+          </View>
+        </Map>
         <Container>
           <Bar>
             <BarLineOne>
@@ -175,8 +278,61 @@ const LoadInfo = (props) => {
             </DetailWrap>
             <DetailWrap>
               <Text>Livestock</Text>
-              <DetailValue>{load.no_of_loads}</DetailValue>
+              {/* <DetailValue>{load.no_of_loads}</DetailValue> */}
             </DetailWrap>
+            <FlatList
+              data={load.live_stock_type}
+              renderItem={({ item }) => {
+                return (
+                  <View style={{ flexDirection: 'row', marginVertical: 10 }}>
+                    <View style={{ flex: 1, marginRight: 5 }}>
+                      <RNPickerSelect
+                        // Icon={() => (
+                        //   <MaterialCommunityIcons
+                        //     name="chevron-down"
+                        //     size={15}
+                        //   />
+                        // )}
+                        disabled={true}
+                        items={lsType}
+                        onValueChange={() => {}}
+                        value={item.name}
+                        style={{
+                          inputAndroid: styles.picker,
+                          inputIOS: styles.picker,
+                          iconContainer: {
+                            paddingTop: 18,
+                            paddingRight: 5,
+                          },
+                        }}
+                      />
+                    </View>
+                    <View style={{ flex: 1, marginHorizontal: 5 }}>
+                      <RNPickerSelect
+                        // Icon={() => (
+                        //   <MaterialCommunityIcons
+                        //     name="chevron-down"
+                        //     size={15}
+                        //   />
+                        // )}
+                        disabled={true}
+                        onValueChange={() => {}}
+                        value={item.qty}
+                        items={qty}
+                        style={{
+                          inputAndroid: styles.picker,
+                          inputIOS: styles.picker,
+                          iconContainer: {
+                            paddingTop: 18,
+                            paddingRight: 5,
+                          },
+                        }}
+                      />
+                    </View>
+                  </View>
+                )
+              }}
+            />
             <DetailWrap>
               <Text>Rate</Text>
               <DetailValue>{load.rate}</DetailValue>
@@ -202,8 +358,11 @@ const LoadInfo = (props) => {
 LoadInfo.navigationOptions = ({ navigation }) => ({
   title: 'Load Info',
   headerLeft: () => (
-    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
-        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    <TouchableOpacity
+      onPress={() => navigation.goBack(null)}
+      style={{ marginLeft: 15 }}
+    >
+      <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
     </TouchableOpacity>
   ),
   headerRight: () => (
@@ -222,6 +381,18 @@ LoadInfo.navigationOptions = ({ navigation }) => ({
       />
     </TouchableWithoutFeedback>
   ),
+})
+
+const styles = StyleSheet.create({
+  picker: {
+    color: 'black',
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderRadius: 10,
+    paddingRight: 30, // to ensure the text is never behind the icon
+    backgroundColor: '#fff',
+  },
 })
 
 export default LoadInfo

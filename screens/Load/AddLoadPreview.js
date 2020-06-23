@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  FlatList,
 } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 import styled from 'styled-components/native'
@@ -164,6 +165,15 @@ const AddLoadDetails = (props) => {
   const handleSubmit = async () => {
     setLoading(true)
 
+    const arr = []
+    finalDetails.allstock.map((item) => {
+      arr.push({
+        name: finalDetails.livestockType[item],
+        qty: finalDetails.livestockQty[item],
+      })
+    })
+    console.log(arr)
+
     try {
       const token = await AsyncStorage.getItem('USER_TOKEN')
       const response = await fetch(`${api_url}?action=addload`, {
@@ -184,7 +194,7 @@ const AddLoadDetails = (props) => {
             totalWeight: finalDetails.weight,
             numOfLoad: finalDetails.numOfLoad,
             rate: finalDetails.rate,
-            livestockType: [{ name: 'name', qty: 'qty' }],
+            livestockType: arr,
             private: finalDetails.checked,
           },
         }),
@@ -241,7 +251,7 @@ const AddLoadDetails = (props) => {
           </RBSheet>
 
           {/* <TitleText>Preview & Save</TitleText> */}
-          <TitleText>Enter Load Details</TitleText>
+          <TitleText>Preview & Save</TitleText>
           <StepText>Step 4 of 4</StepText>
           <Bar>
             <BarLineOne>
@@ -315,44 +325,60 @@ const AddLoadDetails = (props) => {
             <BarLineOne>
               <BarLineOneText>Livestock Type & Quantity</BarLineOneText>
             </BarLineOne>
-            <View style={{ flexDirection: 'row', marginTop: 20 }}>
-              <View style={{ flex: 1, marginRight: 5 }}>
-                <RNPickerSelect
-                  Icon={() => (
-                    <MaterialCommunityIcons name="chevron-down" size={15} />
-                  )}
-                  disabled={true}
-                  items={lsType}
-                  value={finalDetails.livestockType}
-                  style={{
-                    inputAndroid: styles.picker,
-                    inputIOS: styles.picker,
-                    iconContainer: {
-                      paddingTop: 18,
-                      paddingRight: 5,
-                    },
-                  }}
-                />
-              </View>
-              <View style={{ flex: 1, marginHorizontal: 5 }}>
-                <RNPickerSelect
-                  Icon={() => (
-                    <MaterialCommunityIcons name="chevron-down" size={15} />
-                  )}
-                  disabled={true}
-                  value={finalDetails.livestockQty}
-                  items={qty}
-                  style={{
-                    inputAndroid: styles.picker,
-                    inputIOS: styles.picker,
-                    iconContainer: {
-                      paddingTop: 18,
-                      paddingRight: 5,
-                    },
-                  }}
-                />
-              </View>
-            </View>
+            <FlatList
+              data={finalDetails.allstock}
+              renderItem={({ item }) => {
+                return (
+                  <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                    <View style={{ flex: 1, marginRight: 5 }}>
+                      <RNPickerSelect
+                        Icon={() => (
+                          <MaterialCommunityIcons
+                            name="chevron-down"
+                            size={15}
+                          />
+                        )}
+                        disabled={true}
+                        items={lsType}
+                        onValueChange={() => {}}
+                        value={finalDetails.livestockType[item]}
+                        style={{
+                          inputAndroid: styles.picker,
+                          inputIOS: styles.picker,
+                          iconContainer: {
+                            paddingTop: 18,
+                            paddingRight: 5,
+                          },
+                        }}
+                      />
+                    </View>
+                    <View style={{ flex: 1, marginHorizontal: 5 }}>
+                      <RNPickerSelect
+                        Icon={() => (
+                          <MaterialCommunityIcons
+                            name="chevron-down"
+                            size={15}
+                          />
+                        )}
+                        disabled={true}
+                        onValueChange={() => {}}
+                        value={finalDetails.livestockQty[item]}
+                        items={qty}
+                        style={{
+                          inputAndroid: styles.picker,
+                          inputIOS: styles.picker,
+                          iconContainer: {
+                            paddingTop: 18,
+                            paddingRight: 5,
+                          },
+                        }}
+                      />
+                    </View>
+                  </View>
+                )
+              }}
+            />
+
             <AddLivestock>
               <MaterialCommunityIcons name="plus-box" size={20} />
               <AddLivestockText>
@@ -493,8 +519,11 @@ AddLoadDetails.navigationOptions = ({ navigation }) => {
   return {
     title: 'Add Load',
     headerLeft: () => (
-      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
-          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      <TouchableOpacity
+        onPress={() => navigation.goBack(null)}
+        style={{ marginLeft: 15 }}
+      >
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
       </TouchableOpacity>
     ),
     headerRight: () => (

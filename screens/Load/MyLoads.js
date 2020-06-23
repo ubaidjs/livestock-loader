@@ -8,13 +8,102 @@ import {
   RefreshControl,
   TouchableNativeFeedback,
   TouchableOpacity,
+  StyleSheet,
+  Dimensions,
 } from 'react-native'
 import { NavigationEvents } from 'react-navigation'
+import { TabView } from 'react-native-tab-view'
 import styled from 'styled-components/native'
 import moment from 'moment'
 import { Feather, Ionicons } from '@expo/vector-icons'
 import colors from '../../constants/Colors'
 import { api_url } from '../../constants/Api'
+
+const FirstRoute = ({ refreshing, onRefresh, loads, navigation }) => {
+  return (
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      {loads.map((item) => {
+        return (
+          <LoadWrapper key={item.id}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('LoadInfo', {
+                  load: item,
+                })
+              }
+            >
+              <View style={{ padding: 10 }}>
+                <LoadPickup>
+                  <Feather name="arrow-up-circle" color="black" size={18} />
+                  <Address>
+                    <Text style={{ color: colors.warmGrey }}>
+                      Pick up {moment(item.pickup_date).format('MMM DD')}
+                    </Text>
+                    <Text style={{ fontSize: 20, color: colors.greyishBrown }}>
+                      {item.pickup_address}
+                    </Text>
+                  </Address>
+                  <Ionicons
+                    name="ios-arrow-round-forward"
+                    color={colors.linkBlue}
+                    size={32}
+                  />
+                </LoadPickup>
+                <LoadDropoff>
+                  <Feather
+                    name="arrow-down-circle"
+                    color={colors.themeYellow}
+                    size={18}
+                  />
+                  <Address>
+                    <Text style={{ color: colors.warmGrey }}>
+                      Drop off {moment(item.drop_date).format('MMM DD')}
+                    </Text>
+                    <Text style={{ fontSize: 20, color: colors.greyishBrown }}>
+                      {item.drop_address}
+                    </Text>
+                  </Address>
+                  <View>
+                    <Text style={{ color: 'red', alignSelf: 'flex-end' }}>
+                      On Route
+                    </Text>
+                    <Text style={{ fontSize: 20, color: colors.greyishBrown }}>
+                      {item.rate}
+                    </Text>
+                  </View>
+                </LoadDropoff>
+                <LoadWeight>
+                  <Text style={{ color: colors.warmGrey }}>
+                    Livestock: {item.live_stock_type[0].qty}{' '}
+                    {item.live_stock_type[0].name}
+                  </Text>
+                  <Text style={{ color: colors.warmGrey }}>
+                    Weight: {item.total_weight} lbs
+                  </Text>
+                  <Text style={{ color: colors.warmGrey }}>
+                    {moment(item.created_at).fromNow()}
+                  </Text>
+                </LoadWeight>
+              </View>
+            </TouchableOpacity>
+          </LoadWrapper>
+        )
+      })}
+    </ScrollView>
+  )
+}
+
+const SecondRoute = () => {
+  return (
+    <View>
+      <NoLoadText>No Completed Loads</NoLoadText>
+    </View>
+  )
+}
 
 const MyLoads = (props) => {
   const [filter, setFilter] = useState('progress')
@@ -22,6 +111,7 @@ const MyLoads = (props) => {
   const [loading, setLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
   const [noLoads, setNoLoads] = useState(null)
+  const [index, setIndex] = useState(0)
 
   useEffect(() => {
     fetchSavedLoads()
@@ -58,117 +148,74 @@ const MyLoads = (props) => {
     setRefreshing(false)
   }
 
+  const renderTabBar = (props) => {
+    return (
+      <View style={styles.tabBar}>
+        {props.navigationState.routes.map((route, i) => {
+          return (
+            <TouchableOpacity
+              key={i}
+              style={styles.tabItem}
+              onPress={() => setIndex(i)}
+            >
+              <Text
+                style={
+                  route.key === props.navigationState.routes[index].key
+                    ? styles.tabTextActive
+                    : styles.tabText
+                }
+              >
+                {route.title}
+              </Text>
+            </TouchableOpacity>
+          )
+        })}
+      </View>
+    )
+  }
+
+  const renderScene = ({ route }) => {
+    switch (route.key) {
+      case 'first':
+        return (
+          <FirstRoute
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            loads={loads}
+            navigation={props.navigation}
+          />
+        )
+      case 'second':
+        return <SecondRoute />
+      default:
+        return null
+    }
+  }
+
+  if (loading) {
+    return <ActivityIndicator color="#000" />
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <NavigationEvents onWillFocus={() => fetchSavedLoads()} />
-      {loading && <ActivityIndicator color="#000" />}
 
-      {!loading && !noLoads && (
-        <FilterWrapper>
-          {filter === 'progress' ? (
-            <ButtonActive>In Progress</ButtonActive>
-          ) : (
-            <ButtonInactive onPress={() => setFilter('progress')}>
-              In Progress
-            </ButtonInactive>
-          )}
-          {filter === 'completed' ? (
-            <ButtonActive>Completed</ButtonActive>
-          ) : (
-            <ButtonInactive onPress={() => setFilter('completed')}>
-              Completed
-            </ButtonInactive>
-          )}
-        </FilterWrapper>
-      )}
-      {noLoads && (
-        <Text
-          style={{
-            textAlign: 'center',
-            marginTop: 40,
-            fontSize: 18,
-            color: 'gray',
+      {noLoads && <NoLoadText>No Saved Load</NoLoadText>}
+      {!noLoads && (
+        <TabView
+          navigationState={{
+            index,
+            routes: [
+              { key: 'first', title: 'In Progress' },
+              { key: 'second', title: 'Completed' },
+            ],
           }}
-        >
-          No Saved Load
-        </Text> 
-      )} 
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {loads.map((item) => {
-          return (
-            <LoadWrapper key={item.id}>
-              <TouchableOpacity
-                onPress={() =>
-                  props.navigation.navigate('LoadInfo', {
-                    load: item,
-                  })
-                }
-              >
-                <View style={{ padding: 10 }}>
-                  <LoadPickup>
-                    <Feather name="arrow-up-circle" color="black" size={18} />
-                    <Address>
-                      <Text style={{ color: colors.warmGrey }}>
-                        Pick up {moment(item.pickup_date).format('MMM DD')}
-                      </Text>
-                      <Text
-                        style={{ fontSize: 20, color: colors.greyishBrown }}
-                      >
-                        {item.pickup_address}
-                      </Text>
-                    </Address>
-                    <Ionicons
-                      name="ios-arrow-round-forward"
-                      color={colors.linkBlue}
-                      size={32}
-                    />
-                  </LoadPickup>
-                  <LoadDropoff>
-                    <Feather
-                      name="arrow-down-circle"
-                      color={colors.themeYellow}
-                      size={18}
-                    />
-                    <Address>
-                      <Text style={{ color: colors.warmGrey }}>
-                        Drop off {moment(item.drop_date).format('MMM DD')}
-                      </Text>
-                      <Text
-                        style={{ fontSize: 20, color: colors.greyishBrown }}
-                      >
-                        {item.drop_address}
-                      </Text>
-                    </Address>
-                    <View>
-                      <Text style={{ color: 'red', alignSelf: 'flex-end' }}>
-                        On Route
-                      </Text>
-                      <Text
-                        style={{ fontSize: 20, color: colors.greyishBrown }}
-                      >
-                        $ {item.rate}
-                      </Text>
-                    </View>
-                  </LoadDropoff>
-                  <LoadWeight>
-                    <Text style={{ color: colors.warmGrey }}>
-                      Livestock: 20 cattles
-                    </Text>
-                    <Text style={{ color: colors.warmGrey }}>
-                      Weight: {item.total_weight} lbs
-                    </Text>
-                    <Text style={{ color: colors.warmGrey }}>4 Days</Text>
-                  </LoadWeight>
-                </View>
-              </TouchableOpacity>
-            </LoadWrapper>
-          )
-        })}
-      </ScrollView>
+          renderScene={renderScene}
+          renderTabBar={renderTabBar}
+          onIndexChange={setIndex}
+          initialLayout={{ width: Dimensions.get('window').width }}
+        />
+      )}
     </View>
   )
 }
@@ -180,8 +227,11 @@ MyLoads.navigationOptions = ({ navigation }) => {
   return {
     title: 'My Load',
     headerLeft: () => (
-      <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
-          <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+      <TouchableOpacity
+        onPress={() => navigation.goBack(null)}
+        style={{ marginLeft: 15 }}
+      >
+        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
       </TouchableOpacity>
     ),
   }
@@ -238,5 +288,38 @@ const LoadWeight = styled.View`
   align-items: center;
   justify-content: space-between;
 `
+
+const NoLoadText = styled(Text)`
+  text-align: center;
+  margin-top: 40;
+  font-size: 18;
+  color: gray;
+`
+
+const styles = StyleSheet.create({
+  tabBar: {
+    flexDirection: 'row',
+    marginHorizontal: 10,
+  },
+  tabItem: {
+    // flex: 1,
+    alignItems: 'center',
+    padding: 10,
+  },
+  tabText: {
+    color: 'gray',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    borderColor: colors.darkGrey,
+  },
+  tabTextActive: {
+    borderWidth: 1,
+    borderRadius: 10,
+    backgroundColor: colors.themeYellow,
+    borderColor: colors.themeYellow,
+    padding: 10,
+  },
+})
 
 export default MyLoads
