@@ -78,11 +78,11 @@ const FirstRoute = ({ refreshing, onRefresh, loads, navigation }) => {
                 </LoadDropoff>
                 <LoadWeight>
                   <Text style={{ color: colors.warmGrey }}>
-                    Livestock: {item.live_stock_type[0].qty}{' '}
+                    Ls: {item.live_stock_type[0].qty}{' '}
                     {item.live_stock_type[0].name}
                   </Text>
                   <Text style={{ color: colors.warmGrey }}>
-                    Weight: {item.total_weight} lbs
+                    Wt: {item.total_weight} lbs
                   </Text>
                   <Text style={{ color: colors.warmGrey }}>
                     {moment(item.created_at).fromNow()}

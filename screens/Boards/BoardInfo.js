@@ -23,18 +23,20 @@ import {
 import moment from 'moment'
 import { api_url } from '../../constants/Api'
 import colors from '../../constants/Colors'
-import { Ionicons , Octicons} from '@expo/vector-icons'
+import { Ionicons, Octicons } from '@expo/vector-icons'
+import timeSince from '../../constants/TimeSince'
+
 const ParentView = styled.View`
   position: relative;
 `
 
 const ButtonWrapper = styled.View`
-position: absolute;
-bottom: 0;
-width: 100%;
-padding-horizontal: 25px;
-overflow: hidden;
-align-items: center;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding-horizontal: 25px;
+  overflow: hidden;
+  align-items: center;
 `
 
 const Container = styled.View`
@@ -135,51 +137,53 @@ const Map = styled.View`
   width: 100%;
 `
 const CallButton = styled.View`
-background-color: ${colors.themeYellow};
-padding: 15px 10px;
-font-weight: bold;
-border-top-left-radius: 7px;
-border-bottom-left-radius: 7px;
-flex-direction: row;
-justify-content: center;
-align-items: center;
-width: 100px;
-border-right-width:1px;
-border-color:rgb(211 ,176 ,58);
+  background-color: ${colors.themeYellow};
+  padding: 15px 10px;
+  font-weight: bold;
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  border-right-width: 1px;
+  border-color: rgb(211, 176, 58);
 `
 const BottomButton = styled.View`
 flexDirection: row; 
 border-radius: 7px;
 margin-bottom: 20px;
-shadowRadius:  ${Platform.OS == "android" ?  18 : 10};
-shadowOpacity: ${Platform.OS == "android" ?  30 : 0.16}; 
+shadowRadius:  ${Platform.OS == 'android' ? 18 : 10};
+shadowOpacity: ${Platform.OS == 'android' ? 30 : 0.16}; 
 shadow-color: #000;
-shadowOffset:{ width: ${Platform.OS == "android" ?  -1 : 0}, height: ${Platform.OS == "android" ?  9 : 10} };
-elevation: ${Platform.OS == "android" ?  12 : 15};
-`;
+shadowOffset:{ width: ${Platform.OS == 'android' ? -1 : 0}, height: ${
+  Platform.OS == 'android' ? 9 : 10
+} };
+elevation: ${Platform.OS == 'android' ? 12 : 15};
+`
 const ButtonTextLocal = styled.Text`
   font-family: 'pt-mono-bold';
   color: ${colors.greyishBrown};
   margin-left: 10;
 `
 const LineCreate = styled.View`
-height: 47px;
-width: 2px;
-flex-direction: column;
-background: rgb(211 ,176 ,58);
-`;
+  height: 47px;
+  width: 2px;
+  flex-direction: column;
+  background: rgb(211, 176, 58);
+`
 const ChatButton = styled.TouchableOpacity`
-background-color: #ddba45;
-padding: 15px 10px;
-font-weight: bold;
-border-top-right-radius: 7px;
-border-bottom-right-radius: 7px;
-flex-direction: row;
-justify-content: center;
-align-items: center;
-width: 100px;
-border-left-width:1px;
-border-color:rgb(211 ,176 ,58);
+  background-color: #ddba45;
+  padding: 15px 10px;
+  font-weight: bold;
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  border-left-width: 1px;
+  border-color: rgb(211, 176, 58);
 `
 const LoadInfo = (props) => {
   const [loading, setLoading] = useState(false)
@@ -312,7 +316,7 @@ const LoadInfo = (props) => {
                 Available
               </Text>
               <Text style={{ fontSize: 18, fontFamily: 'pt-mono' }}>
-                $10,000
+                {load.rate}
               </Text>
             </View>
           </UserWrap>
@@ -322,7 +326,9 @@ const LoadInfo = (props) => {
               alignSelf: 'flex-end',
             }}
           >
-            <Text style={{ color: colors.littleDarkGrey }}>Posted 30min</Text>
+            <Text style={{ color: colors.littleDarkGrey }}>
+              Posted {moment(load.created_at).fromNow()}
+            </Text>
           </View>
           <Bar>
             <BarLineOne>
@@ -479,14 +485,15 @@ const LoadInfo = (props) => {
           </TouchableOpacity>
         </View>
       </ButtonWrapper> */}
-       <ButtonWrapper>
+      <ButtonWrapper>
         <BottomButton>
           <CallButton>
-          <MaterialIcons name="phone" size={15} />
+            <MaterialIcons name="phone" size={15} />
             <ButtonTextLocal>Call</ButtonTextLocal>
           </CallButton>
           {/* <LineCreate /> */}
-          <ChatButton onPress={() =>
+          <ChatButton
+            onPress={() =>
               props.navigation.navigate('Chat', {
                 friendId: load.u_id,
                 friendName: load.u_fullname,
@@ -495,8 +502,9 @@ const LoadInfo = (props) => {
                 userName: currentUserIdName.name,
                 userImage: currentUserIdName.image,
               })
-            }>
-          <MaterialCommunityIcons name="chat" size={15} />
+            }
+          >
+            <MaterialCommunityIcons name="chat" size={15} />
             <ButtonTextLocal>Chat</ButtonTextLocal>
           </ChatButton>
         </BottomButton>
@@ -508,8 +516,11 @@ const LoadInfo = (props) => {
 LoadInfo.navigationOptions = ({ navigation }) => ({
   title: navigation.getParam('title'),
   headerLeft: () => (
-    <TouchableOpacity onPress={() => navigation.goBack(null)} style={{marginLeft: 15}}>
-        <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
+    <TouchableOpacity
+      onPress={() => navigation.goBack(null)}
+      style={{ marginLeft: 15 }}
+    >
+      <Ionicons name="ios-arrow-round-back" color="#fff" size={30} />
     </TouchableOpacity>
   ),
 })

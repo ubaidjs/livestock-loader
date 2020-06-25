@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   ScrollView,
-  Dimensions
+  Dimensions,
 } from 'react-native'
 import styled from 'styled-components/native'
 import RNPickerSelect from 'react-native-picker-select'
@@ -57,7 +57,7 @@ const CodeText = styled.Text`
 `
 const MobileWrapper = styled.View``
 const ButtonWrapper = styled.View`
-margin-top: ${Dimensions.get('window').height - 450};
+  margin-top: ${Dimensions.get('window').height - 450};
 `
 
 const Mobile = (props) => {
@@ -65,7 +65,7 @@ const Mobile = (props) => {
   const [code, setCode] = useState('+1')
   const [country, setCountry] = useState('us')
   const [loading, setLoading] = useState(false)
-  const [msgshow,setMsgshow] = useState('')
+  const [msgshow, setMsgshow] = useState('')
   const countryList = [
     { label: 'United States', value: 'us' },
     { label: 'Canada', value: 'canada' },
@@ -99,7 +99,7 @@ const Mobile = (props) => {
           // props.navigation.navigate('Otp')
           const otp = generateOtp()
           await fetch(
-            `https://conveyenceadmin.livestockloader.com/smsservice/index.php?phone=${phone}&otp=${otp}&code=+1`
+            `https://conveyenceoffice.livestockloader.com/smsservice/index.php?phone=${phone}&otp=${otp}&code=+1`
           )
           props.navigation.navigate('Otp', {
             otp: otp,
@@ -115,76 +115,86 @@ const Mobile = (props) => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView>
-      <Container>
-        <MobileWrapper>
-          <ScreenTitle>Mobile Verification</ScreenTitle>
-          <TagLine>
-            Please verify your phone number so we know you are a real person.
-          </TagLine>
-          <View>
-            <View style={{ marginBottom: 15 }}>
-              <RNPickerSelect
-                Icon={() => (
-                  <MaterialCommunityIcons name="chevron-down" size={15} />
-                )}
-                placeholder={{}}
-                items={countryList}
-                onValueChange={(value) => {
-                  setCountry(value)
-                }}
-                style={{
-                  inputAndroid: styles.picker,
-                  inputIOS: styles.picker,
-                  iconContainer: {
-                    paddingTop: 18,
-                    paddingRight: 5,
-                  },
-                }}
-              />
-            </View>
-            <View style={{ flexDirection: 'row' , backgroundColor: 'rgb(247, 247, 247)' , height: 54,borderRadius: 5, marginBottom: 25}}>
+        <Container>
+          <MobileWrapper>
+            <ScreenTitle>Mobile Verification</ScreenTitle>
+            <TagLine>
+              Please verify your phone number so we know you are a real person.
+            </TagLine>
+            <View>
+              <View style={{ marginBottom: 15 }}>
+                <RNPickerSelect
+                  Icon={() => (
+                    <MaterialCommunityIcons name="chevron-down" size={15} />
+                  )}
+                  placeholder={{}}
+                  items={countryList}
+                  onValueChange={(value) => {
+                    setCountry(value)
+                  }}
+                  style={{
+                    inputAndroid: styles.picker,
+                    inputIOS: styles.picker,
+                    iconContainer: {
+                      paddingTop: 18,
+                      paddingRight: 5,
+                    },
+                  }}
+                />
+              </View>
               <View
                 style={{
+                  flexDirection: 'row',
                   backgroundColor: 'rgb(247, 247, 247)',
-                  height: '100%',
-                  width: 49,
+                  height: 54,
                   borderRadius: 5,
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  marginBottom: 25,
                 }}
               >
-                <Text style={{fontSize: 20 , color: 'rgb(112 ,112 ,112)'}}>{code}</Text>
+                <View
+                  style={{
+                    backgroundColor: 'rgb(247, 247, 247)',
+                    height: '100%',
+                    width: 49,
+                    borderRadius: 5,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text style={{ fontSize: 20, color: 'rgb(112 ,112 ,112)' }}>
+                    {code}
+                  </Text>
+                </View>
+                <CustomInput
+                  placeholder="Phone Number"
+                  keyboardType="phone-pad"
+                  maxLength={10}
+                  onChangeText={(val) => setPhone(val)}
+                  style={{ flex: 1 }}
+                />
               </View>
-              <CustomInput
-                placeholder="Phone Number"
-                keyboardType="phone-pad"
-                maxLength={10}
-                onChangeText={(val) => setPhone(val)}
-                style={{ flex: 1 }}
-              />
             </View>
-          </View>
-          <CodeText>We'll send you an SMS verification code.</CodeText>
-        </MobileWrapper>
-        <ButtonWrapper>
-        {msgshow != '' && <Invalid>{msgshow}</Invalid>}
-          {phone ? ( 
-            <TouchableOpacity onPress={() => addPhoneNumber()}>
-              <CustomButton>
-                {loading ? (
-                  <ActivityIndicator color={colors.greyishBrown} />
-                ) : (
-                  <ButtonText>SEND CODE</ButtonText>
-                )}
-              </CustomButton>
-            </TouchableOpacity>
-          ) : (
-            <CustomButtonDisable>   
-              <ButtonTextDisable>SEND CODE</ButtonTextDisable>
-            </CustomButtonDisable>
-          )}
-        </ButtonWrapper>
-      </Container>
+            <CodeText>We'll send you an SMS verification code.</CodeText>
+          </MobileWrapper>
+          <ButtonWrapper>
+            {msgshow != '' && <Invalid>{msgshow}</Invalid>}
+            {phone ? (
+              <TouchableOpacity onPress={() => addPhoneNumber()}>
+                <CustomButton>
+                  {loading ? (
+                    <ActivityIndicator color={colors.greyishBrown} />
+                  ) : (
+                    <ButtonText>SEND CODE</ButtonText>
+                  )}
+                </CustomButton>
+              </TouchableOpacity>
+            ) : (
+              <CustomButtonDisable>
+                <ButtonTextDisable>SEND CODE</ButtonTextDisable>
+              </CustomButtonDisable>
+            )}
+          </ButtonWrapper>
+        </Container>
       </ScrollView>
     </TouchableWithoutFeedback>
   )

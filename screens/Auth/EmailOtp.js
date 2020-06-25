@@ -45,7 +45,7 @@ const Otp = (props) => {
   const resendOtp = async () => {
     try {
       await fetch(
-        `https://conveyenceadmin.livestockloader.com/emailservice/index.php?email=${email}&otp=${otp}`
+        `https://conveyenceoffice.livestockloader.com/emailservice/index.php?email=${email}&otp=${otp}`
       )
     } catch (error) {
       console.log(error)

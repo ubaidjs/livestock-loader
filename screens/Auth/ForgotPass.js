@@ -85,7 +85,7 @@ const ForgotPass = (props) => {
   const navigateForward = async () => {
     const otp = generateOtp()
     await fetch(
-      `https://conveyenceadmin.livestockloader.com/emailservice/index.php?email=${email}&otp=${otp}`
+      `https://conveyenceoffice.livestockloader.com/emailservice/index.php?email=${email}&otp=${otp}`
     )
 
     props.navigation.navigate('EmailOtp', {

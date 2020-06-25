@@ -14,6 +14,7 @@ import {
   RefreshControl,
   Alert,
   ImageBackground,
+  Linking,
 } from 'react-native'
 import MapView from 'react-native-maps'
 import {
@@ -385,7 +386,7 @@ const SecondRoute = ({
             <Image
               style={{ height: 50, width: 50, borderRadius: 50 }}
               source={{
-                uri: item.u_image,
+                uri: item.u_image || 'https://i.imgur.com/RYi5Qho.png',
               }}
             />
             <View style={{ flex: 1, marginLeft: 15 }}>
@@ -396,7 +397,7 @@ const SecondRoute = ({
                   color: colors.greyishBrown,
                 }}
               >
-                {item.u_fullname}
+                {item.u_fullname || 'Name'}
               </Text>
               <Text>
                 5
@@ -526,11 +527,11 @@ const LoadBoards = (props) => {
     if (fromSignup) {
       refRBSheet.current.open()
       await fetch(
-        `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${pushToken}&msg=${userString.u_fullname}%20Complete%20your%20account&sender_id=${userString.u_id}&receiver_id=${userString.u_id}&sender_name=${userString.u_fullname}&message_type=completeaccount`
+        `https://conveyenceoffice.livestockloader.com/notification/index.php?token=${pushToken}&msg=${userString.u_fullname}%20Complete%20your%20account&sender_id=${userString.u_id}&receiver_id=${userString.u_id}&sender_name=${userString.u_fullname}&message_type=completeaccount`
       )
 
       await fetch(
-        `https://conveyenceadmin.livestockloader.com/emailservice/index.php?email=${userString.u_email}&token=${pushToken}&type=sendverifyemail`
+        `https://conveyenceoffice.livestockloader.com/emailservice/index.php?email=${userString.u_email}&token=${pushToken}&type=sendverifyemail`
       )
     }
   }
@@ -751,14 +752,20 @@ const LoadBoards = (props) => {
               </Text>
             </BottomSheetOption>
           </TouchableOpacity>
-          <BottomSheetOption>
-            <MaterialIcons name="phone" size={15} color="gray" />
-            <Text
-              style={{ color: colors.linkBlue, fontSize: 18, marginLeft: 10 }}
-            >
-              Call
-            </Text>
-          </BottomSheetOption>
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(`tel:+1`)
+            }}
+          >
+            <BottomSheetOption>
+              <MaterialIcons name="phone" size={15} color="gray" />
+              <Text
+                style={{ color: colors.linkBlue, fontSize: 18, marginLeft: 10 }}
+              >
+                Call
+              </Text>
+            </BottomSheetOption>
+          </TouchableOpacity>
         </View>
       </RBSheet>
 

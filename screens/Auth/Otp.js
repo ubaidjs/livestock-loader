@@ -54,7 +54,7 @@ const Otp = (props) => {
   const resendOtp = async () => {
     try {
       await fetch(
-        `https://conveyenceadmin.livestockloader.com/smsservice/index.php?phone=${phone}&otp=${otp}&code=+1`
+        `https://conveyenceoffice.livestockloader.com/smsservice/index.php?phone=${phone}&otp=${otp}&code=+1`
       )
     } catch (error) {
       console.log(error)

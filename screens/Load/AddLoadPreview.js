@@ -173,12 +173,13 @@ const AddLoadDetails = (props) => {
       })
     })
     console.log(arr)
-
+    const timeStamp = new Date()
     try {
       const token = await AsyncStorage.getItem('USER_TOKEN')
       const response = await fetch(`${api_url}?action=addload`, {
         method: 'POST',
         body: JSON.stringify({
+        	created_at: timeStamp,
           token,
           pickUp: {
             date: finalDetails.pickupDate,

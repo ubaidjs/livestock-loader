@@ -17,6 +17,8 @@ import {
 } from 'react-native'
 import styled from 'styled-components/native'
 import RBSheet from 'react-native-raw-bottom-sheet'
+import * as Contacts from 'expo-contacts'
+import * as Permissions from 'expo-permissions'
 import { api_url } from '../../constants/Api'
 import {
   CustomInput,
@@ -26,6 +28,7 @@ import {
 import { TabView } from 'react-native-tab-view'
 import colors from '../../constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
+import ContactInvite from '../../components/ContactInvite'
 
 const FirstRoute = ({
   friends,
@@ -78,7 +81,46 @@ const FirstRoute = ({
 }
 
 const SecondRoute = () => {
-  return <View></View>
+  const [contacts, setContacts] = useState([])
+  const [filteredContact, setFilteredContact] = useState({})
+
+  useEffect(() => {
+    getContacts()
+  }, [])
+
+  const getContacts = async () => {
+    // const { status } = await Permissions.getAsync(Permissions.CONTACTS)
+    const { status } = await Contacts.requestPermissionsAsync()
+
+    if (status === 'granted') {
+      const { data } = await Contacts.getContactsAsync({
+        fields: [Contacts.Fields.PhoneNumbers],
+      })
+      if (data.length > 0) {
+        setContacts(data)
+      }
+    }
+  }
+  return (
+    <View style={{ flex: 1 }}>
+      {filteredContact.length ? (
+        <FlatList
+          data={filteredContact}
+          renderItem={({ item }) => <ContactInvite name={item.name} />}
+          keyExtractor={(item) => item.id}
+        />
+      ) : (
+        <FlatList
+          style={{ flex: 1 }}
+          data={contacts}
+          renderItem={({ item }) => <ContactInvite name={item.name} />}
+          keyExtractor={(item) => item.id}
+        />
+      )}
+
+      {!contacts.length && <ActivityIndicator color="#000" />}
+    </View>
+  )
 }
 
 const AddGroup = (props) => {
@@ -163,7 +205,7 @@ const AddGroup = (props) => {
 
         temp.forEach(async (item) => {
           await fetch(
-            `https://conveyenceadmin.livestockloader.com/notification/index.php?token=${item.push_token}&msg=${user.u_fullname}%20added%20you%20to%20a%20group&sender_id=${user.u_id}&receiver_id=${item.u_id}&sender_name=${user.u_fullname}&message_type=groupnotification&group_id=${json.group_id}`
+            `https://conveyenceoffice.livestockloader.com/notification/index.php?token=${item.push_token}&msg=${user.u_fullname}%20added%20you%20to%20a%20group&sender_id=${user.u_id}&receiver_id=${item.u_id}&sender_name=${user.u_fullname}&message_type=groupnotification&group_id=${json.group_id}`
           )
         })
 
